@@ -10,7 +10,7 @@ const TwitterURl = "https://api.twitter.com/1.1/statuses/user_timeline.json?scre
 const InstagramTestToken = "IGQVJYVklMR0FGajM4dWNJVzNZAd3UwSm5rcFlwajFiY3VUWkhjVlV1YXozNWJVbmtTaGVHV1BVTTQ4ZAjU2ZAV9tVjh2ZA0xDSXg3SmFwejVKUTRFX2VYUGw1M19rdmpvUlg4QnUxeG80a3R3QVI3dTdmZAgZDZD";
 const FacebookTestToken = "EAADI2kYwctIBANHgpWojU6wfukFymXgpKa1yJDjttba3xxdyb1I9Wmw6vkZCaBZCv9RLsE9KtfWl10MGnaeSA90WH9nJuqkFMkBPEITSeEZAOWsljiOa0gG1LonyubJW1rCpyLBxdq2NqKAqkIIPODKxJCeCPhYThbYHFMSYgZDZD";
 
-app.get("/", (req, res) => {
+app.get("/api/feed", (req, res) => {
     res.json(posts);
 })
 
@@ -105,10 +105,12 @@ async function getStream(accessToken) {
             "Client-Id": process.env.TWITCH_CLIENT_ID
         }
     })
-    posts.push({
-        type: "twitch_stream",
-        data: response.data.data
-    });
+    if (response.data.data.length === 1) {
+        posts.push({
+            type: "twitch_stream",
+            data: response.data.data[0]
+        });
+    }
 }
 
 async function getTwitchVideos(accessToken) {
@@ -189,6 +191,6 @@ function getDate(post) {
 
 app.listen(8080, () => {
     clock();
-    setInterval(clock, 1000 * 60 * 60);
+    // setInterval(clock, 1000 * 60 * 60);
     console.log("Server is listening on 8080");
 })

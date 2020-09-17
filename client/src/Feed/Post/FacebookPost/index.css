@@ -1,0 +1,29 @@
+.facebook-post-container {
+    width: 640px;
+}
+
+.facebook-post-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.facebook-post-header-logo {
+    width: 35px;
+    height: 35px;
+    margin: 15px;
+}
+
+.facebook-post-header-date {
+    margin: 25px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.facebook-post-message {
+    text-align: left;
+    margin: 25px;
+}
+
+.facebook-post-attachment-media {
+    max-width: 640px;
+}

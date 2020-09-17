@@ -1,0 +1,29 @@
+.twitter-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.twitter-post-container {
+    width: 100%;
+}
+
+.twitter-header-logo {
+    width: 35px;
+    height: 35px;
+    margin: 15px;
+}
+
+.twitter-header-date {
+    margin: 25px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.twitter-media {
+    width: 640px;
+}
+
+.tweet {
+    margin: 25px;
+    text-align: left;
+}
