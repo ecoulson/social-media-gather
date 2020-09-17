@@ -7,7 +7,8 @@ const { google } = require("googleapis");
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
 const TwitterURl = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=adaptsolutions1";
-const TestToken = "IGQVJYVklMR0FGajM4dWNJVzNZAd3UwSm5rcFlwajFiY3VUWkhjVlV1YXozNWJVbmtTaGVHV1BVTTQ4ZAjU2ZAV9tVjh2ZA0xDSXg3SmFwejVKUTRFX2VYUGw1M19rdmpvUlg4QnUxeG80a3R3QVI3dTdmZAgZDZD";
+const InstagramTestToken = "IGQVJYVklMR0FGajM4dWNJVzNZAd3UwSm5rcFlwajFiY3VUWkhjVlV1YXozNWJVbmtTaGVHV1BVTTQ4ZAjU2ZAV9tVjh2ZA0xDSXg3SmFwejVKUTRFX2VYUGw1M19rdmpvUlg4QnUxeG80a3R3QVI3dTdmZAgZDZD";
+const FacebookTestToken = "EAADI2kYwctIBANHgpWojU6wfukFymXgpKa1yJDjttba3xxdyb1I9Wmw6vkZCaBZCv9RLsE9KtfWl10MGnaeSA90WH9nJuqkFMkBPEITSeEZAOWsljiOa0gG1LonyubJW1rCpyLBxdq2NqKAqkIIPODKxJCeCPhYThbYHFMSYgZDZD";
 
 app.get("/", (req, res) => {
     res.json(posts);
@@ -18,7 +19,8 @@ async function clock() {
         getInstagramData(),
         getTwitterData(),
         getYouTubeData(),
-        getTwitchData()
+        getTwitchData(),
+        getFacebookData(),
     ])
     sortFeed(posts);
 };
@@ -39,7 +41,7 @@ async function getTwitterData() {
 
 async function getInstagramData() {
     try {
-        let userMediaRes = await axios.get(`${InstagramURL}/me/media?fields=permalink,thumbnail_url,usernameid,caption,media_type,media_url,username,timestamp&access_token=${TestToken}`);
+        let userMediaRes = await axios.get(`${InstagramURL}/me/media?fields=permalink,thumbnail_url,usernameid,caption,media_type,media_url,username,timestamp&access_token=${InstagramTestToken}`);
         posts.push(...userMediaRes.data.data.map((post) => {
             return {
                 type: "instagram",
@@ -135,6 +137,31 @@ async function getTwitchVideos(accessToken) {
     }
 }
 
+async function getFacebookData() {
+    const response = await axios.get("https://graph.facebook.com/v8.0/me/posts", {
+        headers: {
+            Authorization: `Bearer ${FacebookTestToken}`
+        }
+    })
+    let facebookPosts = await Promise.all(response.data.data.map(async (post) => {
+        return {
+            ...post,
+            attachments: (await axios.get(`https://graph.facebook.com/v8.0/${post.id}/attachments`, {
+                headers: {
+                    Authorization: `Bearer ${FacebookTestToken}`
+                }
+            })).data.data
+        }
+    }));
+    facebookPosts = facebookPosts.map((post) => {
+        return {
+            type: "facebook_post",
+            data: post
+        }
+    });
+    posts.push(...facebookPosts);
+}
+
 function sortFeed(posts) {
     posts.sort((a, b) => {
         const dateA = getDate(a);
@@ -154,7 +181,9 @@ function getDate(post) {
         case "twitch_stream":
             return new Date();
         case "twitch_video":
-            return new Date(post.data.published_at)
+            return new Date(post.data.published_at);
+        case "facebook_post":
+            return new Date(post.data.created_time);
     }
 }
 
