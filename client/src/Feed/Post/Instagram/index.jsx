@@ -3,7 +3,6 @@ import { ReactComponent as InstagramLogo } from "./instagram.svg";
 import "./index.css";
 
 export default function Instagram(props) {
-    console.log(props.post);
     return (
         <div className="instagram-container">
             <div className="instagram-header">
@@ -12,7 +11,7 @@ export default function Instagram(props) {
                     {new Date(props.post.data.timestamp).toDateString()}
                 </span>
             </div>
-            <img className="instgram-media" src={props.post.data.media_url} />
+            <img alt="instagram post" className="instgram-media" src={props.post.data.media_url} />
         </div>
     )
 } 

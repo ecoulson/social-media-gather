@@ -6,7 +6,7 @@ const { google } = require("googleapis");
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
-const TwitterURl = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=adaptsolutions1";
+const TwitterURl = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=LeagueOfLegends";
 const InstagramTestToken = "IGQVJYVklMR0FGajM4dWNJVzNZAd3UwSm5rcFlwajFiY3VUWkhjVlV1YXozNWJVbmtTaGVHV1BVTTQ4ZAjU2ZAV9tVjh2ZA0xDSXg3SmFwejVKUTRFX2VYUGw1M19rdmpvUlg4QnUxeG80a3R3QVI3dTdmZAgZDZD";
 const FacebookTestToken = "EAADI2kYwctIBANHgpWojU6wfukFymXgpKa1yJDjttba3xxdyb1I9Wmw6vkZCaBZCv9RLsE9KtfWl10MGnaeSA90WH9nJuqkFMkBPEITSeEZAOWsljiOa0gG1LonyubJW1rCpyLBxdq2NqKAqkIIPODKxJCeCPhYThbYHFMSYgZDZD";
 
@@ -62,7 +62,7 @@ async function getYouTubeData() {
         service.channels.list({
             auth: process.env.YOUTUBE_API_KEY,
             part: 'snippet,contentDetails,statistics',
-            forUsername: 'PewDiePie'
+            forUsername: 'ESPN'
         }, function (err, response) {
             if (err) {
                 return reject(err);
@@ -99,7 +99,7 @@ async function getTwitchAccessToken() {
 }
 
 async function getStream(accessToken) {
-    const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=loltyler1`, {
+    const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=bobross`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`,
             "Client-Id": process.env.TWITCH_CLIENT_ID
@@ -115,7 +115,7 @@ async function getStream(accessToken) {
 
 async function getTwitchVideos(accessToken) {
     try {
-        const userResponse = await axios.get(`https://api.twitch.tv/helix/users?login=loltyler1`, {
+        const userResponse = await axios.get(`https://api.twitch.tv/helix/users?login=bobross`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
                 "Client-Id": process.env.TWITCH_CLIENT_ID

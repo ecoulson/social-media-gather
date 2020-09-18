@@ -17,7 +17,7 @@ export default function TwitchVideo(props) {
             <div className="twitch-video-header">
                 <Twitch className="twitch-video-header-logo" />
                 <h2 className="twitch-video-header-title">{getTitle(props.post.data.title)}</h2>
-                <span className="twitch-video-header-viewers">Viewers: {getViews(props.post.data)}</span>
+                <span className="twitch-video-header-viewers">{new Date(props.post.data.published_at).toDateString()}</span>
             </div>
             {
                 isLoaded ? 
@@ -26,19 +26,6 @@ export default function TwitchVideo(props) {
             }
         </div>
     )
-}
-
-function getViews(post) {
-    if (post.view_count > 1000000000) {
-        return (post.view_count / 1000000000).toFixed(1) + "B"
-    }
-    if (post.view_count > 1000000) {
-        return (post.view_count / 1000000).toFixed(1) + "M"
-    }
-    if (post.view_count > 1000) {
-        return (post.view_count / 1000).toFixed(1) + "K"
-    }
-    return post.view_count;
 }
 
 function getTitle(title) {
@@ -51,7 +38,7 @@ function renderThumbnail(post, load) {
     let imageUrl = post.thumbnail_url.replace("%{width}", 640).replace("%{height}", 360);
     return (
         <div onClick={load} className="twitch-video-thumbnail">
-            <img className="twitch-video-thumbnail-image" src={imageUrl} />
+            <img alt="video thumbnail" className="twitch-video-thumbnail-image" src={imageUrl} />
             <div className="twitch-video-overlay" />
             <Play className="twitch-video-play" />
         </div>

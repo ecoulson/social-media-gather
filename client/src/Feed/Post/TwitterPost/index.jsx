@@ -13,6 +13,7 @@ export default function TwitterPost(props) {
                 </span>
             </div>
             <div className="tweet">{props.post.data.text}</div>
+            <div className="tweet">@{props.post.data.user.screen_name}</div>
         </div>
     )
 } 

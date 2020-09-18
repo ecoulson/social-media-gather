@@ -3,7 +3,6 @@ import { ReactComponent as Facebook } from "./facebook.svg";
 import "./index.css";
 
 export default function FacebookPost(props) {
-    console.log(props);
     return (
         <div className="facebook-post-container">
             <div className="facebook-post-header">
@@ -24,5 +23,5 @@ function renderMessage(post) {
 }
 
 function renderAttachments(post) {
-    return <img className="facebook-post-attachment-media" src={post.attachments[0].media.image.src} />;
+    return <img alt="attachment" className="facebook-post-attachment-media" src={post.attachments[0].media.image.src} />;
 }

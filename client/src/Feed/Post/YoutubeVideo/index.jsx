@@ -13,7 +13,7 @@ export default function YouTubeVideo(props) {
             <div className="youtube-header">
                 <YouTube className="youtube-header-logo" />
                 <h2 className="youtube-header-title">{getTitle(props.post.data.snippet.title)}</h2>
-                <span className="youtube-header-viewers">Viewers: {getViews(props.post.data)}</span>
+                <span className="youtube-header-viewers">{new Date(props.post.data.snippet.publishedAt).toDateString()}</span>
             </div>
             {
                 isLoaded ? 
@@ -28,7 +28,7 @@ function renderThumbnail(post, load) {
     const imageUrl = post.snippet.thumbnails.standard.url;
     return (
         <div onClick={load} className="youtube-thumbnail">
-            <img className="youtube-thumbnail-image" src={imageUrl} />
+            <img alt="video thumbnail" className="youtube-thumbnail-image" src={imageUrl} />
             <div className="youtube-overlay" />
             <Play className="youtube-play" />
         </div>
@@ -37,10 +37,6 @@ function renderThumbnail(post, load) {
 
 function renderVideo(post) {
     return <ReactPlayer playing controls url={`https://www.youtube.com/watch?v=${post.contentDetails.videoId}`} />
-}
-
-function getViews(post) {
-    return 0;
 }
 
 function getTitle(title) {
