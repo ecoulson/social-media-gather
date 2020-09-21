@@ -1,8 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 const axios = require("axios").default;
 const { google } = require("googleapis");
+const Routes = require("./src/");
+const bodyParser = require('body-parser');
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
@@ -10,17 +13,32 @@ const TwitterURl = "https://api.twitter.com/1.1/statuses/user_timeline.json?scre
 const InstagramTestToken = "IGQVJYVklMR0FGajM4dWNJVzNZAd3UwSm5rcFlwajFiY3VUWkhjVlV1YXozNWJVbmtTaGVHV1BVTTQ4ZAjU2ZAV9tVjh2ZA0xDSXg3SmFwejVKUTRFX2VYUGw1M19rdmpvUlg4QnUxeG80a3R3QVI3dTdmZAgZDZD";
 const FacebookTestToken = "EAADI2kYwctIBANHgpWojU6wfukFymXgpKa1yJDjttba3xxdyb1I9Wmw6vkZCaBZCv9RLsE9KtfWl10MGnaeSA90WH9nJuqkFMkBPEITSeEZAOWsljiOa0gG1LonyubJW1rCpyLBxdq2NqKAqkIIPODKxJCeCPhYThbYHFMSYgZDZD";
 
+mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+}).then(() => {
+    console.log("connected to db")
+}).catch(() => {
+    console.log("failed to connect to db")
+});
+
+app.use(bodyParser.json())
+
+app.use(Routes);
+
 app.get("/api/feed", (req, res) => {
     res.json(posts);
 })
 
 async function clock() {
     await Promise.all([
-        getInstagramData(),
+    //     getInstagramData(),
         getTwitterData(),
         getYouTubeData(),
         getTwitchData(),
-        getFacebookData(),
+    //     getFacebookData(),
     ])
     sortFeed(posts);
 };
