@@ -12,13 +12,18 @@ export default function TwitchStream(props) {
         <div className="twitch-stream-container">
             <div className="twitch-stream-header">
                 <Twitch className="twitch-stream-header-logo" />
-                <h2 className="twitch-stream-header-title">{getTitle(props.post.data.title)}</h2>
+                <h2 className="twitch-stream-header-title">{getTitle(props.post.title)}</h2>
                 <span className="twitch-stream-header-viewers">{new Date().toDateString()}</span>
             </div>
             {
                 isLoaded ? 
-                    renderStream(props.post.data) : 
-                    renderStreamThumbnail(props.post.data, load)
+                    renderStream(props.post) : 
+                    renderStreamThumbnail(props.post, load)
+            }
+            {
+                props.post.gameName === "League Of Legends" ?
+                    <button>Worlds Mode</button> :
+                    null
             }
         </div>
     )
@@ -31,7 +36,7 @@ function getTitle(title) {
 }
 
 function renderStreamThumbnail(post, load) {
-    let imageUrl = post.thumbnail_url.replace("{width}", 640).replace("{height}", 360);
+    let imageUrl = post.thumbnailUrl.replace("{width}", 640).replace("{height}", 360);
     return (
         <div onClick={load} className="twitch-stream-thumbnail">
             <img alt="video thumbnail" className="twitch-stream-thumbnail-image" src={imageUrl} />
@@ -46,5 +51,5 @@ function renderStream(post) {
     return <ReactPlayer 
                 controls 
                 playing={true}
-                url={`https://www.twitch.tv/${post.user_name}`} />
+                url={post.url} />
 }

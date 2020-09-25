@@ -16,9 +16,9 @@ export default function Post(props) {
 }
 
 function getRender(post) {
-    switch (post.type) {
+    switch (post.type.toLowerCase()) {
         case "twitch_stream":
-            return <TwitchStream post={post} />
+            return <TwitchStream post={post.twitchStream} />
         case "twitch_video":
             return <TwitchVideo post={post} />
         case "instagram":

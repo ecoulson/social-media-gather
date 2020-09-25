@@ -28,17 +28,17 @@ app.use(bodyParser.json())
 
 app.use(Routes);
 
-app.get("/api/feed", (req, res) => {
+app.get("/api/feed_old", (req, res) => {
     res.json(posts);
 })
 
 async function clock() {
     await Promise.all([
-    //     getInstagramData(),
+        getInstagramData(),
         getTwitterData(),
         getYouTubeData(),
         getTwitchData(),
-    //     getFacebookData(),
+        getFacebookData(),
     ])
     sortFeed(posts);
 };
