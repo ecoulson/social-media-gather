@@ -20,7 +20,7 @@ function getRender(post) {
         case "twitch_stream":
             return <TwitchStream post={post.twitchStream} />
         case "twitch_video":
-            return <TwitchVideo post={post} />
+            return <TwitchVideo post={post.twitchVideo} />
         case "instagram":
             return <Instagram post={post} />
         case "facebook_post":

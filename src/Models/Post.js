@@ -19,6 +19,15 @@ const schema = new Schema({
         userName: String,
         thumbnailUrl: String,
         title: String,
+    },
+    twitchVideo: {
+        url: String,
+        gameName: String,
+        publishedAt: Date,
+        title: String,
+        description: String,
+        thumbnailUrl: String,
+        userName: String,
     }
 })
 

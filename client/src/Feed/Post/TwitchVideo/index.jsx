@@ -8,7 +8,7 @@ import "./index.css";
 export default function TwitchVideo(props) {
     const [isLoaded, load] = useState(false);
 
-    if (props.post.data.thumbnail_url === "") {
+    if (props.post.thumbnailUrl === "") {
         return null;
     }
     
@@ -16,13 +16,13 @@ export default function TwitchVideo(props) {
         <div className="twitch-video-container">
             <div className="twitch-video-header">
                 <Twitch className="twitch-video-header-logo" />
-                <h2 className="twitch-video-header-title">{getTitle(props.post.data.title)}</h2>
-                <span className="twitch-video-header-viewers">{new Date(props.post.data.published_at).toDateString()}</span>
+                <h2 className="twitch-video-header-title">{getTitle(props.post.title)}</h2>
+                <span className="twitch-video-header-viewers">{new Date(props.post.publishedAt).toDateString()}</span>
             </div>
             {
                 isLoaded ? 
-                    renderVideo(props.post.data) : 
-                    renderThumbnail(props.post.data, load)
+                    renderVideo(props.post) : 
+                    renderThumbnail(props.post, load)
             }
         </div>
     )
@@ -35,7 +35,7 @@ function getTitle(title) {
 }
 
 function renderThumbnail(post, load) {
-    let imageUrl = post.thumbnail_url.replace("%{width}", 640).replace("%{height}", 360);
+    let imageUrl = post.thumbnailUrl.replace("%{width}", 640).replace("%{height}", 360);
     return (
         <div onClick={load} className="twitch-video-thumbnail">
             <img alt="video thumbnail" className="twitch-video-thumbnail-image" src={imageUrl} />

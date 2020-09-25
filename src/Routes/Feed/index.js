@@ -3,7 +3,7 @@ const Post = require('../../Models/Post');
 const Axios = require("axios").default;
 
 router.get("/", async (req, res) => {
-    const feed = await Post.find().sort({ timeCreated: -1 }).exec()
+    const feed = await Post.find().sort({ timeCreated: -1 }).limit(20).exec()
     return res.json(feed);
 })
 
@@ -14,11 +14,10 @@ router.get("/twitch/callback", (req, res) => {
 router.post("/twitch/callback", async (req, res) => {
     const userLiveStreams = req.body.data
     if (userLiveStreams.length === 1) {
-        console.log("create");
         const tokePayload = await getTwitchAccessToken();
         const twitchLiveStreamPost = new Post({
             type: "TWITCH_STREAM",
-            createdAt: new Date(userLiveStreams[0].started_at),
+            timeCreated: new Date(userLiveStreams[0].started_at),
             userId: userLiveStreams[0].user_id,
             twitchStream: {
                 url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
@@ -32,7 +31,6 @@ router.post("/twitch/callback", async (req, res) => {
         })
         await twitchLiveStreamPost.save();
     } else {
-        console.log('end')
         await Post.findOneAndUpdate({
             "twitchStream.live": true,
             userId: req.query.twitch_id

@@ -43,7 +43,8 @@ async function registerAccount(userId, twitchId) {
     const tokenPayload = await getTwitchAccessToken();
     user.twitchId = twitchId;
     await Promise.all([
-        createUserTwitchPosts(tokenPayload.access_token, twitchId),
+        createPostForLiveStream(tokenPayload.access_token, twitchId),
+        createPostForVideos(tokenPayload.access_token, twitchId),
         registerWebhooks(tokenPayload.access_token, twitchId)
     ]);
     return await user.save();
@@ -68,14 +69,14 @@ async function registerWebhooks(accessToken, twitchId) {
     }
 }
 
-async function createUserTwitchPosts(accessToken, twitchId) {
+async function createPostForLiveStream(accessToken, twitchId) {
     try {
         const userLiveStreams = await getLiveStream(accessToken, twitchId);
         if (userLiveStreams.length === 1) {
             const twitchLiveStreamPost = new Post({
                 type: "TWITCH_STREAM",
                 userId: userLiveStreams[0].user_id,
-                createdAt: new Date(userLiveStreams[0].started_at),
+                timeCreated: new Date(userLiveStreams[0].started_at),
                 twitchStream: {
                     url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
                     live: true,
@@ -114,6 +115,64 @@ async function getLiveStream(accessToken, userId) {
         }
     })
     return response.data.data;
+}
+
+async function createPostForVideos(accessToken, userId) {
+    let videoPageResponse = await getVideoPage(accessToken, userId);
+    while (videoPageResponse.data.data.length !== 0) {
+        if (videoPageResponse.headers["ratelimit-remaining"] <= 20) {
+            const waitTime = parseInt(videoPageResponse.headers["ratelimit-reset"]) - (new Date().getTime() / 1000);
+            await wait(waitTime * 1000);
+        }
+        await Promise.all(videoPageResponse.data.data.map(video => {
+            createVideoPost(video, accessToken)
+        }));
+        videoPageResponse = await getVideoPage(accessToken, userId, videoPageResponse.data.pagination.cursor);
+    }
+}
+
+async function wait(miliseconds) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, miliseconds)
+    })
+}
+
+async function getVideoPage(accessToken, userId, paginationCursor) {
+    if (!paginationCursor) {
+        const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${userId}`, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Client-Id": process.env.TWITCH_CLIENT_ID
+            }
+        })
+        return response;
+    }
+    const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${userId}&after=${paginationCursor}`, {
+        headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Client-Id": process.env.TWITCH_CLIENT_ID
+        }
+        
+    })
+    return response;
+}
+
+async function createVideoPost(video, accessToken) {
+    const videoPost = new Post({
+        type: "TWITCH_VIDEO",
+        userId: video.user_id,
+        timeCreated: new Date(video.created_at),
+        twitchVideo: {
+            url: video.url,
+            gameName: await getGameName(accessToken, video.game_id),
+            publishedAt: new Date(video.published_at),
+            title: video.title,
+            description: video.description,
+            thumbnailUrl: video.thumbnail_url,
+            userName: video.user_name,
+        }
+    })
+    return await videoPost.save()
 }
 
 module.exports = router;
