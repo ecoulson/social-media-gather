@@ -40,35 +40,56 @@ router.post("/:id", async (req, res) => {
 
 async function registerAccount(userId, twitchId) {
     const user = await User.findById(userId);
+    const tokenPayload = await getTwitchAccessToken();
     user.twitchId = twitchId;
     await Promise.all([
-        createUserTwitchPosts(twitchId),
-        registerWebhooks(twitchId)
+        createUserTwitchPosts(tokenPayload.access_token, twitchId),
+        registerWebhooks(tokenPayload.access_token, twitchId)
     ]);
     return await user.save();
 }
 
-async function registerWebhooks(twitchId) {
-    
-}
-
-async function createUserTwitchPosts(twitchId) {
-    const tokenPayload = await getTwitchAccessToken();
-    const userLiveStreams = await getLiveStream(tokenPayload.access_token, twitchId);
-    if (userLiveStreams.length === 1) {
-        const twitchLiveStreamPost = new Post({
-            type: "TWITCH_STREAM",
-            createdAt: new Date(userLiveStreams[0].started_at),
-            twitchStream: {
-                url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
-                live: true,
-                gameName: await getGameName(tokenPayload.access_token, userLiveStreams[0].game_id),
-                startedAt: new Date(userLiveStreams[0].started_at),
-                title: userLiveStreams[0].title,
-                thumbnailUrl: userLiveStreams[0].thumbnail_url
+async function registerWebhooks(accessToken, twitchId) {
+    try {
+        await Axios.post("https://api.twitch.tv/helix/webhooks/hub", {
+            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?twitch_id=${twitchId}`,
+            "hub.mode": "subscribe",
+            "hub.lease_seconds": 864000,
+            "hub.secret": "bob",
+            "hub.topic": `https://api.twitch.tv/helix/streams?user_id=${twitchId}`
+        }, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Client-Id": process.env.TWITCH_CLIENT_ID
             }
         })
-        await twitchLiveStreamPost.save();
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+async function createUserTwitchPosts(accessToken, twitchId) {
+    try {
+        const userLiveStreams = await getLiveStream(accessToken, twitchId);
+        if (userLiveStreams.length === 1) {
+            const twitchLiveStreamPost = new Post({
+                type: "TWITCH_STREAM",
+                userId: userLiveStreams[0].user_id,
+                createdAt: new Date(userLiveStreams[0].started_at),
+                twitchStream: {
+                    url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
+                    live: true,
+                    gameName: await getGameName(accessToken, userLiveStreams[0].game_id),
+                    startedAt: new Date(userLiveStreams[0].started_at),
+                    title: userLiveStreams[0].title,
+                    thumbnailUrl: userLiveStreams[0].thumbnail_url,
+                    userName: userLiveStreams[0].user_name,
+                }
+            })
+            await twitchLiveStreamPost.save();
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -79,6 +100,9 @@ async function getGameName(accessToken, gameId) {
             "Client-Id": process.env.TWITCH_CLIENT_ID
         }
     })
+    if (response.data.data.length === 0) {
+        return "";
+    }
     return response.data.data[0].name;
 }
 

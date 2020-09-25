@@ -6,6 +6,7 @@ const axios = require("axios").default;
 const { google } = require("googleapis");
 const Routes = require("./src/");
 const bodyParser = require('body-parser');
+const morgan = require("morgan");
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
     console.log("failed to connect to db")
 });
 
+app.use(morgan('dev'));
 app.use(bodyParser.json())
 
 app.use(Routes);
@@ -208,7 +210,5 @@ function getDate(post) {
 }
 
 app.listen(8080, () => {
-    clock();
-    // setInterval(clock, 1000 * 60 * 60);
     console.log("Server is listening on 8080");
 })

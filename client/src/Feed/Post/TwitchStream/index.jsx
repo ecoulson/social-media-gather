@@ -7,6 +7,7 @@ import "./index.css";
 
 export default function TwitchStream(props) {
     const [isLoaded, load] = useState(false);
+    const [worldsMode, setWorldsMode] = useState(false);
     
     return (
         <div className="twitch-stream-container">
@@ -15,24 +16,48 @@ export default function TwitchStream(props) {
                 <h2 className="twitch-stream-header-title">{getTitle(props.post.title)}</h2>
                 <span className="twitch-stream-header-viewers">{new Date().toDateString()}</span>
             </div>
-            {
-                isLoaded ? 
-                    renderStream(props.post) : 
-                    renderStreamThumbnail(props.post, load)
-            }
-            {
-                props.post.gameName === "League Of Legends" ?
-                    <button>Worlds Mode</button> :
-                    null
-            }
+            { renderContent(isLoaded, props.post, load, worldsMode, setWorldsMode) }
         </div>
     )
 }
 
 function getTitle(title) {
-    return title.length > 30 ?
-        title.substring(0, 30) + "..." :
+    return title.length > 25 ?
+        title.substring(0, 25) + "..." :
         title;
+}
+
+function renderContent(isLoaded, post, load, worldsMode, setWorldsMode) {
+    if (worldsMode) {
+        return renderWorldsMode(post, setWorldsMode);
+    }
+    if (post.live) {
+        return [
+            isLoaded ?
+                renderStream(post) :
+                renderStreamThumbnail(post, load),
+            post.gameName === "League of Legends" ?
+                <button onClick={() => setWorldsMode(true)} className="twitch-stream-worlds-mode">Worlds Mode</button> :
+                null    
+        ]
+    } else {
+        return <div>{post.userName} finished streaming at {new Date(post.endedAt).toDateString()}</div>
+    }
+}
+
+function renderWorldsMode(post, setWorldsMode) {
+    return (
+        <div className="worlds-mode-container">
+            <button onClick={() => setWorldsMode(false)}>Close</button>
+            <button>Audio Only</button>
+            {renderStream(post)}
+            <ReactPlayer 
+                controls 
+                muted={true}
+                playing={true}
+                url="https://www.twitch.tv/riotgames" />
+        </div>
+    )
 }
 
 function renderStreamThumbnail(post, load) {

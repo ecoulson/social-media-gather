@@ -15,6 +15,10 @@
     font-weight: 400;
 }
 
+.twitch-stream-container {
+    width: 100%;
+}
+
 .twitch-stream-header-viewers {
     margin-top: 18px;
     font-size: 16px;
@@ -47,6 +51,14 @@
 }
 
 .twitch-stream-thumbnail:hover {
+    cursor: pointer;
+}
+
+.twitch-stream-worlds-mode {
+    margin: 10px 0;
+}
+
+.twitch-stream-worlds-mode:hover {
     cursor: pointer;
 }
 

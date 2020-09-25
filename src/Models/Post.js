@@ -9,11 +9,14 @@ const schema = new Schema({
         required: true
     },
     timeCreated: Date,
+    userId: String,
     twitchStream: {
         url: String,
         live: Boolean,
         gameName: String,
         startedAt: Date,
+        endedAt: Date,
+        userName: String,
         thumbnailUrl: String,
         title: String,
     }
