@@ -3,8 +3,8 @@ const User = require('../../Models/User');
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
 const Axios = require("axios").default;
 
-router.get("/:userHandle", async (req, res) => {
-    res.json(await getTwitterUsers(req.params.userHandle));
+router.get("/", async (req, res) => {
+    res.json(await getTwitterUsers(req.query.username));
 });
 
 async function getTwitterUsers(userHandle) {
@@ -13,11 +13,18 @@ async function getTwitterUsers(userHandle) {
             "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
         }
     });
-    return response.data;
+    const formattedUsers = response.data.map((user) => {
+        return {
+            id: user.id_str,
+            username: user.screen_name,
+            profilePicture: user.profile_image_url
+        }
+    })
+    return formattedUsers;
 }
 
 router.post("/:id", async (req, res) => {
-    res.json(await registerAccount(req.params.id, req.body.twitterId));
+    res.json(await registerAccount(req.params.id, req.body.id));
 })
 
 async function registerAccount(userId, twitterId) {

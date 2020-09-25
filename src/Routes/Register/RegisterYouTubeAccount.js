@@ -2,13 +2,21 @@ const router = require("express").Router();
 const { google } = require("googleapis");
 const User = require('../../Models/User');
 
-router.get("/:username", async (req, res) => {
-    res.json(await getUsers(req.params.username))
+router.get("/", async (req, res) => {
+    res.json(await getUsers(req.query.username))
 });
 
 async function getUsers(username) {
     const service = google.youtube('v3');
-    return await getChannel(username, service);
+    const channel = await getChannel(username, service);
+    const formattedChannels = channel.items.map((item) => {
+        return {
+            id: item.id.channelId,
+            username: item.snippet.title,
+            profilePicture: item.snippet.thumbnails.default.url
+        }
+    })
+    return formattedChannels;
 }
 
 function getChannel(username, service) {
@@ -28,7 +36,7 @@ function getChannel(username, service) {
 }
 
 router.post("/:id", async (req, res) => {
-    res.json(await registerAccount(req.params.id, req.body.channelId));
+    res.json(await registerAccount(req.params.id, req.body.id));
 })
 
 async function registerAccount(userId, channelId) {

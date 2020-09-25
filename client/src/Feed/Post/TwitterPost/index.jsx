@@ -1,9 +1,8 @@
 import React from "react";
-import { ReactComponent as Twitter } from "./twitter.svg";
+import { ReactComponent as Twitter } from "../../../Assets/twitter.svg";
 import "./index.css";
 
 export default function TwitterPost(props) {
-    console.log(props);
     return (
         <div className="twitter-post-container">
             <div className="twitter-header">

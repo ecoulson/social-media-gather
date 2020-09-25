@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import ReactPlayer from "react-player"
-import { ReactComponent as Twitch } from "./twitch.svg";
-import { ReactComponent as Play } from "./play.svg";
+import { ReactComponent as Twitch } from "../../../Assets/twitch.svg";
+import { ReactComponent as Play } from "../../../Assets/play.svg";
 import "./index.css";
 
 export default function TwitchStream(props) {

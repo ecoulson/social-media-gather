@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import ReactPlayer from "react-player";
-import { ReactComponent as YouTube } from "./youtube.svg";
-import { ReactComponent as Play } from "./play.svg";
+import { ReactComponent as YouTube } from "../../../Assets/youtube.svg";
+import { ReactComponent as Play } from "../../../Assets/play.svg";
 import "./index.css";
 
 export default function YouTubeVideo(props) {

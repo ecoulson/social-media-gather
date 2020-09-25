@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as InstagramLogo } from "./instagram.svg";
+import { ReactComponent as InstagramLogo } from "../../../Assets/instagram.svg";
 import "./index.css";
 
 export default function Instagram(props) {

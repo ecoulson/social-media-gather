@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as Facebook } from "./facebook.svg";
+import { ReactComponent as Facebook } from "../../../Assets/facebook.svg";
 import "./index.css";
 
 export default function FacebookPost(props) {

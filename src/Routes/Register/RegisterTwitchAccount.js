@@ -2,8 +2,8 @@ const router = require("express").Router();
 const User = require('../../Models/User');
 const Axios = require("axios").default
 
-router.get("/:username", async (req, res) => {
-    res.json(await getUsers(req.params.username))
+router.get("/", async (req, res) => {
+    res.json(await getUsers(req.query.username))
 });
 
 async function getUsers(username) {
@@ -18,17 +18,23 @@ async function getChannel(username) {
             "Client-Id": process.env.TWITCH_CLIENT_ID
         }
     })
-    return response.data
+    const channels = response.data.data.map((result) => {
+        return {
+            username: result.display_name,
+            id: result.id,
+            profilePicture: result.thumbnail_url
+        }
+    })
+    return channels
 }
 
 async function getTwitchAccessToken() {
     const response = await Axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`)
-    console.log(response.data)
     return response.data;
 }
 
 router.post("/:id", async (req, res) => {
-    res.json(await registerAccount(req.params.id, req.body.twitchId));
+    res.json(await registerAccount(req.params.id, req.body.id));
 })
 
 async function registerAccount(userId, twitchId) {
