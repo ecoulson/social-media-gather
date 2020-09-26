@@ -31,7 +31,7 @@ app.use(bodyParser.json())
 
 app.use(Routes);
 
-app.use("/", express.static(path.join(__dirname, '..', 'client', 'build')));
+app.use("/", express.static(path.join(__dirname, 'client', 'build')));
 
 app.get("/api/feed_old", (req, res) => {
     res.json(posts);
