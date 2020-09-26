@@ -7,6 +7,7 @@ const { google } = require("googleapis");
 const Routes = require("./src/");
 const bodyParser = require('body-parser');
 const morgan = require("morgan");
+const path = require("path");
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
@@ -37,17 +38,6 @@ app.get("/api/feed_old", (req, res) => {
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
    });
-
-async function clock() {
-    await Promise.all([
-        getInstagramData(),
-        getTwitterData(),
-        getYouTubeData(),
-        getTwitchData(),
-        getFacebookData(),
-    ])
-    sortFeed(posts);
-};
 
 async function getTwitterData() {
     let tweets = await axios.get(TwitterURl, {
@@ -111,58 +101,6 @@ async function getYouTubeData() {
     })
 }
 
-async function getTwitchData() {
-    const tokenPayload = await getTwitchAccessToken();
-    await getStream(tokenPayload.access_token);
-    await getTwitchVideos(tokenPayload.access_token);
-}
-
-async function getTwitchAccessToken() {
-    const response = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`)
-    return response.data;
-}
-
-async function getStream(accessToken) {
-    const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=bobross`, {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`,
-            "Client-Id": process.env.TWITCH_CLIENT_ID
-        }
-    })
-    if (response.data.data.length === 1) {
-        posts.push({
-            type: "twitch_stream",
-            data: response.data.data[0]
-        });
-    }
-}
-
-async function getTwitchVideos(accessToken) {
-    try {
-        const userResponse = await axios.get(`https://api.twitch.tv/helix/users?login=bobross`, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Client-Id": process.env.TWITCH_CLIENT_ID
-            }
-        });
-        const user = userResponse.data.data[0];
-        const videosResponse = await axios.get(`https://api.twitch.tv/helix/videos?user_id=${user.id}`, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Client-Id": process.env.TWITCH_CLIENT_ID
-            }
-        });
-        posts.push(...videosResponse.data.data.map((video) => {
-            return {
-                type: "twitch_video",
-                data: video
-            }
-        }));
-    } catch (error) {
-        console.log(error.response.data);
-    }
-}
-
 async function getFacebookData() {
     const response = await axios.get("https://graph.facebook.com/v8.0/me/posts", {
         headers: {
@@ -186,31 +124,6 @@ async function getFacebookData() {
         }
     });
     posts.push(...facebookPosts);
-}
-
-function sortFeed(posts) {
-    posts.sort((a, b) => {
-        const dateA = getDate(a);
-        const dateB = getDate(b);
-        return dateB - dateA;
-    })
-}
-
-function getDate(post) {
-    switch (post.type) {
-        case "twitter":
-            return new Date(post.data.created_at);
-        case "instagram":
-            return new Date(post.data.timestamp);
-        case "youtube":
-            return new Date(post.data.snippet.publishedAt);
-        case "twitch_stream":
-            return new Date();
-        case "twitch_video":
-            return new Date(post.data.published_at);
-        case "facebook_post":
-            return new Date(post.data.created_time);
-    }
 }
 
 app.listen(process.env.PORT, () => {
