@@ -3,7 +3,11 @@ const Post = require('../../Models/Post');
 const Axios = require("axios").default;
 
 router.get("/", async (req, res) => {
-    const feed = await Post.find().sort({ timeCreated: -1 }).limit(20).exec()
+    const feed = await Post.find()
+        .skip(parseInt(req.query.offset))
+        .sort({ timeCreated: -1 })
+        .limit(20)
+        .exec()
     return res.json(feed);
 })
 

@@ -34,6 +34,10 @@ app.get("/api/feed_old", (req, res) => {
     res.json(posts);
 })
 
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+   });
+
 async function clock() {
     await Promise.all([
         getInstagramData(),

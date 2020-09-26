@@ -46,6 +46,6 @@ function handleAccountSelection(onAccountSelection) {
     }
 }
 
-function handleChange(event, setUsername) {
-    setUsername(event.target.value)
+function handleChange(event, setResults) {
+    setResults(event.target.value)
 }
