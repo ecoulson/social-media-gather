@@ -213,6 +213,6 @@ function getDate(post) {
     }
 }
 
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
     console.log("Server is listening on 8080");
 })
