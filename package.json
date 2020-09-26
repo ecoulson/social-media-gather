@@ -20,5 +20,8 @@
     "morgan": "^1.10.0",
     "react-router-dom": "^5.2.0"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "devDependencies": {}
 }
