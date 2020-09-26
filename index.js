@@ -31,13 +31,15 @@ app.use(bodyParser.json())
 
 app.use(Routes);
 
+app.use("/", express.static(path.join(__dirname, '..', 'client', 'build')));
+
 app.get("/api/feed_old", (req, res) => {
     res.json(posts);
 })
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-   });
+});
 
 async function getTwitterData() {
     let tweets = await axios.get(TwitterURl, {
