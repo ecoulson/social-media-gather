@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const schema = new Schema({
     type: {
         type: String,
-        enum: ["TWITCH_STREAM", "TWITCH_VIDEO"],
+        enum: ["TWITCH_STREAM", "TWITCH_VIDEO", "YOUTUBE_VIDEO"],
         required: true
     },
     timeCreated: Date,
@@ -28,6 +28,12 @@ const schema = new Schema({
         description: String,
         thumbnailUrl: String,
         userName: String,
+    },
+    youtubeVideo: {
+        publishedAt: Date,
+        thumbnailUrl: String,
+        title: String,
+        videoId: String
     }
 })
 

@@ -25,8 +25,8 @@ function getRender(post) {
             return <Instagram post={post} />
         case "facebook_post":
             return <FacebookPost post={post} />
-        case "youtube":
-            return <YouTubeVideo post={post} />
+        case "youtube_video":
+            return <YouTubeVideo post={post.youtubeVideo} />
         case "twitter":
             return <TwitterPost post={post} />
         default:

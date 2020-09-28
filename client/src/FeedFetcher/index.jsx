@@ -14,7 +14,7 @@ export default function FeedFetcher() {
 
     const onScroll = debounce(() => {
         const height = getDocumentHeight(body, html);
-        if (window.scrollY + originalHeight > height - height / 3) {
+        if (window.scrollY + originalHeight > height - 2000) {
             setIndex(index => index + 20);
         }            
     }, 250)
@@ -32,10 +32,7 @@ export default function FeedFetcher() {
         })
     }, [index]);
     
-    return [
-        <Feed feed={feed} />,
-        <div>{index}</div>   
-    ];
+    return <Feed feed={feed} />
 }
 
 function getDocumentHeight(body, html) {

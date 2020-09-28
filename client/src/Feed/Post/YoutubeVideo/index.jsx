@@ -12,20 +12,20 @@ export default function YouTubeVideo(props) {
         <div className="youtube-container">
             <div className="youtube-header">
                 <YouTube className="youtube-header-logo" />
-                <h2 className="youtube-header-title">{getTitle(props.post.data.snippet.title)}</h2>
-                <span className="youtube-header-viewers">{new Date(props.post.data.snippet.publishedAt).toDateString()}</span>
+                <h2 className="youtube-header-title">{getTitle(props.post.title)}</h2>
+                <span className="youtube-header-viewers">{new Date(props.post.publishedAt).toDateString()}</span>
             </div>
             {
                 isLoaded ? 
-                    renderVideo(props.post.data) : 
-                    renderThumbnail(props.post.data, load)
+                    renderVideo(props.post) : 
+                    renderThumbnail(props.post, load)
             }
         </div>
     )
 }
 
 function renderThumbnail(post, load) {
-    const imageUrl = post.snippet.thumbnails.standard.url;
+    const imageUrl = post.thumbnailUrl;
     return (
         <div onClick={load} className="youtube-thumbnail">
             <img alt="video thumbnail" className="youtube-thumbnail-image" src={imageUrl} />
@@ -36,7 +36,7 @@ function renderThumbnail(post, load) {
 }
 
 function renderVideo(post) {
-    return <ReactPlayer playing controls url={`https://www.youtube.com/watch?v=${post.contentDetails.videoId}`} />
+    return <ReactPlayer playing controls url={`https://www.youtube.com/watch?v=${post.videoId}`} />
 }
 
 function getTitle(title) {
