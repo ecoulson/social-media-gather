@@ -2,6 +2,9 @@ const router = require("express").Router();
 const { google } = require("googleapis");
 const User = require('../../Models/User');
 const Post = require("../../Models/Post");
+const { default: Axios } = require("axios");
+const qs = require('querystring')
+const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
 
 router.get("/", async (req, res) => {
     res.json(await getUsers(req.query.username))
@@ -9,8 +12,8 @@ router.get("/", async (req, res) => {
 
 async function getUsers(username) {
     const service = google.youtube('v3');
-    const channel = await searchChannelsByUsername(username, service);
-    const formattedChannels = channel.items.map((item) => {
+    const channels = await searchChannelsByUsername(username, service);
+    const formattedChannels = channels.items.map((item) => {
         return {
             id: item.id.channelId,
             username: item.snippet.title,
@@ -26,7 +29,8 @@ function searchChannelsByUsername(username, service) {
             auth: process.env.YOUTUBE_API_KEY,
             part: 'snippet',
             q: username,
-            type: "channel"
+            type: "channel",
+            maxResults: 50
         }, function (err, response) {
             if (err) {
                 return reject(err);
@@ -44,7 +48,27 @@ async function registerAccount(userId, channelId) {
     const user = await User.findById(userId);
     user.youtubeId = channelId;
     createYoutubePosts(channelId);
+    registerWebhook(channelId);
     return await user.save();
+}
+
+async function registerWebhook(channelId) {
+    try {
+        const webhookPostData = {
+            "hub.mode": "subscribe",
+            "hub.callback": `${process.env.BASE_URL}/api/feed/youtube/callback?channelId=${channelId}`,
+            "hub.verify": "async",
+            "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
+        };
+        const response = await Axios.post(WebhookHubUrl, qs.stringify(webhookPostData), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+        console.log(response.data);
+    } catch (error) {
+        console.log(error.response.data);
+    }
 }
 
 async function createYoutubePosts(channelId) {

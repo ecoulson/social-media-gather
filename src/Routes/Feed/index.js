@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Post = require('../../Models/Post');
 const Axios = require("axios").default;
+const XmlParser = require("express-xml-bodyparser");
+const { google } = require("googleapis");
 
 router.get("/", async (req, res) => {
     const feed = await Post.find()
@@ -64,6 +66,63 @@ async function getGameName(accessToken, gameId) {
         return "";
     }
     return response.data.data[0].name;
+}
+
+router.get("/youtube/callback", (req, res) => {
+    res.type("text/plain").status(200).send(req.query["hub.challenge"]);
+})
+
+router.post("/youtube/callback", XmlParser({trim: false, explicitArray: false}), async (req, res) => {
+    const service = google.youtube('v3');
+    const video = await getVideo(service, req.body.feed.entry["yt:videoid"]);
+    await createVideoPost(video);
+    return res.status(200).send();
+});
+
+function getVideo(youtube, videoId) {
+    return new Promise((resolve, reject) => {
+        youtube.videos.list({
+            part: "snippet,contentDetails,statistics,player,liveStreamingDetails",
+            id: videoId,
+            auth: process.env.YOUTUBE_API_KEY
+        }, (err, videos) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(videos.data.items[0]);
+        })
+    })
+}
+
+function createVideoPost(video) {
+    const videoPost = new Post({
+        type: "YOUTUBE_VIDEO",
+        userId: video.snippet.channelId,
+        timeCreated: video.snippet.publishedAt,
+        youtubeVideo: {
+            publishedAt: video.snippet.publishedAt,
+            thumbnailUrl: getThumbnail(video.snippet.thumbnails),
+            title: video.snippet.title,
+            videoId: video.id
+        }
+    })
+    return videoPost.save();
+}
+
+function getThumbnail(thumbnails) {
+    if (thumbnails.standard) {
+        return thumbnails.standard.url
+    }
+    if (thumbnails.high) {
+        return thumbnails.high.url
+    }
+    if (thumbnails.maxres) {
+        return thumbnails.maxres.url
+    }
+    if (thumbnails.medium) {
+        return thumbnails.medium.url
+    }
+    return thumbnails.default.url
 }
 
 module.exports = router;
