@@ -27,8 +27,8 @@ function getRender(post) {
             return <FacebookPost post={post} />
         case "youtube_video":
             return <YouTubeVideo post={post.youtubeVideo} />
-        case "twitter":
-            return <TwitterPost post={post} />
+        case "tweet":
+            return <TwitterPost post={post.tweet} />
         default:
             return <div>Unknown post type</div>
     }

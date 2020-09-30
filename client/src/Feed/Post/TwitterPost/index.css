@@ -27,3 +27,22 @@
     margin: 25px;
     text-align: left;
 }
+
+.tweet-author-container {
+    margin: 25px;
+    text-align: left;
+}
+
+.tweet-user {
+    color: blue;
+}
+
+.tweet-hashtag {
+    color: blue;
+}
+
+.twitter-media-attachment {
+    max-width: 100%;
+    display: block;
+    margin: 20px auto;
+}
