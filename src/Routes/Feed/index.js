@@ -3,8 +3,9 @@ const Post = require('../../Models/Post');
 const Axios = require("axios").default;
 const XmlParser = require("express-xml-bodyparser");
 const { google } = require("googleapis");
+const requiresAuth = require("../../Middleware/RequiresAuth");
 
-router.get("/", async (req, res) => {
+router.get("/", requiresAuth(), async (req, res) => {
     const feed = await Post.find()
         .skip(parseInt(req.query.offset))
         .sort({ timeCreated: -1 })

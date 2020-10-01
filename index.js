@@ -3,11 +3,11 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const axios = require("axios").default;
-const { google } = require("googleapis");
 const Routes = require("./src/");
 const bodyParser = require('body-parser');
 const morgan = require("morgan");
 const path = require("path");
+const cookieParser = require('cookie-parser')
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
@@ -26,8 +26,9 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
 });
 
 app.use(morgan('dev'));
-app.use(bodyParser.json())
-
+app.use(bodyParser.json());
+app.use(cookieParser());
+  
 app.use(Routes);
 
 app.use("/", express.static(path.join(__dirname, 'client', 'build')));
