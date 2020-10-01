@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const User = require('../../Models/User');
 const Post = require('../../Models/Post');
+const requiresAuth = require("../../Middleware/RequiresAuth");
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 const axios = require("axios").default;
@@ -25,12 +25,11 @@ async function getTwitterUsers(userHandle) {
     return formattedUsers;
 }
 
-router.post("/:id", async (req, res) => {
-    res.json(await registerAccount(req.params.id, req.body.id));
+router.post("/", requiresAuth(), async (req, res) => {
+    res.json(await registerAccount(req.user, req.body.id));
 })
 
-async function registerAccount(userId, twitterId) {
-    const user = await User.findById(userId);
+async function registerAccount(user, twitterId) {
     user.twitterId = twitterId;
     await createTwitterPostsForUser(twitterId);
     return await user.save();

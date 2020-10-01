@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AccountSearch from "./AccountSearch";
 import PlatformSelector from "./PlatformSelector";
 import "./index.css"
 import EmailInput from "./EmailInput";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
+import Cookie from "../Library/Cookie";
+import isAuthenticated from "../Auth/IsAuthenticated";
 
 export default function SignUp() {
     const [platform, setPlatform] = useState("twitch")
     const [platformIdMap, setPlatformIdMap] = useState(new Map());
     const [email, setEmail] = useState("");
+    const history = useHistory();
+
+    useEffect(() => {
+        async function checkAuthentication() {
+            if (!await isAuthenticated()) {
+                history.push('/login')
+            }
+        }
+        checkAuthentication();
+    })
 
     return (
         <div className="sign-up-container">
@@ -25,10 +37,13 @@ export default function SignUp() {
 
 function onRegister(platformIdMap, email) {
     return async () => {
-        const registerUserResponse = await Axios.post("/api/register/", { email })
         const registerRequests = [];
         platformIdMap.forEach((id, platform) => {
-            registerRequests.push(Axios.post(`/api/register/${platform}/${registerUserResponse.data._id}`, { id }))
+            registerRequests.push(Axios.post(`/api/register/${platform}/`, { id }, {
+                headers: {
+                    "Authorization": `Bearer ${Cookie.getCookie("token")}`
+                }
+            }))
         })
         const registerResponse = await Promise.all(registerRequests);
         console.log(registerResponse.forEach((response) => {console.log(response.data)}));

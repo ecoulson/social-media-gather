@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const { google } = require("googleapis");
-const User = require('../../Models/User');
 const Post = require("../../Models/Post");
 const { default: Axios } = require("axios");
-const qs = require('querystring')
+const qs = require('querystring');
+const requiresAuth = require("../../Middleware/RequiresAuth");
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
 
 router.get("/", async (req, res) => {
@@ -40,12 +40,11 @@ function searchChannelsByUsername(username, service) {
     })
 }
 
-router.post("/:id", async (req, res) => {
-    res.json(await registerAccount(req.params.id, req.body.id));
+router.post("/", requiresAuth(), async (req, res) => {
+    res.json(await registerAccount(req.user, req.body.id));
 })
 
-async function registerAccount(userId, channelId) {
-    const user = await User.findById(userId);
+async function registerAccount(user, channelId) {
     user.youtubeId = channelId;
     createYoutubePosts(channelId);
     registerWebhook(channelId);

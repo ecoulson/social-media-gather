@@ -9,6 +9,7 @@ import {
 import SignUp from './SignUp';
 import Login from './Login';
 import Logout from "./Logout"
+import Register from './Register';
 
 function App() {
 
@@ -26,6 +27,9 @@ function App() {
 			</Route>
 			<Route exact path="/logout">
 				<Logout />
+			</Route>
+			<Route exact path="/register">
+				<Register />
 			</Route>
 		</Switch>
     </Router>

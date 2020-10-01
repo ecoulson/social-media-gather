@@ -6,7 +6,12 @@ const { google } = require("googleapis");
 const requiresAuth = require("../../Middleware/RequiresAuth");
 
 router.get("/", requiresAuth(), async (req, res) => {
-    const feed = await Post.find()
+    const feed = await Post
+        .find({
+            userId: {
+                $in: req.user.following
+            }
+        })
         .skip(parseInt(req.query.offset))
         .sort({ timeCreated: -1 })
         .limit(20)

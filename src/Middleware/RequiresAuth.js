@@ -2,12 +2,11 @@ const jsonwebtoken = require("jsonwebtoken");
 const User = require("../Models/User");
 
 function requiresAuth() {
-    return (req, res, next) => {
+    return async (req, res, next) => {
         try {
-            console.log(req)
             const token = req.cookies.token;
             const decoded = jsonwebtoken.verify(token, process.env.AUTH_SECRET);
-            const user = User.findById(decoded.id);
+            const user = await User.findById(decoded.id);
             req.user = user;
             next();
         } catch (error) {
