@@ -42,17 +42,17 @@ async function registerAccount(user, twitchId) {
     const tokenPayload = await getTwitchAccessToken();
     user.twitchId = twitchId;
     await Promise.all([
-        createPostForLiveStream(tokenPayload.access_token, twitchId),
-        createPostForVideos(tokenPayload.access_token, twitchId),
-        registerWebhooks(tokenPayload.access_token, twitchId)
+        createPostForLiveStream(tokenPayload.access_token, twitchId, user.id),
+        createPostForVideos(tokenPayload.access_token, twitchId, user.id),
+        registerWebhooks(tokenPayload.access_token, twitchId, user.id)
     ]);
     return await user.save();
 }
 
-async function registerWebhooks(accessToken, twitchId) {
+async function registerWebhooks(accessToken, twitchId, userId) {
     try {
         await Axios.post("https://api.twitch.tv/helix/webhooks/hub", {
-            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?twitch_id=${twitchId}`,
+            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?twitch_id=${userId}`,
             "hub.mode": "subscribe",
             "hub.lease_seconds": 864000,
             "hub.secret": "bob",
@@ -68,13 +68,13 @@ async function registerWebhooks(accessToken, twitchId) {
     }
 }
 
-async function createPostForLiveStream(accessToken, twitchId) {
+async function createPostForLiveStream(accessToken, twitchId, userId) {
     try {
         const userLiveStreams = await getLiveStream(accessToken, twitchId);
         if (userLiveStreams.length === 1) {
             const twitchLiveStreamPost = new Post({
                 type: "TWITCH_STREAM",
-                userId: userLiveStreams[0].user_id,
+                userId: userId,
                 timeCreated: new Date(userLiveStreams[0].started_at),
                 twitchStream: {
                     url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
@@ -106,8 +106,8 @@ async function getGameName(accessToken, gameId) {
     return response.data.data[0].name;
 }
 
-async function getLiveStream(accessToken, userId) {
-    const response = await Axios.get(`https://api.twitch.tv/helix/streams?user_id=${userId}`, {
+async function getLiveStream(accessToken, twitchId) {
+    const response = await Axios.get(`https://api.twitch.tv/helix/streams?user_id=${twitchId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`,
             "Client-Id": process.env.TWITCH_CLIENT_ID
@@ -116,17 +116,17 @@ async function getLiveStream(accessToken, userId) {
     return response.data.data;
 }
 
-async function createPostForVideos(accessToken, userId) {
-    let videoPageResponse = await getVideoPage(accessToken, userId);
+async function createPostForVideos(accessToken, twitchId, userId) {
+    let videoPageResponse = await getVideoPage(accessToken, twitchId);
     while (videoPageResponse.data.data.length !== 0) {
         if (videoPageResponse.headers["ratelimit-remaining"] <= 20) {
             const waitTime = parseInt(videoPageResponse.headers["ratelimit-reset"]) - (new Date().getTime() / 1000);
             await wait(waitTime * 1000);
         }
         await Promise.all(videoPageResponse.data.data.map(video => {
-            createVideoPost(video, accessToken)
+            createVideoPost(video, accessToken, userId)
         }));
-        videoPageResponse = await getVideoPage(accessToken, userId, videoPageResponse.data.pagination.cursor);
+        videoPageResponse = await getVideoPage(accessToken, twitchId, videoPageResponse.data.pagination.cursor);
     }
 }
 
@@ -136,9 +136,9 @@ async function wait(miliseconds) {
     })
 }
 
-async function getVideoPage(accessToken, userId, paginationCursor) {
+async function getVideoPage(accessToken, twitchId, paginationCursor) {
     if (!paginationCursor) {
-        const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${userId}`, {
+        const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${twitchId}`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
                 "Client-Id": process.env.TWITCH_CLIENT_ID
@@ -146,7 +146,7 @@ async function getVideoPage(accessToken, userId, paginationCursor) {
         })
         return response;
     }
-    const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${userId}&after=${paginationCursor}`, {
+    const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${twitchId}&after=${paginationCursor}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`,
             "Client-Id": process.env.TWITCH_CLIENT_ID
@@ -156,10 +156,10 @@ async function getVideoPage(accessToken, userId, paginationCursor) {
     return response;
 }
 
-async function createVideoPost(video, accessToken) {
+async function createVideoPost(video, accessToken, userId) {
     const videoPost = new Post({
         type: "TWITCH_VIDEO",
-        userId: video.user_id,
+        userId: userId,
         timeCreated: new Date(video.created_at),
         twitchVideo: {
             url: video.url,

@@ -22,10 +22,10 @@ function renderTweet(tweet, text) {
     const elements = [];
     const userMentions = text.match(/@\w*/g);
     const hashtags = text.match(/#\w*/g);
-    const urls = text.match(/(https|http)\:\/\/\S*/g)
+    const urls = text.match(/(https|http):\/\/\S*/g)
     const entityPositions = [];
     if (userMentions) {
-        userMentions.map((userMention) => {
+        userMentions.forEach((userMention) => {
             const startIndex = text.indexOf(userMention);
             const endIndex = startIndex + userMention.length;
             entityPositions.push({
@@ -37,7 +37,7 @@ function renderTweet(tweet, text) {
         })
     }
     if (hashtags) {
-        hashtags.map((hashtag) => {
+        hashtags.forEach((hashtag) => {
             const startIndex = text.indexOf(hashtag);
             const endIndex = startIndex + hashtag.length;
             entityPositions.push({
@@ -50,7 +50,7 @@ function renderTweet(tweet, text) {
     }
 
     if (urls) {
-        urls.map((url) => {
+        urls.forEach((url) => {
             const startIndex = text.indexOf(url);
             const endIndex = startIndex + url.length;
             entityPositions.push({
@@ -66,13 +66,13 @@ function renderTweet(tweet, text) {
     entityPositions.forEach((position) => {
         elements.push(text.substring(currentIndex, position.startIndex));
         currentIndex = position.endIndex;
-        if (position.type == "hashtag") {
+        if (position.type === "hashtag") {
             elements.push(<a className="tweet-hashtag" href={`https://twitter.com/search?q=${position.value}`}>{position.value}</a>);
         }
-        if (position.type == "user_mention") {
+        if (position.type === "user_mention") {
             elements.push(<a href={`https://twitter.com/${position.value.replace("@", "")}`} className="tweet-user">{position.value}</a>)
         }
-        if (position.type == "url") {
+        if (position.type === "url") {
             elements.push(<a href={position.value}>{position.value}</a>)
         }
     })
@@ -81,7 +81,7 @@ function renderTweet(tweet, text) {
     if (tweet.media.length > 0) {
         tweet.media.forEach((media) => {
             if (media.type === "photo") {
-                elements.push(<img className="twitter-media-attachment" src={media.url} />)
+                elements.push(<img alt="twitter post" className="twitter-media-attachment" src={media.url} />)
             } else {
                 elements.push(<ReactPlayer controls className="twitter-media-attachment" url={media.url} />)
             }

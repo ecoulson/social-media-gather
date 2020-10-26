@@ -20,6 +20,7 @@ router.post("/", async (req, res) => {
         email: req.body.email,
         username: req.body.username
     });
+    user.following = [user.id]
     await user.save();
     const serializedUser = user.toJSON();
     delete serializedUser.password;

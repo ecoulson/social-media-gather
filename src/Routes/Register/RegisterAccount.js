@@ -6,7 +6,10 @@ router.post("/", async (req, res) => {
 });
 
 async function createUser(email) {
-    const user = new User({ email });
+    const user = new User({ 
+        email,
+    });
+    user.following.push(user.id);
     return await user.save();
 }
 

@@ -1,0 +1,36 @@
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    width: 25vw;
+    min-width: 300px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+#search-form {
+    width: 90%;
+}
+
+.search-input {
+    min-width: 300px;
+    padding: 10px 10px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid black;
+    font-size: 18px;
+    margin: 0;
+    width: 100%;
+}
+
+.search-input:hover {
+    border-bottom: 1px solid #4B6AB1;
+}
+
+.search-icon {
+    width: 25px;
+    position: absolute;
+    left: 0;
+}

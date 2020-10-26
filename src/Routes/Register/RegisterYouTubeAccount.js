@@ -46,16 +46,16 @@ router.post("/", requiresAuth(), async (req, res) => {
 
 async function registerAccount(user, channelId) {
     user.youtubeId = channelId;
-    createYoutubePosts(channelId);
-    registerWebhook(channelId);
+    createYoutubePosts(channelId, user.id);
+    registerWebhook(channelId, user.id);
     return await user.save();
 }
 
-async function registerWebhook(channelId) {
+async function registerWebhook(channelId, userId) {
     try {
         const webhookPostData = {
             "hub.mode": "subscribe",
-            "hub.callback": `${process.env.BASE_URL}/api/feed/youtube/callback?channelId=${channelId}`,
+            "hub.callback": `${process.env.BASE_URL}/api/feed/youtube/callback?userId=${userId}`,
             "hub.verify": "async",
             "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
         };
@@ -70,20 +70,22 @@ async function registerWebhook(channelId) {
     }
 }
 
-async function createYoutubePosts(channelId) {
+async function createYoutubePosts(channelId, userId) {
     try {
         const service = google.youtube('v3');
         const channel = await getChannelById(service, channelId);
         let uploadPage = await getUploadsPage(service, channel);
-        while (uploadPage.data.nextPageToken) {
+        let flag = true;
+        while (uploadPage.data.nextPageToken || flag) {
             let videoIds = uploadPage.data.items.map((item) => {
                 return item.contentDetails.videoId;
             });
             const videos = await getVideos(service, videoIds);
             await Promise.all(videos.data.items.map((video) => {
-                createVideoPost(video);
+                createVideoPost(video, userId);
             }));
             uploadPage = await getUploadsPage(service, channel, uploadPage.data.nextPageToken);
+            flag = false;
         }
     } catch (error) {
         console.log(error);
@@ -137,10 +139,10 @@ function getVideos(youtube, videoIds) {
     })
 }
 
-function createVideoPost(video) {
+function createVideoPost(video, userId) {
     const videoPost = new Post({
         type: "YOUTUBE_VIDEO",
-        userId: video.snippet.channelId,
+        userId: userId,
         timeCreated: video.snippet.publishedAt,
         youtubeVideo: {
             publishedAt: video.snippet.publishedAt,

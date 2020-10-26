@@ -21,7 +21,7 @@ export default function AccountSearch(props) {
             }
         }
         getResults()
-    }, [username])
+    }, [username, props.platform])
 
     return (
         <div className="account-container">

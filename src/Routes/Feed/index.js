@@ -30,7 +30,7 @@ router.post("/twitch/callback", async (req, res) => {
         const twitchLiveStreamPost = new Post({
             type: "TWITCH_STREAM",
             timeCreated: new Date(userLiveStreams[0].started_at),
-            userId: userLiveStreams[0].user_id,
+            userId: req.query.user_id,
             twitchStream: {
                 url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
                 live: true,
@@ -43,9 +43,9 @@ router.post("/twitch/callback", async (req, res) => {
         })
         await twitchLiveStreamPost.save();
     } else {
-        await Post.findOneAndUpdate({
+        await Post.findAndUpdate({
             "twitchStream.live": true,
-            userId: req.query.twitch_id
+            userId: req.query.user_id
         }, {
             $set: {
                 "twitchStream.live": false,
@@ -81,7 +81,7 @@ router.get("/youtube/callback", (req, res) => {
 router.post("/youtube/callback", XmlParser({trim: false, explicitArray: false}), async (req, res) => {
     const service = google.youtube('v3');
     const video = await getVideo(service, req.body.feed.entry["yt:videoid"]);
-    await createVideoPost(video);
+    await createVideoPost(video, req.query.userId);
     return res.status(200).send();
 });
 
@@ -100,10 +100,10 @@ function getVideo(youtube, videoId) {
     })
 }
 
-function createVideoPost(video) {
+function createVideoPost(video, userId) {
     const videoPost = new Post({
         type: "YOUTUBE_VIDEO",
-        userId: video.snippet.channelId,
+        userId: userId,
         timeCreated: video.snippet.publishedAt,
         youtubeVideo: {
             publishedAt: video.snippet.publishedAt,

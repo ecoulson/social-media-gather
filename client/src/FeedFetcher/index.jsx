@@ -5,12 +5,13 @@ import Feed from "../Feed";
 import { useEffect } from "react";
 import debounce from "../Library/debounce";
 
-export default function FeedFetcher() {
+export default function FeedFetcher(props) {
     const body = document.body;
     const html = document.documentElement;
     const originalHeight = getDocumentHeight(body, html)
     const [feed, setFeed] = useState([]);
-    const [index, setIndex] = useState(0)
+    const [index, setIndex] = useState(0);
+    const [reload, setReload] = useState(false);
 
     const onScroll = debounce(() => {
         const height = getDocumentHeight(body, html);
@@ -24,18 +25,33 @@ export default function FeedFetcher() {
         return function cleanup() {
             window.removeEventListener("scroll", onScroll)
         }
-    }, [])
+    }, [onScroll])
 
     useEffect(() => {
-        Axios.get(`/api/feed?offset=${index}`).then((response) => {
-            setFeed([...feed, ...response.data])
-        })
-    }, [index]);
+        async function getFeed() {
+            const response = await Axios.get(`${props.feedUrl}?offset=${index}`);
+            setFeed([...feed, ...response.data]);
+        }
+
+        if (reload) {
+            setIndex(0);
+            setFeed((prevState) => { 
+                return { feed } 
+            });
+            setReload(false);
+        } else {
+            getFeed();
+        }
+    }, [index, reload]);
+
+    useEffect(() => {
+        setReload(true);
+    }, [props.feedUrl])
     
     return <Feed feed={feed} />
 }
 
 function getDocumentHeight(body, html) {
-    return Math.max( body.scrollHeight, body.offsetHeight, 
-        html.clientHeight, html.scrollHeight, html.offsetHeight )
+    return Math.max(body.scrollHeight, body.offsetHeight, 
+        html.clientHeight, html.scrollHeight, html.offsetHeight)
 }

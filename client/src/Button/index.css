@@ -1,0 +1,41 @@
+.button-primary {
+    display: block;
+    border-radius: 10px;
+    background-color: transparent;
+    color: #4B6AB1;
+    border: 2px solid #4B6AB1;
+    padding: 10px 15px;
+    font-size: 16px;
+    transition: 0.25s ease all;
+    outline: none;
+    text-decoration: none;
+    text-align: center;
+}
+
+.button-danger {
+    color: #b14b4b;
+    border: 2px solid #b14b4b;
+}
+
+.button-primary:hover, .button-primary:focus {
+    color: white;
+    background-color: #4B6AB1;
+    cursor: pointer;
+}
+
+.button-danger:hover, .button-danger:focus {
+    background-color: #b14b4b
+}
+
+.button-alt {
+    display: block;
+    color: white;
+    border: 2px solid white;
+}
+
+.button-alt:hover, .button-alt:focus  {
+    color: #49392C;
+    background-color: white;
+    border: 2px solid #49392C;
+    cursor: pointer;
+}

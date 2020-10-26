@@ -1,0 +1,31 @@
+.profile-follow-button {
+    margin: 0 auto;
+    display: block;
+}
+
+.profile-username {
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.profile-splash-container {
+    padding-bottom: 20px;
+    margin: 20px auto;
+}
+
+#follow-button, #following-button {
+    margin: 0 auto;
+    display: block;
+    display: flex;
+    align-items: center;
+}
+
+.following-check {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+#following-button:hover {
+    content: "unfollow";
+}

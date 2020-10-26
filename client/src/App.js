@@ -1,36 +1,49 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
-import FeedFetcher from './FeedFetcher';
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
-import SignUp from './SignUp';
-import Login from './Login';
-import Logout from "./Logout"
-import Register from './Register';
+const SetupAccount = React.lazy(() => import('./SetupAccount'));
+const Login = React.lazy(() => import('./Login'));
+const Logout = React.lazy(() => import("./Logout"));
+const Register = React.lazy(() => import('./Register'));
+const Profile = React.lazy(() => import('./Profile'));
+const Layout = React.lazy(() => import('./Layout'));
+const Home = React.lazy(() => import('./Home'));
+const EditProfile = React.lazy(() => import('./EditProfile'));
 
 function App() {
 
   return (
     <Router>
 		<Switch>
-			<Route exact path="/">
-				<FeedFetcher />
-			</Route>
-			<Route exact path="/signup">
-				<SignUp />
-			</Route>
-			<Route exact path="/login">
-				<Login />
-			</Route>
-			<Route exact path="/logout">
-				<Logout />
-			</Route>
-			<Route exact path="/register">
-				<Register />
-			</Route>
+			<Suspense fallback={() => <Layout />}>
+				<Route exact path="/">
+					<Home />
+				</Route>
+				<Route exact path="/edit-profile">
+					<EditProfile />
+				</Route>
+				<Route exact path="/setup-account">
+					<SetupAccount />
+				</Route>
+				<Route exact path="/login">
+					<Login />
+				</Route>
+				<Route exact path="/logout">
+					<Logout />
+				</Route>
+				<Route exact path="/register">
+					<Register />
+				</Route>
+				<Route exact path="/profile/:username" render={(props) => (
+					<Layout>
+						<Profile {...props} />
+					</Layout>
+				)} />
+			</Suspense>
 		</Switch>
     </Router>
   );

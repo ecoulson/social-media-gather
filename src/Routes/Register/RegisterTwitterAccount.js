@@ -31,13 +31,13 @@ router.post("/", requiresAuth(), async (req, res) => {
 
 async function registerAccount(user, twitterId) {
     user.twitterId = twitterId;
-    await createTwitterPostsForUser(twitterId);
+    await createTwitterPostsForUser(twitterId, user.id);
     return await user.save();
 }
 
-async function createTwitterPostsForUser(twitterId) {
+async function createTwitterPostsForUser(twitterId, userId) {
     const tweets = await getTwitterPosts(twitterId);
-    await Promise.all(tweets.map((tweet) => createPostFromTweet(tweet)));
+    await Promise.all(tweets.map((tweet) => createPostFromTweet(tweet, userId)));
 }
 
 async function getTwitterPosts(twitterId) {
@@ -49,11 +49,11 @@ async function getTwitterPosts(twitterId) {
     return response.data;
 }
 
-async function createPostFromTweet(tweet) {
+async function createPostFromTweet(tweet, userId) {
     const post = new Post({
         type: "TWEET",
         timeCreated: new Date(tweet.created_at),
-        userId: tweet.user.id_str,
+        userId: userId,
         tweet: {
             id: tweet.id_str,
             text: tweet.full_text,

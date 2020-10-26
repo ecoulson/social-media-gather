@@ -1,7 +1,11 @@
 import Axios from "axios";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import Button from "../Button";
+import Form from "../Form";
 import { Input } from "../Input";
+import LoginLayout from "../LoginLayout";
+import "./index.css";
 
 export default function Register(props) {
     const [username, setUsername] = useState("");
@@ -18,11 +22,17 @@ export default function Register(props) {
     }
 
     return (
-        <div className="register">
-            <Input onChange={setUsername} placeholder="username" />
-            <Input onChange={setEmail} placeholder="email" />
-            <Input onChange={setPassword} placeholder="password" />
-            <button onClick={onRegister}>Register</button>
-        </div>
+        <LoginLayout>
+            <h2 className="register-title">Sign Up</h2>
+            <Form>
+                <Input alt label="username" onChange={setUsername} placeholder="username" />
+                <Input alt label="email" onChange={setEmail} placeholder="email" />
+                <Input alt label="password" type="password" onChange={setPassword} placeholder="password" />
+                <Button id="register-button" alt onClick={onRegister}>Register</Button>
+            </Form>
+            <p className="register-login-container">
+                Already have an account? Click <Link to="/login">here</Link> to login!
+            </p>
+        </LoginLayout>
     )
 }

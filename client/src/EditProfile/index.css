@@ -1,0 +1,14 @@
+.edit-profile-panel {
+    height: 500px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-profile-heading {
+    text-align: center;
+}
+
+#delete-profile, #update-profile {
+    margin: 20px auto;
+}

@@ -8,7 +8,7 @@ export default function Logout() {
     useEffect(() => {
         Cookie.eraseCookie("token");
         history.push("/");
-    }, []);
+    }, [history]);
 
     return (
         <div>

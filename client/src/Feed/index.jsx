@@ -1,38 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Post from "./Post";
+import Loader from "../Loader";
 import "./index.css";
-import isAuthenticated from "../Auth/IsAuthenticated";
-import { Link, useHistory } from "react-router-dom";
+import Panel from "../Panel";
 
 export default function Feed(props) {
-    const history = useHistory();
-    const [authenticated, setAuthenticated] = useState(false);
-
-    useEffect(() => {
-        async function checkAuthentication() {
-            if (!await isAuthenticated()) {
-                history.push("/login")
-                setAuthenticated(true)
-            }
-        }
-
-        checkAuthentication();
-    }, [])
+    if (props.feed.length === 0) {
+        return (
+            <div className="feed">
+                <Loader />
+            </div>
+        );
+    }
 
     return (
-        <div className="feed">
-            <h1 className="feed-title">Feed</h1>
-            <div className="feed-login">
-                {authenticated ? 
-                    <Link to="/login">Login</Link> :
-                    <Link to="/logout">Logout</Link>
-                }
-            </div>
+        <Panel className="feed">
             {
                 props.feed.map((post, i) => {
                     return <Post key={i} post={post} />
                 })
             }
-        </div>
+        </Panel>
     )
 }
