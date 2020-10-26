@@ -35,9 +35,7 @@ export default function FeedFetcher(props) {
 
         if (reload) {
             setIndex(0);
-            setFeed((prevState) => { 
-                return { feed } 
-            });
+            setFeed(feed);
             setReload(false);
         } else {
             getFeed();
