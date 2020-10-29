@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../Button";
 import Form from "../Form";
-import { Input } from "../Input";
-import LoginLayout from "../LoginLayout";
+import Input from "../Input";
 import "./index.css";
 
 export default function Register(props) {
@@ -22,7 +21,7 @@ export default function Register(props) {
     }
 
     return (
-        <LoginLayout>
+        <>
             <h2 className="register-title">Sign Up</h2>
             <Form>
                 <Input alt label="username" onChange={setUsername} placeholder="username" />
@@ -33,6 +32,6 @@ export default function Register(props) {
             <p className="register-login-container">
                 Already have an account? Click <Link to="/login">here</Link> to login!
             </p>
-        </LoginLayout>
+        </>
     )
 }

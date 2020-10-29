@@ -1,6 +1,5 @@
 .edit-profile-panel {
     height: 500px;
-    margin-top: 20px;
     display: flex;
     flex-direction: column;
 }

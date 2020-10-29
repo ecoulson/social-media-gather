@@ -74,7 +74,8 @@ function renderStreamThumbnail(post, load) {
 
 function renderStream(post) {
     return <ReactPlayer 
-                controls 
+                controls
+                className="twitch-stream-player" 
                 playing={true}
                 url={post.url} />
 }

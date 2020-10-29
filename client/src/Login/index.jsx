@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../Button";
 import Form from "../Form";
-import { Input } from "../Input";
+import Input from "../Input";
 import Cookie from "../Library/Cookie";
-import LoginLayout from "../LoginLayout";
 import "./index.css"
 
 export default function Login() {
@@ -26,7 +25,7 @@ export default function Login() {
     }
 
     return (
-        <LoginLayout>
+        <>
             <h2 className="login-title">Login</h2>
             <Form id="login-form" onSubmit={submit}>
                 <Input alt label="username" id="login-username" onChange={setUsername} />
@@ -36,6 +35,6 @@ export default function Login() {
             <p className="login-register-container">
                 Don't have an account yet? Click <Link to="/register">here</Link> to sign up!
             </p>
-        </LoginLayout>
+        </>
     )
 }

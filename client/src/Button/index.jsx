@@ -9,7 +9,7 @@ export default function Button(props) {
             className += " button-danger"
         }
         className += props.alt ? " button-alt" : "";
-        return className;
+        return className + " " + props.className;
     }
 
 

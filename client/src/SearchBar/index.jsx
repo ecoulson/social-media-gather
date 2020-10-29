@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Input } from "../Input";
+import Input from "../Input";
 import "./index.css";
 import SearchDropdown from "./SearchDropdown";
 import { ReactComponent as SearchIcon } from "../Assets/search.svg";
 import Form from "../Form";
 
-export default function SearchBar() {
+export default function SearchBar(props) {
     const history = useHistory();
     const [user, setUser] = useState("");
     
@@ -24,7 +24,7 @@ export default function SearchBar() {
                     onChange={setUser} 
                     placeholder="Search for users" />
             </Form>
-            <SearchDropdown username={user} />
+            <SearchDropdown onSelect={props.onSelect} username={user} />
         </div>
     )
 }

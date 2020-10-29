@@ -58,12 +58,12 @@ export default function Profile(props) {
     }
 
     return (
-        <div>
+        <>
             <Panel className="profile-splash-container">
                 <h1 className="profile-username">{user.username}</h1>
                 {renderFollowButton()}
             </Panel>
             <FeedFetcher feedUrl={`/api/users/get-user-posts/${user.username}`} />
-        </div>
+        </>
     )
 }

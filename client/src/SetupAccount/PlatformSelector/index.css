@@ -2,17 +2,42 @@
     width: 50px;
     height: 50px;
     padding: 10px;
+    transition: all 0.5s ease;;
+}
+
+.platform-icon-container {
+    position: relative;
+}
+
+.platform-icon-check {
+    position: absolute;
+    right: -7px;
+    bottom: -7px;
+    background-color: white;
+    border-radius: 100px;
+    width: 17px;
+    height: 17px;
+    border: 5px solid #4B6AB1;
+    padding: 3px;
+    color: #297a43;
+}
+
+.platform-icon:hover {
+    background-color: #4B6AB1;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .platform-selector {
-    width: 100%;
     display: flex;
     justify-content: space-evenly;
-    margin: 20px;
+    margin: 30px 20px;
+    box-sizing: border-box;
 }
 
 .platform-active {
-    background-color: black;
+    background-color: #4B6AB1;
     color: white;
     border-radius: 5px;
 }

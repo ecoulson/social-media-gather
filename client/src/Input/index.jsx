@@ -2,7 +2,7 @@ import React from "react";
 import { useRef } from "react";
 import "./index.css";
 
-export function Input(props) {
+export default function Input(props) {
     const containerRef = useRef();
 
     if (props.value && props.value.length > 0 && containerRef.current) {

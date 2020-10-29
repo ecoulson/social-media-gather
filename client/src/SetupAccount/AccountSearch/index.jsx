@@ -3,6 +3,7 @@ import Account from './Account';
 import Axios from "axios"
 import debounce from "../../Library/debounce";
 import "./index.css";
+import Input from '../../Input';
 
 export default function AccountSearch(props) {
     const [results, setResults] = useState([])
@@ -25,7 +26,7 @@ export default function AccountSearch(props) {
 
     return (
         <div className="account-container">
-            <input onChange={(event) => { handleChange(event, debouncedSetResults)}} placeholder="username" />
+            <Input onChange={(event) => { handleChange(event, debouncedSetResults)}} label="username" />
             <div className="account-search-results">
                 {results.map((result) => {
                     return <Account 
@@ -46,6 +47,6 @@ function handleAccountSelection(onAccountSelection) {
     }
 }
 
-function handleChange(event, setResults) {
-    setResults(event.target.value)
+function handleChange(value, setResults) {
+    setResults(value)
 }

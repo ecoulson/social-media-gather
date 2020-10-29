@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Button from "../Button";
 import Loader from "../Loader";
-import { Input } from "../Input";
-import Layout from "../Layout";
+import Input from "../Input";
 import Cookie from "../Library/Cookie";
 import Panel from "../Panel";
 import "./index.css";
@@ -63,10 +62,10 @@ export default function EditProfile() {
     }
 
     return (
-        <Layout>
+        <>
             <Panel className="edit-profile-panel">
                 {renderPanel()}
             </Panel>
-        </Layout>
+        </>
     )
 }  

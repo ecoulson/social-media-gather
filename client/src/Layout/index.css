@@ -8,4 +8,11 @@
     padding-top: 100px;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .layout {
+        padding-top: 0;
+    }
 }

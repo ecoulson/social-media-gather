@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import AccountSearch from "./AccountSearch";
 import PlatformSelector from "./PlatformSelector";
 import "./index.css"
-import EmailInput from "./EmailInput";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import Cookie from "../Library/Cookie";
 import isAuthenticated from "../Auth/IsAuthenticated";
+import Panel from "../Panel";
+import Button from "../Button";
 
 export default function SignUp() {
     const [platform, setPlatform] = useState("twitch")
     const [platformIdMap, setPlatformIdMap] = useState(new Map());
-    const [email, setEmail] = useState("");
     const history = useHistory();
 
     useEffect(() => {
@@ -24,18 +24,15 @@ export default function SignUp() {
     })
 
     return (
-        <div className="sign-up-container">
-            <h1 className="sign-up-title">Sign Up</h1>
-            <Link className="feed-link" to="/">Feed</Link>
-            <EmailInput onChange={setEmail} />
-            <button onClick={onRegister(platformIdMap, email)} className="register-button">Register</button>
-            <PlatformSelector onPlatformChange={onPlatformChange(setPlatform)} />
+        <Panel className="sign-up-container">
+            <Button onClick={onRegister(platformIdMap)} id="register-button">Register</Button>
+            <PlatformSelector platforms={platformIdMap} onPlatformChange={onPlatformChange(setPlatform)} />
             <AccountSearch onAccountSelection={onPlatformIdMap(platform, platformIdMap, setPlatformIdMap)} platform={platform} />
-        </div>
+        </Panel>
     )
 }
 
-function onRegister(platformIdMap, email) {
+function onRegister(platformIdMap) {
     return async () => {
         const registerRequests = [];
         platformIdMap.forEach((id, platform) => {

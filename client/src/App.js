@@ -5,6 +5,10 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import LoginLayout from './LoginLayout';
+import Loader from './Loader';
+import Panel from './Panel';
+import Me from './Me';
 const SetupAccount = React.lazy(() => import('./SetupAccount'));
 const Login = React.lazy(() => import('./Login'));
 const Logout = React.lazy(() => import("./Logout"));
@@ -18,33 +22,50 @@ function App() {
 
   return (
     <Router>
-		<Switch>
-			<Suspense fallback={() => <Layout />}>
+		<Suspense fallback={() => <Panel><Loader /></Panel>}>
+			<Switch>
 				<Route exact path="/">
-					<Home />
+					<Layout>
+						<Home />
+					</Layout>
+				</Route>
+				<Route exact path="/me">
+					<Layout>
+						<Me />
+					</Layout>
 				</Route>
 				<Route exact path="/edit-profile">
-					<EditProfile />
+					<Layout>
+						<EditProfile />
+					</Layout>
 				</Route>
 				<Route exact path="/setup-account">
-					<SetupAccount />
-				</Route>
-				<Route exact path="/login">
-					<Login />
-				</Route>
-				<Route exact path="/logout">
-					<Logout />
-				</Route>
-				<Route exact path="/register">
-					<Register />
+					<Layout>
+						<SetupAccount />
+					</Layout>
 				</Route>
 				<Route exact path="/profile/:username" render={(props) => (
 					<Layout>
 						<Profile {...props} />
 					</Layout>
 				)} />
-			</Suspense>
-		</Switch>
+				<Route exact path="/login">
+					<LoginLayout>
+						<Login />
+					</LoginLayout>
+				</Route>
+				<Route exact path="/logout">
+					<LoginLayout>
+						<Logout />
+					</LoginLayout>
+				</Route>
+				<Route exact path="/register">
+					<LoginLayout>
+						<Register />
+					</LoginLayout>
+				</Route>
+			</Switch>
+		</Suspense>
     </Router>
   );
 }

@@ -1,0 +1,36 @@
+.mobile-search-page {
+    position: fixed;
+    top: 100vh;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    z-index: 3;
+    transition: all 0.5s;
+}
+
+.mobile-search-page-active {
+    top: 0;
+}
+
+.mobile-close-model {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    font-size: 24px;
+    padding: 10px;
+    top: 0;
+    right: 0;
+    color: #5d5d61;
+    transition: 0.5s ease;
+    border-radius: 100px;
+    z-index: 500;
+}
+
+.mobile-close-model:hover {
+    background-color: #5d5d61;
+    color: black;
+}
