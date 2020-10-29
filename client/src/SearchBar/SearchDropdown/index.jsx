@@ -29,7 +29,9 @@ export default function SearchDropdown(props) {
 
     function onClick(username) {
         return () => {
-            props.onSelect();
+            if (props.onSelect) {
+                props.onSelect();
+            }
             search(username)
             hide();
         }
