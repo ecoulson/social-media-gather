@@ -7,7 +7,7 @@ router.get("/:username", requiresAuth(), async (req, res) => {
         username: {
             $regex: new RegExp(`${req.params.username}.*`, 'i')
         }
-    });
+    }).limit(10);
     return res.json(users.map((user) => {
         return {
             username: user.username,

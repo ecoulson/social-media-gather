@@ -57,7 +57,7 @@
     align-items: center;
 }
 
-@media (max-width: 1224px) {
+@media (max-width: 768px) {
     .search-dropdown {
         width: 100vw;
         box-shadow: none;

@@ -10,7 +10,7 @@
     margin: 0 auto;
 }
 
-@media (max-width: 1224px) {
+@media (max-width: 768px) {
     .search-bar-container {
         margin: 30px auto;
         width: 80vw;
