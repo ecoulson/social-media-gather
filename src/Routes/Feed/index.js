@@ -81,6 +81,9 @@ router.get("/youtube/callback", (req, res) => {
 router.post("/youtube/callback", XmlParser({trim: false, explicitArray: false}), async (req, res) => {
     const service = google.youtube('v3');
     const video = await getVideo(service, req.body.feed.entry["yt:videoid"]);
+    if (await Post.find({ "youtubeVideo.videoId": video.id})) {
+        return res.status(200).send();
+    }
     await createVideoPost(video, req.query.userId);
     return res.status(200).send();
 });
