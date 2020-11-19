@@ -97,7 +97,7 @@ setInterval(() => {
 
 setInterval(() => {
     TwitterRefreshJob();
-},  1000);
+}, 10 * 60 * 1000);
 
 app.listen(process.env.PORT, () => {
     console.log("Server is listening on 8080");
