@@ -37,6 +37,7 @@ const schema = new Schema({
         userName: String,
         thumbnailUrl: String,
         title: String,
+        streamId: String,
     },
     twitchVideo: {
         url: String,

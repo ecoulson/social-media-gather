@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Post = require('../../Models/Post');
+const Webhook = require('../../Models/Webhook');
 const requiresAuth = require("../../Middleware/RequiresAuth");
 const Axios = require("axios").default
 
@@ -51,18 +52,27 @@ async function registerAccount(user, twitchId) {
 
 async function registerWebhooks(accessToken, twitchId, userId) {
     try {
+        const leaseTime = 60 * 60 * 24 * 7;
+        const now = new Date();
+        const webhook = new Webhook({
+            expirationDate: now.setSeconds(now.getSeconds() + leaseTime),
+            platform: "twitch",
+            topicURL: `https://api.twitch.tv/helix/streams?user_id=${twitchId}`,
+            callbackURL: `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
+            userId: userId
+        });
         await Axios.post("https://api.twitch.tv/helix/webhooks/hub", {
-            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?twitch_id=${userId}`,
+            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
             "hub.mode": "subscribe",
-            "hub.lease_seconds": 864000,
-            "hub.secret": "bob",
+            "hub.lease_seconds": leaseTime,
             "hub.topic": `https://api.twitch.tv/helix/streams?user_id=${twitchId}`
         }, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
                 "Client-Id": process.env.TWITCH_CLIENT_ID
             }
-        })
+        });
+        await webhook.save();
     } catch (error) {
         console.log(error.response.data);
     }
@@ -79,6 +89,7 @@ async function createPostForLiveStream(accessToken, twitchId, userId) {
                 twitchStream: {
                     url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
                     live: true,
+                    streamId: userLiveStreams[0].id,
                     gameName: await getGameName(accessToken, userLiveStreams[0].game_id),
                     startedAt: new Date(userLiveStreams[0].started_at),
                     title: userLiveStreams[0].title,

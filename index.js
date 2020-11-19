@@ -7,7 +7,9 @@ const Routes = require("./src/");
 const bodyParser = require('body-parser');
 const morgan = require("morgan");
 const path = require("path");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const WebhookRefreshJob = require("./src/Jobs/WebhookRefreshJob");
+const TwitterRefreshJob = require("./src/Jobs/TwitterRefreshJob");
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"
@@ -28,7 +30,7 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
-  
+
 app.use(Routes);
 
 app.use("/", express.static(path.join(__dirname, 'client', 'build')));
@@ -82,6 +84,20 @@ async function getFacebookData() {
     });
     posts.push(...facebookPosts);
 }
+
+const threshold = new Date();
+threshold.setSeconds(24 * 60 * 60);
+WebhookRefreshJob(threshold);
+TwitterRefreshJob();
+setInterval(() => {
+    const threshold = new Date();
+    threshold.setSeconds(24 * 60 * 60);
+    WebhookRefreshJob(threshold);
+}, 12 * 60 * 60 * 1000)
+
+setInterval(() => {
+    TwitterRefreshJob();
+},  1000);
 
 app.listen(process.env.PORT, () => {
     console.log("Server is listening on 8080");

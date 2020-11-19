@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { google } = require("googleapis");
 const Post = require("../../Models/Post");
+const Webhook = require("../../Models/Webhook");
 const { default: Axios } = require("axios");
 const qs = require('querystring');
 const requiresAuth = require("../../Middleware/RequiresAuth");
@@ -53,20 +54,30 @@ async function registerAccount(user, channelId) {
 
 async function registerWebhook(channelId, userId) {
     try {
+        const leaseTime = 60 * 60 * 24 * 7;
+        const now = new Date();
         const webhookPostData = {
             "hub.mode": "subscribe",
             "hub.callback": `${process.env.BASE_URL}/api/feed/youtube/callback?userId=${userId}`,
             "hub.verify": "async",
             "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
         };
-        const response = await Axios.post(WebhookHubUrl, qs.stringify(webhookPostData), {
+        const webhook = new Webhook({
+            expirationDate: now.setSeconds(now.getSeconds() + leaseTime),
+            platform: "youtube",
+            topicURL: `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
+            callbackURL: `${process.env.BASE_URL}/api/feed/youtube/callback?userId=${userId}`,
+            userId: userId,
+            channelId: channelId
+        });
+        webhook.save();
+        await Axios.post(WebhookHubUrl, qs.stringify(webhookPostData), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         })
-        console.log(response.data);
     } catch (error) {
-        console.log(error.response.data);
+        console.log(error);
     }
 }
 

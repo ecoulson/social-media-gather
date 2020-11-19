@@ -1,46 +1,26 @@
-const router = require("express").Router();
-const Post = require('../../Models/Post');
-const requiresAuth = require("../../Middleware/RequiresAuth");
-const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
-const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+const Post = require("../Models/Post");
+const User = require("../Models/User");
 const axios = require("axios").default;
+const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
-const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN;
-
-router.get("/", async (req, res) => {
-    res.json(await getTwitterUsers(req.query.username));
-});
-
-async function getTwitterUsers(userHandle) {
-    const response = await axios.get(`${TwitterSearchEndpoint}?screen_name=${userHandle}`, {
-        headers: {
-            "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
-        }
-    });
-    const formattedUsers = response.data.map((user) => {
-        return {
-            id: user.id_str,
-            username: user.screen_name,
-            profilePicture: user.profile_image_url
-        }
-    })
-    return formattedUsers;
+async function getAllTwitterUsers() {
+    return (await User.find()).filter((user) => user.twitterId);
 }
 
-router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount(req.user, req.body.id));
-})
-
-async function registerAccount(user, twitterId) {
-    user.twitterId = twitterId;
-    await createTwitterPostsForUser(twitterId, user.id);
-    streamTweets(BEARER_TOKEN, twitterId);
-    return await user.save();
+async function updatePosts() {
+    const users = await getAllTwitterUsers();
+    await Promise.all(users.map(user => createTwitterPostsForUser(user.twitterId, user.id)));
 }
 
 async function createTwitterPostsForUser(twitterId, userId) {
     const tweets = await getTwitterPosts(twitterId);
-    await Promise.all(tweets.map((tweet) => createPostFromTweet(tweet, userId)));
+    await Promise.all(tweets.map(async (tweet) => {
+        if (await Post.findOne({ "tweet.id": tweet.id_str })) {
+            return Promise.resolve();
+        }
+        console.log(tweet);
+        return createPostFromTweet(tweet, userId);
+    }));
 }
 
 async function getTwitterPosts(twitterId) {
@@ -129,4 +109,4 @@ function getMedia(tweet) {
     }
 }
 
-module.exports = router;
+module.exports = updatePosts;

@@ -64,8 +64,8 @@ function renderStreamThumbnail(post, load) {
     let imageUrl = post.thumbnailUrl.replace("{width}", 640).replace("{height}", 360);
     return (
         <div onClick={load} className="twitch-stream-thumbnail">
-            <img alt="video thumbnail" className="twitch-stream-thumbnail-image" src={imageUrl} />
             <div className="twitch-stream-overlay" />
+            <img alt="video thumbnail" className="twitch-stream-thumbnail-image" src={imageUrl} />
             <span className="twitch-stream-live">Live</span>
             <Play className="twitch-stream-play" />
         </div>

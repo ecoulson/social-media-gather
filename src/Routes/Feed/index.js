@@ -24,14 +24,19 @@ router.get("/twitch/callback", (req, res) => {
 })
 
 router.post("/twitch/callback", async (req, res) => {
+    res.send("Ok").status(200);
     const userLiveStreams = req.body.data
     if (userLiveStreams.length === 1) {
         const tokePayload = await getTwitchAccessToken();
+        if (await Post.findOne({ "twitchStream.streamId": userLiveStreams[0].id})) {
+            return;
+        }
         const twitchLiveStreamPost = new Post({
             type: "TWITCH_STREAM",
             timeCreated: new Date(userLiveStreams[0].started_at),
             userId: req.query.user_id,
             twitchStream: {
+                streamId: userLiveStreams[0].id,
                 url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
                 live: true,
                 gameName: await getGameName(tokePayload.access_token, userLiveStreams[0].game_id),
@@ -40,10 +45,10 @@ router.post("/twitch/callback", async (req, res) => {
                 title: userLiveStreams[0].title,
                 thumbnailUrl: userLiveStreams[0].thumbnail_url
             }
-        })
+        });
         await twitchLiveStreamPost.save();
     } else {
-        await Post.findAndUpdate({
+        await Post.findOneAndUpdate({
             "twitchStream.live": true,
             userId: req.query.user_id
         }, {
@@ -51,7 +56,7 @@ router.post("/twitch/callback", async (req, res) => {
                 "twitchStream.live": false,
                 "twitchStream.endedAt": new Date()
             }
-        }).exec();
+        })
     }
     res.status(200).send();
 })
@@ -81,7 +86,7 @@ router.get("/youtube/callback", (req, res) => {
 router.post("/youtube/callback", XmlParser({trim: false, explicitArray: false}), async (req, res) => {
     const service = google.youtube('v3');
     const video = await getVideo(service, req.body.feed.entry["yt:videoid"]);
-    if (await Post.find({ "youtubeVideo.videoId": video.id})) {
+    if (await Post.findOne({ "youtubeVideo.videoId": video.id})) {
         return res.status(200).send();
     }
     await createVideoPost(video, req.query.userId);
