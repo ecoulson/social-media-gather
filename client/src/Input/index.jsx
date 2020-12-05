@@ -15,6 +15,7 @@ export default function Input(props) {
             type={props.type}
             onBlur={props.label ? handleBlur : undefined}
             onFocus={props.label ? handleFocus : undefined}
+            placeholder={props.placeholder ? props.placeholder : ""}
             id={props.id ? props.id : "default-input"}
             autoComplete="off"
             onKeyDown={props.onKeyDown ? props.onKeyDown : () => {}}

@@ -1,8 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import FeedLogin from "../../FeedLogin";
 import Logo from "../../Logo";
-import SearchBar from "../../SearchBar";
 import MobileSearchPage from "./MobileSearchPage";
 import "./index.css";
 import { useMediaQuery } from 'react-responsive';
@@ -22,17 +19,6 @@ export default function Navbar() {
     if (isDesktopOrLaptop) {
         return (
             <DesktopNavbar />
-            // <div className="navbar-desktop">
-            //     <div className="navbar-desktop-item">
-            //         <Link to="/"><Logo /></Link>
-            //     </div>
-            //     <div className="navbar-desktop-item">
-            //         <SearchBar />
-            //     </div>
-            //     <div className="navbar-desktop-item">
-            //         <FeedLogin />
-            //     </div>
-            // </div>
         )
     }
 

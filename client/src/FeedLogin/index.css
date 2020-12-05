@@ -9,15 +9,9 @@
     height: 50px;
     padding: 2px;
     border-radius: 100%;
-    border: 3px solid #4B6AB1;
-    fill: #4B6AB1;
+    border: 3px solid black;
+    fill: black;
     transition: 0.5s;
-}
-
-.profile-image:hover > svg {
-    fill: white;
-    cursor: pointer;
-    background-color: #4B6AB1;
 }
 
 .profile-dropdown {
@@ -29,7 +23,7 @@
     box-shadow: 0px 0px 3px 3px rgba(0,0,0, 0.25);
     box-sizing: border-box;
     padding: 10px;
-    top: 50px;
+    top: 70px;
     border-radius: 5px;
 }
 

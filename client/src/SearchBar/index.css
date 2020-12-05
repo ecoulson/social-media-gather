@@ -6,7 +6,6 @@
     position: relative;
     width: 25vw;
     min-width: 300px;
-    padding: 0 20px;
     margin: 0 auto;
     height: 75px;
 }
@@ -20,7 +19,7 @@
 }
 
 #search-form {
-    width: 90%;
+    width: 100%;
 }
 
 .search-input {
@@ -28,7 +27,7 @@
     padding: 10px 10px;
     outline: none;
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
     font-size: 18px;
     margin: 0;
     border-radius: 0px;
@@ -36,12 +35,11 @@
 }
 
 .search-input:hover {
-    border-bottom: 1px solid #4B6AB1;
+    border-bottom: 2px solid #4B6AB1;
 }
 
 .search-icon {
     width: 25px;
     position: absolute;
-    left: 0;
-    top: 12px;
+    right: 0;
 }
