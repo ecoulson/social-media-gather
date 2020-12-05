@@ -112,3 +112,4 @@ client/build
 tmp/
 
 credentials.json
+token.json
