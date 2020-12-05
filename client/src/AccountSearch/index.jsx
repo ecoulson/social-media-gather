@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Account from './Account';
 import Axios from "axios"
-import debounce from "../../Library/debounce";
+import debounce from "../Library/debounce";
 import "./index.css";
-import Input from '../../Input';
+import Input from '../Input';
 
 export default function AccountSearch(props) {
     const [results, setResults] = useState([])

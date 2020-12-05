@@ -8,7 +8,9 @@ import {
 import LoginLayout from './LoginLayout';
 import Loader from './Loader';
 import Panel from './Panel';
-import Me from './Me';
+const AddAccount = React.lazy(() => import('./AddAccount'));
+const Me = React.lazy(() => import('./Me'));
+const SearchPage = React.lazy(() => import('./SearchPage'));
 const SetupAccount = React.lazy(() => import('./SetupAccount'));
 const Login = React.lazy(() => import('./Login'));
 const Logout = React.lazy(() => import("./Logout"));
@@ -59,10 +61,20 @@ function App() {
 						<Logout />
 					</LoginLayout>
 				</Route>
+				<Route path="/search">
+					<Layout>
+						<SearchPage />
+					</Layout>
+				</Route>
 				<Route exact path="/register">
 					<LoginLayout>
 						<Register />
 					</LoginLayout>
+				</Route>
+				<Route path="/add-account">
+					<Layout>
+						<AddAccount />
+					</Layout>
 				</Route>
 			</Switch>
 		</Suspense>

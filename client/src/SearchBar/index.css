@@ -8,6 +8,7 @@
     min-width: 300px;
     padding: 0 20px;
     margin: 0 auto;
+    height: 75px;
 }
 
 @media (max-width: 768px) {

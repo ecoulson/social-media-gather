@@ -1,0 +1,62 @@
+.search-panel {
+    padding: 20px 10px;
+    margin: 20px auto;
+}
+
+.search-page-result {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    color: black;
+    margin: 10px 0;
+}
+
+.search-page-result:hover {
+    background-color: #e2e2ec;
+    border-radius: 25px;
+}
+
+.search-page-user {
+    width: 25px;
+    height: 25px;
+    padding: 5px 15px;
+    padding-right: 25px;
+}
+
+.search-page-user-info {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.search-page-user-platforms {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.search-page-user-platforms svg {
+    width: 25px;
+    height: 25px;
+    margin: 0 10px;
+}
+
+.search-page-user-name {
+    font-size: 24px;
+    margin: 0;
+}
+
+.search-panel-title {
+    text-align: center;
+}
+
+.search-panel-missing {
+    justify-content: center;
+    display: flex;
+    align-items: center;   
+}
+
+.search-panel-missing span {
+    margin-right: 10px;
+}

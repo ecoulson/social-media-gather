@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { ReactComponent as Twitch } from "../../Assets/twitch.svg";
-import { ReactComponent as YouTube } from "../../Assets/youtube.svg";
-import { ReactComponent as Twitter } from "../../Assets/twitter.svg";
-import { ReactComponent as Check } from "../../Assets/check.svg";
+import { ReactComponent as Twitch } from "../Assets/twitch.svg";
+import { ReactComponent as YouTube } from "../Assets/youtube.svg";
+import { ReactComponent as Twitter } from "../Assets/twitter.svg";
+import { ReactComponent as Check } from "../Assets/check.svg";
+import { ReactComponent as Instagram } from "../Assets/instagram.svg";
 import "./index.css";
 
 export default function PlatformSelector(props) {
-    console.log(props);
     const [platform, setPlatform] = useState("twitch")
 
     function renderPlatformUsed(id) {
@@ -27,8 +27,12 @@ export default function PlatformSelector(props) {
                 <YouTube id="platform-icon-youtube" onClick={handleChange("youtube", setPlatform, props.onPlatformChange)} className={getPlatformClass("youtube", platform)} />
             </div>
             <div className="platform-icon-container">
-            {renderPlatformUsed("twitter")}
+                {renderPlatformUsed("twitter")}
                 <Twitter id="platform-icon-twitter" onClick={handleChange("twitter", setPlatform, props.onPlatformChange)} className={getPlatformClass("twitter", platform)} />
+            </div>
+            <div className="platform-icon-container">
+                {renderPlatformUsed("instagram")}
+                <Instagram id="platform-icon-instagram" onClick={handleChange("instagram", setPlatform, props.onPlatformChange)} className={getPlatformClass("instagram", platform)} />
             </div>
         </div>
     )

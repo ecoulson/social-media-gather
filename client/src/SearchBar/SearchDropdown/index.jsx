@@ -14,7 +14,7 @@ export default function SearchDropdown(props) {
         async function getUsers() {
             if (props.username.length !== 0) {
                 const response = await Axios.get(`/api/users/search/${props.username}`);
-                setUsers(response.data);
+                setUsers(response.data.slice(0, 9));
             } else {
                 hide();
             }

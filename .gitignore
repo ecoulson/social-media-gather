@@ -107,3 +107,8 @@ dist
 
 # Client Buid;
 client/build
+
+#puppeteer
+tmp/
+
+credentials.json

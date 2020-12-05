@@ -6,6 +6,7 @@ const UserSchema = new Schema({
     twitterId: String,
     youtubeId: String,
     twitchId: String,
+    instagramId: String,
     email: String,
     password: String,
     username: String,

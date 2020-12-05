@@ -7,12 +7,16 @@ router.get("/:username", requiresAuth(), async (req, res) => {
         username: {
             $regex: new RegExp(`${req.params.username}.*`, 'i')
         }
-    }).limit(10);
+    });
     return res.json(users.map((user) => {
         return {
             username: user.username,
             id: user.id,
-            following: req.user.following.includes(user.id)
+            following: req.user.following.includes(user.id),
+            twitterId: user.twitterId,
+            twitchId: user.twitchId,
+            youtubeId: user.youtubeId,
+            instagramId: user.instagramId
         }
     }));
 })

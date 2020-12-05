@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
+const InstagramMedia = new Schema({
+    url: String,
+    type: String
+})
+
 const TwitterUrls = new Schema({
     displayUrl: String,
     url: String,
@@ -23,7 +28,7 @@ const TwitterMedia = new Schema({
 const schema = new Schema({
     type: {
         type: String,
-        enum: ["TWITCH_STREAM", "TWITCH_VIDEO", "YOUTUBE_VIDEO", "TWEET"],
+        enum: ["TWITCH_STREAM", "TWITCH_VIDEO", "YOUTUBE_VIDEO", "TWEET", "INSTAGRAM"],
         required: true
     },
     timeCreated: Date,
@@ -63,6 +68,14 @@ const schema = new Schema({
         urls: [TwitterUrls],
         userMentions: [TwitterUserMentions],
         media: [TwitterMedia]
+    },
+    instagram: {
+        takenAt: Date,
+        id: String,
+        likes: String,
+        caption: String,
+        media: [InstagramMedia],
+        thumbnail: InstagramMedia
     }
 })
 

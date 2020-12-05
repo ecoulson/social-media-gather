@@ -2,10 +2,10 @@ const router = require("express").Router();
 const Post = require('../../Models/Post');
 const requiresAuth = require("../../Middleware/RequiresAuth");
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
+const User = require("../../Models/User");
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 const axios = require("axios").default;
-
-const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN;
+const bigInt = require("big-integer");
 
 router.get("/", async (req, res) => {
     res.json(await getTwitterUsers(req.query.username));
@@ -29,12 +29,16 @@ async function getTwitterUsers(userHandle) {
 
 router.post("/", requiresAuth(), async (req, res) => {
     res.json(await registerAccount(req.user, req.body.id));
-})
+});
+
+router.post("/add", async (req, res) => {
+    const user = await User.findOne({ _id: req.body.userId });
+    res.json(await registerAccount(user, req.body.id))
+});
 
 async function registerAccount(user, twitterId) {
     user.twitterId = twitterId;
     await createTwitterPostsForUser(twitterId, user.id);
-    streamTweets(BEARER_TOKEN, twitterId);
     return await user.save();
 }
 
@@ -44,12 +48,41 @@ async function createTwitterPostsForUser(twitterId, userId) {
 }
 
 async function getTwitterPosts(twitterId) {
-    let response = await axios.get(`${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&count=200&tweet_mode=extended`, {
+    let response = await axios.get(`${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&count=200&tweet_mode=extended&exclude_replies=true`, {
         headers: {
             "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
         }
     });
-    return response.data;
+    const userResponse = await axios.get(`${TwitterSearchEndpoint}?user_id=${twitterId}`, {
+        headers: {
+            "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+        }
+    });
+    const user = userResponse.data[0];
+    let tweets = response.data;
+    while (tweets.length < user.statuses_count) {
+        console.log(getMinId(tweets));
+        response = await axios.get(
+            `${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&max_id=${getMinId(tweets)}&count=200&tweet_mode=extended&exclude_replies=true`, 
+        {
+            headers: {
+                "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+            }
+        });
+        tweets = tweets.concat(response.data);
+    }
+    console.log("here")
+    return tweets;
+}
+
+function getMinId(tweets) {
+    let minId = bigInt(tweets[0].id_str);
+    for (let i = 0; i < tweets.length; i++) {
+        if (bigInt(tweets[i].id_str).lt(minId)) {
+            minId = bigInt(tweets[i].id_str);
+        }
+    }
+    return minId;
 }
 
 async function createPostFromTweet(tweet, userId) {

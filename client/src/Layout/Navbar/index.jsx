@@ -10,6 +10,7 @@ import { ReactComponent as Search } from "../../Assets/search.svg";
 import { ReactComponent as User } from "../../Assets/user.svg";
 import Button from "../../Button";
 import { useState } from "react";
+import DesktopNavbar from "./DesktopNavbar";
 
 export default function Navbar() {
     const [showSearch, setShowSearch] = useState(false);
@@ -20,17 +21,18 @@ export default function Navbar() {
 
     if (isDesktopOrLaptop) {
         return (
-            <div className="navbar-desktop">
-                <div className="navbar-desktop-item">
-                    <Link to="/"><Logo /></Link>
-                </div>
-                <div className="navbar-desktop-item">
-                    <SearchBar />
-                </div>
-                <div className="navbar-desktop-item">
-                    <FeedLogin />
-                </div>
-            </div>
+            <DesktopNavbar />
+            // <div className="navbar-desktop">
+            //     <div className="navbar-desktop-item">
+            //         <Link to="/"><Logo /></Link>
+            //     </div>
+            //     <div className="navbar-desktop-item">
+            //         <SearchBar />
+            //     </div>
+            //     <div className="navbar-desktop-item">
+            //         <FeedLogin />
+            //     </div>
+            // </div>
         )
     }
 

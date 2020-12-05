@@ -17,7 +17,8 @@ export default function Input(props) {
             onFocus={props.label ? handleFocus : undefined}
             id={props.id ? props.id : "default-input"}
             autoComplete="off"
-            value={props.value ? props.value : undefined}
+            onKeyDown={props.onKeyDown ? props.onKeyDown : () => {}}
+            value={props.value === undefined ? props.value : undefined}
             onChange={handleChange(props.onChange)} />
     );
 

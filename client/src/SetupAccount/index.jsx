@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import AccountSearch from "./AccountSearch";
-import PlatformSelector from "./PlatformSelector";
+import AccountSearch from "../AccountSearch";
+import PlatformSelector from "../PlatformSelector";
 import "./index.css"
 import { useHistory } from "react-router-dom";
 import Axios from "axios";

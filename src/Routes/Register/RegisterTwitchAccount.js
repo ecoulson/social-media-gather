@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Post = require('../../Models/Post');
+const User = require("../../Models/User");
 const Webhook = require('../../Models/Webhook');
 const requiresAuth = require("../../Middleware/RequiresAuth");
 const Axios = require("axios").default
@@ -37,6 +38,11 @@ async function getTwitchAccessToken() {
 
 router.post("/", requiresAuth(), async (req, res) => {
     res.json(await registerAccount(req.user, req.body.id));
+})
+
+router.post("/add", async (req, res) => {
+    const user = await User.findOne({ _id: req.body.userId });
+    res.json(await registerAccount(user, req.body.id))
 })
 
 async function registerAccount(user, twitchId) {

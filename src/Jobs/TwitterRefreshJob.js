@@ -18,7 +18,6 @@ async function createTwitterPostsForUser(twitterId, userId) {
         if (await Post.findOne({ "tweet.id": tweet.id_str })) {
             return Promise.resolve();
         }
-        console.log(tweet);
         return createPostFromTweet(tweet, userId);
     }));
 }

@@ -20,6 +20,7 @@ export default function Feed(props) {
                     return <Post key={i} post={post} />
                 })
             }
+            <Loader />
         </Panel>
     )
 }

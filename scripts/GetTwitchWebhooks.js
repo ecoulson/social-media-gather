@@ -19,7 +19,6 @@ async function getWebhooks() {
                 authorization: `Bearer ${payload.access_token}`
             }
         });
-        console.log(response.data);
     } catch (error) {
         console.log(error);
     }

@@ -8,15 +8,16 @@ import debounce from "../Library/debounce";
 export default function FeedFetcher(props) {
     const body = document.body;
     const html = document.documentElement;
-    const originalHeight = getDocumentHeight(body, html)
     const [feed, setFeed] = useState([]);
+    const [originalHeight, setHeight] = useState(0);
     const [index, setIndex] = useState(0);
-    const [reload, setReload] = useState(false);
+    console.log(props.feedUrl);
 
     const onScroll = debounce(() => {
         const height = getDocumentHeight(body, html);
         if (window.scrollY + originalHeight > height - 500) {
             setIndex(index => index + 20);
+            getFeed();
         }            
     }, 250)
 
@@ -27,26 +28,34 @@ export default function FeedFetcher(props) {
         }
     }, [onScroll])
 
-    useEffect(() => {
-        async function getFeed() {
-            const response = await Axios.get(`${props.feedUrl}?offset=${index}`);
-            setFeed([...feed, ...response.data]);
-        }
+    async function getFeed() {
+        const response = await Axios.get(`${props.feedUrl}?offset=${index}`);
+        console.log(response);
+        setFeed([...feed, ...response.data]);
+    }
 
-        if (reload) {
-            setIndex(0);
-            setFeed([]);
-            setReload(false);
-        } else {
+    useEffect(() => {
+        getFeed();
+        setHeight(getDocumentHeight(body, html));
+    }, [])
+    
+    useEffect(() => {
+        setIndex(0);
+        setFeed([]);
+        setHeight(getDocumentHeight(body,html));
+    }, [props.feedUrl])
+
+    useEffect(() => {
+        if (feed === []) {
             getFeed();
         }
-    }, [index, reload]);
+    }, [feed])
 
-    useEffect(() => {
-        setReload(true);
-    }, [props.feedUrl])
-    
-    return <Feed feed={feed} />
+    return (
+        <>
+            <Feed feed={feed} />
+        </>
+    );
 }
 
 function getDocumentHeight(body, html) {

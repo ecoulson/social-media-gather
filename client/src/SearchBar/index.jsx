@@ -11,7 +11,8 @@ export default function SearchBar(props) {
     const [user, setUser] = useState("");
     
     function search() {
-        history.push(`/profile/${user}`)
+        setUser(() => "");
+        history.push(`/search?query=${user}`)
     }
 
     return (
@@ -21,6 +22,7 @@ export default function SearchBar(props) {
                 <Input 
                     className="search-input" 
                     type="text"
+                    value={user}
                     onChange={setUser} 
                     placeholder="Search for users" />
             </Form>

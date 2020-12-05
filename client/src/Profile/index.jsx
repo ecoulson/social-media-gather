@@ -17,12 +17,12 @@ export default function Profile(props) {
     
     useEffect(() => {
         async function checkAuthenticated() {
-            if (!await isAuthenticated()) {
-                history.push('/')
-            } else {
-                const response = await Axios.get(`/api/users/get-by-username/${props.match.params.username}`);
-                setUser(response.data);
-            }
+            // if (!await isAuthenticated()) {
+                // history.push('/')
+            // } else {
+            const response = await Axios.get(`/api/users/get-by-username/${props.match.params.username}`);
+            setUser(response.data);
+            // }
         }
 
         async function isFollowing() {
@@ -56,7 +56,7 @@ export default function Profile(props) {
         }
         return <Button innerRef={followButton} id="follow-button" onClick={follow}>Follow</Button>;
     }
-
+    console.log(user.username)
     return (
         <>
             <Panel className="profile-splash-container">

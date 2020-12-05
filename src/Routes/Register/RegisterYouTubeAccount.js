@@ -3,6 +3,7 @@ const { google } = require("googleapis");
 const Post = require("../../Models/Post");
 const Webhook = require("../../Models/Webhook");
 const { default: Axios } = require("axios");
+const User = require("../../Models/User");
 const qs = require('querystring');
 const requiresAuth = require("../../Middleware/RequiresAuth");
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
@@ -43,6 +44,11 @@ function searchChannelsByUsername(username, service) {
 
 router.post("/", requiresAuth(), async (req, res) => {
     res.json(await registerAccount(req.user, req.body.id));
+})
+
+router.post("/add", async (req, res) => {
+    const user = await User.findOne({ _id: req.body.userId });
+    res.json(await registerAccount(user, req.body.id))
 })
 
 async function registerAccount(user, channelId) {

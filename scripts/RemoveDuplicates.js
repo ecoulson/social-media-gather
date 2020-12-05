@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
 
 async function main() {
     const mediaIdMapping = new Map();
-    const medias = ["twitch", "youtube", "twitter"];
+    const medias = ["twitch", "youtube", "twitter", "instagram"];
 
     medias.forEach((media) => {
         mediaIdMapping.set(media, new Set());
@@ -30,6 +30,24 @@ async function main() {
                 deleteTasks.push(Posts.findByIdAndDelete(post.id));
             } else {
                 ids.add(post.youtubeVideo.videoId)
+            }
+        } else if (post.twitchStream) {
+            
+        } else if (post.twitchVideo) {
+
+        } else if (post.instagram) {
+            const ids = mediaIdMapping.get("instagram");
+            if (ids.has(post.instagram.id)) {
+                deleteTasks.push(Posts.findByIdAndDelete(post.id));
+            } else {
+                ids.add(post.instagram.id)
+            }
+        } else {
+            const ids = mediaIdMapping.get("twitter");
+            if (ids.has(post.tweet.id)) {
+                deleteTasks.push(Posts.findByIdAndDelete(post.id));
+            } else {
+                ids.add(post.tweet.id)
             }
         }
     });
