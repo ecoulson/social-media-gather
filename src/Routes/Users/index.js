@@ -7,6 +7,7 @@ const SearchUsers = require("./SearchUsers");
 const IsFollowing = require("./IsFollowing");
 const DeleteUser = require("./DeleteUser");
 const UpdateUser = require("./UpdateUser");
+const GetUserById = require("./GetUserById");
 
 router.use("/get-by-username", GetUserByUsernameRoute);
 router.use("/get-user-posts", GetUserPosts);
@@ -16,5 +17,6 @@ router.use("/search", SearchUsers);
 router.use("/is-following", IsFollowing);
 router.use("/delete", DeleteUser);
 router.use("/update", UpdateUser);
+router.use("/get-by-id", GetUserById);
 
 module.exports = router;

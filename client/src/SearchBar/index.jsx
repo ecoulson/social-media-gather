@@ -19,7 +19,7 @@ export default function SearchBar(props) {
         }
 
         getPlaceholder();
-        setInterval(getPlaceholder, 10*1000);
+        setInterval(getPlaceholder, 60*1000);
     }, [])
 
     function search() {

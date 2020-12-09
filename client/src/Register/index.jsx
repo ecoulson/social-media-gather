@@ -24,9 +24,9 @@ export default function Register(props) {
         <>
             <h2 className="register-title">Sign Up</h2>
             <Form>
-                <Input alt label="username" onChange={setUsername} placeholder="username" />
-                <Input alt label="email" onChange={setEmail} placeholder="email" />
-                <Input alt label="password" type="password" onChange={setPassword} placeholder="password" />
+                <Input alt label="username" onChange={setUsername} />
+                <Input alt label="email" onChange={setEmail} />
+                <Input alt label="password" type="password" onChange={setPassword} />
                 <Button id="register-button" alt onClick={onRegister}>Register</Button>
             </Form>
             <p className="register-login-container">
