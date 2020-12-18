@@ -3,15 +3,15 @@ import styled from "@emotion/styled";
 import React from "react";
 import AddCreatorButton from "./AddCreatorButton";
 
-const Section = styled(GridItem)`
+const AddCreatorSection = styled(GridItem)`
 grid-area: add-creator;
 box-sizing: border-box;
 `;
 
-export default function AddCreatorSection() {
+export default () => {
     return (
-        <Section>
+        <AddCreatorSection>
             <AddCreatorButton />
-        </Section>
+        </AddCreatorSection>
     )
 }

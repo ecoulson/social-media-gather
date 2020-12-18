@@ -3,7 +3,11 @@ import React from "react";
 import styled from "@emotion/styled";
 import CollapseButton from "./CollapseButton";
 
-const StyledHeader = styled(Text)`
+const FollowedCreatorsHeaderLayout = styled(GridItem)`
+grid-area: header;
+`;
+
+const FollowedCreatorsHeader = styled(Text)`
 position: relative;
 font-size: 24px;
 display: flex;
@@ -11,13 +15,12 @@ align-items: center;
 font-weight: 700;
 `;
 
-export default function FollowedCreatorsHeader() {
+export default () => {
     return (
-        <GridItem gridArea="header">
-            <StyledHeader>
-                Followed Creators: 
-                <CollapseButton />
-            </StyledHeader>
-        </GridItem>
+        <FollowedCreatorsHeaderLayout>
+            <FollowedCreatorsHeader>
+                Followed Creators: <CollapseButton />
+            </FollowedCreatorsHeader>
+        </FollowedCreatorsHeaderLayout>
     )
 }

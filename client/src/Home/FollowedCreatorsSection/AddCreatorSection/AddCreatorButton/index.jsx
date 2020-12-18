@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { FaPlus } from 'react-icons/fa';
 
-const CreatorButton = styled(Button)`
+const AddCreatorButton = styled(Button)`
 width: 100%;
 padding: 30px 5px;
 background-color: white;
@@ -19,11 +19,11 @@ position: absolute;
 left: 25px;
 `
 
-export default function AddCreatorButton() {
+export default () => {
     return (
-        <CreatorButton>
+        <AddCreatorButton>
             <PlusIcon as={FaPlus} />
             <Text>Add your favorite creator!</Text>
-        </CreatorButton>
+        </AddCreatorButton>
     )
 }

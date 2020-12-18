@@ -2,13 +2,13 @@ import { Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 
-const StyledText = styled(Text)`
+const CreatorName = styled(Text)`
 font-size: 18px;
 font-weight: 600;
 `;
 
-export default function CreatorName({user}) {
+export default ({user}) => {
     return (
-        <StyledText>{user.username}</StyledText>
+        <CreatorName>{user.username}</CreatorName>
     )
 }

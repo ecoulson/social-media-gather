@@ -1,15 +1,8 @@
-import { Avatar, Link, Spacer } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import { Avatar, Spacer } from "@chakra-ui/react";
 import React from "react";
+import CreatorContainer from "./CreatorContainer";
 import CreatorDetails from "./CreatorDetails";
 import CreatorFollowers from "./CreatorFollowers";
-
-const CreatorContainer = styled(Link)`
-margin: 5px 0;
-padding: 5px;
-align-items: center;
-display: flex;
-`
 
 export default function Creator({user}) {
     return (

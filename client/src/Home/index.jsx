@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import isAuthenticated from "../Auth/IsAuthenticated";
 import FeedFetcher from "../FeedFetcher";
+import Feed from "./Feed";
 import FollowedCreatorsSection from "./FollowedCreatorsSection";
 import HomeLayout from "./HomeLayout";
 import "./index.css";
@@ -23,7 +24,7 @@ export default function Home() {
     return (
         <HomeLayout>
             <FollowedCreatorsSection />
-            <FeedFetcher feedUrl="/api/feed" />
+            <Feed />
         </HomeLayout>
     )
 }

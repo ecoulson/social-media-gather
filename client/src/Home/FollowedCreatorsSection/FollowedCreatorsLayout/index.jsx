@@ -2,6 +2,11 @@ import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
+const FollowedCreatorsLayout = styled(GridItem)`
+max-height: calc(100vh - 75px);
+grid-area: followed;
+`
+
 const GridLayout = styled(Grid)`
 grid-template-rows: 50px auto 60px;
 height: calc(100vh - 75px);
@@ -14,12 +19,12 @@ grid-template-areas:
     "add-creator";
 `;
 
-export default function FollowedCreatorsLayout(props) {
+export default ({children}) => {
     return (
-        <GridItem maxHeight="calc(100vh - 75px)" gridArea="followed">
+        <FollowedCreatorsLayout>
             <GridLayout>
-                {props.children}
+                {children}
             </GridLayout>
-        </GridItem>
+        </FollowedCreatorsLayout>
     );
 }
