@@ -9,8 +9,8 @@ import Layout from "./Layout";
 export default () => {
     return (
         <Layout>
-            <PostIcon type={MediaIconType.INSTAGRAM} />
-            <Author author="Text" />
+            <PostIcon type={MediaIconType.YOUTUBE} />
+            <Author author="FNG" />
             <Time date={Date.now()} />
             <MoreIcon />
         </Layout>

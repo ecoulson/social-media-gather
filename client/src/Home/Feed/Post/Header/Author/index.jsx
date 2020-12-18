@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import React from "react"
 
 const Author = styled(Text)`
-font-weight: 600;
+font-weight: 800;
 font-size: 20px;
 `
 

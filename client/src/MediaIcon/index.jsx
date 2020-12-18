@@ -11,7 +11,7 @@ width: ${props => {
     return props.width ? props.width : 26
 }}px;
 height: ${props => props.height ? props.height : 26}px;
-padding: 3px;
+padding: 5px;
 border-radius: 100px;
 `;
 
