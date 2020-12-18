@@ -1,7 +1,7 @@
 import React from "react";
 import CreatorMediaContainer from "./CreatorMediaContainer";
-import MediaIcon from "./MediaIcon";
-import MediaIconType from "./MediaIcon/Type";
+import MediaIcon from "../../../../../MediaIcon";
+import MediaIconType from "../../../../../MediaIcon/Type";
 
 export default function CreatorMedias(props) {
     function renderMedias() {

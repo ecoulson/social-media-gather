@@ -1,17 +1,18 @@
 import React from "react";
-import { Flex } from "@chakra-ui/react";
-import styled from "@emotion/styled";
-import MediaIcon from "../../../../MediaIcon";
+import Author from "./Author";
+import Time from "./Time";
+import MoreIcon from "./MoreIcon";
+import PostIcon from "./PostIcon";
 import MediaIconType from "../../../../MediaIcon/Type";
-
-const FeedPostHeading = styled(Flex)`
-
-`;
+import Layout from "./Layout";
 
 export default () => {
     return (
-        <FeedPostHeading>
-            <MediaIcon height={50} width={50} type={MediaIconType.INSTAGRAM} />
-        </FeedPostHeading>
+        <Layout>
+            <PostIcon type={MediaIconType.INSTAGRAM} />
+            <Author author="Text" />
+            <Time date={Date.now()} />
+            <MoreIcon />
+        </Layout>
     )
 };
