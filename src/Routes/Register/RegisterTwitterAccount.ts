@@ -1,4 +1,4 @@
-import router from "express";
+import { Router } from "express";
 import Post from "../../Models/Post";
 import requiresAuth from "../../Middleware/RequiresAuth";
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
@@ -6,18 +6,19 @@ import User from "../../Models/User";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 import axios from "axios";
 import bigInt from "big-integer";
+const router = Router();
 
 router.get("/", async (req, res) => {
-    res.json(await getTwitterUsers(req.query.username));
+    res.json(await getTwitterUsers(req.query.username as string));
 });
 
-async function getTwitterUsers(userHandle) {
+async function getTwitterUsers(userHandle : string) {
     const response = await axios.get(`${TwitterSearchEndpoint}?screen_name=${userHandle}`, {
         headers: {
             "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
         }
     });
-    const formattedUsers = response.data.map((user) => {
+    const formattedUsers = response.data.map((user : any) => {
         return {
             id: user.id_str,
             username: user.screen_name,
@@ -28,7 +29,7 @@ async function getTwitterUsers(userHandle) {
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount(req.user, req.body.id));
+    res.json(await registerAccount((req as any).user, req.body.id));
 });
 
 router.post("/add", async (req, res) => {
@@ -36,18 +37,18 @@ router.post("/add", async (req, res) => {
     res.json(await registerAccount(user, req.body.id))
 });
 
-async function registerAccount(user, twitterId) {
+async function registerAccount(user : any, twitterId : string) {
     user.twitterId = twitterId;
     await createTwitterPostsForUser(twitterId, user.id);
     return await user.save();
 }
 
-async function createTwitterPostsForUser(twitterId, userId) {
+async function createTwitterPostsForUser(twitterId : string, userId : string) {
     const tweets = await getTwitterPosts(twitterId);
-    await Promise.all(tweets.map((tweet) => createPostFromTweet(tweet, userId)));
+    await Promise.all(tweets.map((tweet : any) => createPostFromTweet(tweet, userId)));
 }
 
-async function getTwitterPosts(twitterId) {
+async function getTwitterPosts(twitterId : string) {
     let response = await axios.get(`${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&count=200&tweet_mode=extended&exclude_replies=true`, {
         headers: {
             "Authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
@@ -75,7 +76,7 @@ async function getTwitterPosts(twitterId) {
     return tweets;
 }
 
-function getMinId(tweets) {
+function getMinId(tweets : any[]) {
     let minId = bigInt(tweets[0].id_str);
     for (let i = 0; i < tweets.length; i++) {
         if (bigInt(tweets[i].id_str).lt(minId)) {
@@ -85,7 +86,7 @@ function getMinId(tweets) {
     return minId;
 }
 
-async function createPostFromTweet(tweet, userId) {
+async function createPostFromTweet(tweet : any, userId : string) {
     const post = new Post({
         type: "TWEET",
         timeCreated: new Date(tweet.created_at),
@@ -95,7 +96,7 @@ async function createPostFromTweet(tweet, userId) {
             text: tweet.full_text,
             publishedAt: new Date(tweet.created_at),
             screenName: tweet.user.screen_name,
-            hashtags: tweet.entities.hashtags.map((hashtag) => hashtag.text),
+            hashtags: tweet.entities.hashtags.map((hashtag : any) => hashtag.text),
             urls: getUrls(tweet),
             userMentions: getUserMentions(tweet),
             media: getMedia(tweet)
@@ -104,11 +105,11 @@ async function createPostFromTweet(tweet, userId) {
     return post.save();
 }
 
-function getUrls(tweet) {
+function getUrls(tweet : any) {
     if (!tweet.entities.urls) {
         return [];
     }
-    return tweet.entities.urls.map((url) => {
+    return tweet.entities.urls.map((url : any) => {
         return {
             url: url.url,
             expandedUrl: url.expanded_url,
@@ -117,11 +118,11 @@ function getUrls(tweet) {
     })
 }
 
-function getUserMentions(tweet) {
+function getUserMentions(tweet : any) {
     if (!tweet.entities.user_mentions) {
         return [];
     }
-    return tweet.entities.user_mentions.map((userMention) => {
+    return tweet.entities.user_mentions.map((userMention : any) => {
         return {
             id: userMention.id_str,
             screenName: userMention.screen_name
@@ -129,14 +130,14 @@ function getUserMentions(tweet) {
     })
 }
 
-function getMedia(tweet) {
+function getMedia(tweet: any) {
     if (tweet.extended_entities && tweet.extended_entities.media) {
-        return tweet.extended_entities.media.map((media) => {
+        return tweet.extended_entities.media.map((media : any) => {
             let mediaUrl = media.media_url;
             if (media.video_info) {
                 const sortedVariants = media.video_info.variants
-                    .filter((variant) => variant.bitrate)
-                    .sort((a, b) => a.bitrate - b.bitrate);
+                    .filter((variant : any) => variant.bitrate)
+                    .sort((a : any, b : any) => a.bitrate - b.bitrate);
                 if (sortedVariants[sortedVariants.length - 1]) {
                     mediaUrl = sortedVariants[sortedVariants.length - 1].url;
                 }
@@ -149,7 +150,7 @@ function getMedia(tweet) {
             }
         })
     } else if (tweet.entities && tweet.entities.media) {
-        return tweet.entities.media.map((media) => {
+        return tweet.entities.media.map((media : any) => {
             return {
                 id: media.id_str,
                 thumbnailUrl: media.media_url,

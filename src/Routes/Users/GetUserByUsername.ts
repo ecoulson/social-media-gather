@@ -1,6 +1,8 @@
-import router from "express";
+import { Router } from "express";
 import requiresAuth from "../../Middleware/RequiresAuth";
 import User from "../../Models/User";
+
+const router = Router();
 
 router.get('/:username', requiresAuth(), async (req, res) => {
     const user = await User.findOne({ 

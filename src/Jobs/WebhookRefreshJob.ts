@@ -2,14 +2,14 @@ import Axios from "axios";
 import Webhook from "../Models/Webhook";
 import qs from "querystring";
 
-async function WebhookRefreshJob(thresholdDate) {
+async function WebhookRefreshJob(thresholdDate : Date) {
     const accessToken = await getTwitchAccessToken();
     const webhooks = await getWebhooksInThreshold(thresholdDate);
     await cancel(webhooks, accessToken.access_token);
     await renew(webhooks, accessToken.access_token);
 }
 
-async function getWebhooksInThreshold(thresholdDate) {
+async function getWebhooksInThreshold(thresholdDate : Date) {
     const webhooks = await Webhook.find({
         expirationDate: {
             $lte: thresholdDate
@@ -19,7 +19,7 @@ async function getWebhooksInThreshold(thresholdDate) {
     return webhooks;
 }
 
-async function renew(webhooks, accessToken) {
+async function renew(webhooks : any[], accessToken : any) {
     webhooks.forEach(async (webhook) => {
         const leaseTime = 60 * 60 * 24 * 7;
         const now = new Date();
@@ -60,7 +60,7 @@ async function renew(webhooks, accessToken) {
     })
 }
 
-async function cancel(webhooks, accessToken) {
+async function cancel(webhooks : any[], accessToken : any) {
     webhooks.forEach(async (webhook) => {
         switch (webhook.platform) {
             case "twitch":

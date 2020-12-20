@@ -1,5 +1,7 @@
-import router from "express";
+import { Router } from "express";
 import User from "../../Models/User";
+
+const router = Router();
 
 router.get("/:id", async (req, res) => {
     const user = await User.findById(req.params.id);

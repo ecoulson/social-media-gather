@@ -1,7 +1,9 @@
-import router from "express";
+import { Router } from "express";
 import bcrypt from "bcrypt";
 import User from "../../Models/User";
 import jsonwebtoken from "jsonwebtoken";
+
+const router = Router();
 
 router.post("/", async (req, res) => {
     const user = await User.findOne({ username: req.body.username });
@@ -11,9 +13,11 @@ router.post("/", async (req, res) => {
         })
     }
     if (await bcrypt.compare(req.body.password, user.password)) {
-        const options = {};
+        const options = {
+            expiresIn: undefined
+        };
         if (!req.body.rememberMe) {
-            options["expiresIn"] = "1d"
+            options.expiresIn = "1d"
         }
         const token = jsonwebtoken.sign({ id: user.id }, process.env.AUTH_SECRET, options)
         return res.json({

@@ -4,12 +4,12 @@ import axios from "axios";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {
-    return (await User.find()).filter((user) => user.twitterId);
+    return (await User.find()).filter((user : any) => user.twitterId);
 }
 
 async function updatePosts() {
     const users = await getAllTwitterUsers();
-    await Promise.all(users.map(user => createTwitterPostsForUser(user.twitterId, user.id)));
+    await Promise.all(users.map((user : any)=> createTwitterPostsForUser(user.twitterId, user.id)));
 }
 
 async function createTwitterPostsForUser(twitterId, userId) {

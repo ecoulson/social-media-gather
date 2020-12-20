@@ -1,6 +1,8 @@
-import router from "express";
+import { Router } from "express";
 import bcrypt from "bcrypt";
 import User from "../../Models/User";
+
+const router = Router();
 
 router.post("/", async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -19,7 +21,7 @@ router.post("/", async (req, res) => {
         password: hashedPassword,
         email: req.body.email,
         username: req.body.username
-    });
+    }) as any;
     user.following = [user.id]
     await user.save();
     const serializedUser = user.toJSON();

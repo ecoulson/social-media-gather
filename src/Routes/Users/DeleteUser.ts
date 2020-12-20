@@ -1,9 +1,11 @@
 import requiresAuth from "../../Middleware/RequiresAuth";
-import router from "express";
+import { Router } from "express";
 import User from "../../Models/User";
 
+const router = Router();
+
 router.delete("/", requiresAuth(), async (req, res) => {
-    await User.findByIdAndDelete(req.user.id);
+    await User.findByIdAndDelete((req as any).user.id);
     res.send("deleted");
 });
 

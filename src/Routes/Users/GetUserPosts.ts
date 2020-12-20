@@ -1,12 +1,14 @@
-import router from "express";
+import { Router } from "express";
 import User from "../../Models/User";
 import Post from "../../Models/Post";
+
+const router = Router();
 
 router.get("/:username", async (req, res) => {
     const user = await User.findOne({ username: req.params.username });
     const posts = await Post.find({ 
         userId: user.id
-    }).skip(parseInt(req.query.offset)).limit(20).sort({ timeCreated: -1 });
+    }).skip(parseInt(req.query.offset as string)).limit(20).sort({ timeCreated: -1 });
     res.json(posts);
 })
 

@@ -1,9 +1,11 @@
 import requiresAuth from "../../Middleware/RequiresAuth";
-import router from "express";
+import { Router } from "express";
+
+const router = Router();
 
 router.put("/", requiresAuth(), async (req, res) => {
-    req.user.email = req.body.email;
-    await req.user.save();
+    (req as any).user.email = req.body.email;
+    await (req as any).user.save();
     res.send("updated");
 })
 

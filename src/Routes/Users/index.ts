@@ -1,4 +1,4 @@
-import router from "express";
+import { Router } from "express";
 import GetUserByUsernameRoute from "./GetUserByUsername";
 import GetUserPosts from "./GetUserPosts";
 import FollowUser from "./FollowUser";
@@ -8,6 +8,8 @@ import IsFollowing from "./IsFollowing";
 import DeleteUser from "./DeleteUser";
 import UpdateUser from "./UpdateUser";
 import GetUserById from "./GetUserById";
+
+const router = Router();
 
 router.use("/get-by-username", GetUserByUsernameRoute);
 router.use("/get-user-posts", GetUserPosts);

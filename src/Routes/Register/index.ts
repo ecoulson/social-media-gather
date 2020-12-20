@@ -1,9 +1,11 @@
-import router from "express";
+import { Router } from "express";
 import TwitterRoute from "./RegisterTwitterAccount";
 import YouTubeRoute from "./RegisterYouTubeAccount";
 import TwitchAccount from "./RegisterTwitchAccount";
 import InstagramAccount from "./RegisterInstagramAccount";
 import AccountRoute from "./RegisterAccount";
+
+const router = Router();
 
 router.use("/", AccountRoute);
 router.use("/twitter", TwitterRoute);

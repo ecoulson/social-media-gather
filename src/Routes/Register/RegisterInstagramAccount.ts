@@ -1,12 +1,14 @@
 import requiresAuth from "../../Middleware/RequiresAuth";
-import IgApiClient from "instagram-private-api";
-const ig = new IgApiClient();
-import router from "express";
+import { IgApiClient } from "instagram-private-api";
+import { Router } from "express";
 import Post from "../../Models/Post";
 import User from "../../Models/User";
 import fs from "fs";
 import readline from "readline";
 import {google} from "googleapis";
+
+const router = Router();
+const ig = new IgApiClient();
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
@@ -16,7 +18,7 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
-fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content) => {
+fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content : any) => {
     if (err) {
         return console.log('Error loading client secret file:', err);
     }
@@ -30,7 +32,7 @@ fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content) => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials : any, callback : any) {
     const {client_secret, client_id, redirect_uris} = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(
         client_id, client_secret, redirect_uris[0]);
@@ -45,7 +47,7 @@ function authorize(credentials, callback) {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getNewToken(oAuth2Client, callback) {
+function getNewToken(oAuth2Client : any, callback : any) {
     const authUrl = oAuth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: SCOPES,
@@ -57,7 +59,7 @@ function getNewToken(oAuth2Client, callback) {
     });
     rl.question('Enter the code from that page here: ', (code) => {
         rl.close();
-        oAuth2Client.getToken(decodeURIComponent(code), (err, token) => {
+        oAuth2Client.getToken(decodeURIComponent(code), (err : any, token : any) => {
             if (err) {
                 return console.error('Error retrieving access token', err);
             }
@@ -79,32 +81,32 @@ function getNewToken(oAuth2Client, callback) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function getCode(auth) {
+function getCode(auth : any) {
     return new Promise(async (resolve, reject) => {
         const gmail = google.gmail({version: 'v1', auth});
-        const messages = await getAllMessages(gmail);
-        const threads = await Promise.all(messages.map((message) => getThread(gmail, message.threadId)));
+        const messages = await getAllMessages(gmail) as any;
+        const threads = await Promise.all(messages.map((message : any) => getThread(gmail, message.threadId))) as any;
         const codeSnippet = threads
-            .map((thread) => [...thread][0])
-            .sort((a , b) => a.internalDate > b.internalDate)
-            .filter(mail => mail.payload.headers.find(header => header.name === "From" && header.value === "Instagram <security@mail.instagram.com>"))
-            .map(mail => { 
+            .map((thread : any) => [...thread][0])
+            .sort((a : any, b : any) => a.internalDate > b.internalDate)
+            .filter((mail : any) => mail.payload.headers.find((header : any) => header.name === "From" && header.value === "Instagram <security@mail.instagram.com>"))
+            .map((mail : any) => { 
                 return {
                     snippet: mail.snippet, 
                     hasCode: /code to confirm your identity: \d{6}/.test(mail.snippet) 
                 }
             })
-            .find(possibleCode => possibleCode.hasCode)
+            .find((possibleCode : any) => possibleCode.hasCode)
             
         resolve(codeSnippet.snippet.substring(codeSnippet.snippet.length - 7, codeSnippet.snippet.length - 1));
     })
 }
 
-function getAllMessages(gmail) {
+function getAllMessages(gmail : any) {
     return new Promise((resolve, reject) => {
         gmail.users.messages.list({
             userId: 'me',
-        }, (err, res) => {
+        }, (err : any, res : any) => {
             if (err) {
                 return reject(err);
             }
@@ -113,12 +115,12 @@ function getAllMessages(gmail) {
     })
 }
 
-function getThread(gmail, threadId) {
+function getThread(gmail : any, threadId : string) {
     return new Promise((resolve, reject) => {
         gmail.users.threads.get({
             id: threadId,
             userId: 'me'
-        }, (err, res) => {
+        }, (err : any, res : any) => {
             if (err) {
                 return reject(err);
             }
@@ -146,10 +148,10 @@ async function setupInstagram() {
 }
 
 router.get("/", async (req, res) => {
-    res.json(await searchUsers(req.query.username))
+    res.json(await searchUsers(req.query.username as string))
 })
 
-async function searchUsers(username) {
+async function searchUsers(username : string) {
     const searchResults = await ig.search.users(username);
     return searchResults.map((user) => {
         return {
@@ -161,7 +163,7 @@ async function searchUsers(username) {
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount(req.user, req.body.id))
+    res.json(await registerAccount((req as any).user, req.body.id))
 })
 
 router.post("/add", requiresAuth(), async (req, res) => {
@@ -169,7 +171,7 @@ router.post("/add", requiresAuth(), async (req, res) => {
     res.json(await registerAccount(user, req.body.id))
 })
 
-async function registerAccount(user, instagramId) {
+async function registerAccount(user : any, instagramId : string) {
     user.instagramId = instagramId;
     await user.save();
     const igUser = await ig.user.info(instagramId);
@@ -255,14 +257,14 @@ async function registerAccount(user, instagramId) {
     }
 }
 
-function getCaption(post) {
+function getCaption(post : any) {
     if (post.caption) {
         return post.caption.text
     }
     return "";
 }
 
-async function wait(time) {
+async function wait(time : number) {
     return new Promise((resolve) => {
         setTimeout(resolve, time);
     })

@@ -1,21 +1,23 @@
-import router from "express";
+import { Router } from "express";
 import { google } from "googleapis";
 import Post from "../../Models/Post";
 import Webhook from "../../Models/Webhook";
-import { default: Axios } from "axios";
+import Axios from "axios";
 import User from "../../Models/User";
 import qs from "querystring";
 import requiresAuth from "../../Middleware/RequiresAuth";
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
 
+const router = Router();
+
 router.get("/", async (req, res) => {
-    res.json(await getUsers(req.query.username))
+    res.json(await getUsers(req.query.username as string))
 });
 
-async function getUsers(username) {
+async function getUsers(username : string) {
     const service = google.youtube('v3');
-    const channels = await searchChannelsByUsername(username, service);
-    const formattedChannels = channels.items.map((item) => {
+    const channels = await searchChannelsByUsername(username, service) as any;
+    const formattedChannels = channels.items.map((item : any) => {
         return {
             id: item.id.channelId,
             username: item.snippet.title,
@@ -25,7 +27,7 @@ async function getUsers(username) {
     return formattedChannels;
 }
 
-function searchChannelsByUsername(username, service) {
+function searchChannelsByUsername(username : string, service : any) {
     return new Promise((resolve, reject) => {
         service.search.list({
             auth: process.env.YOUTUBE_API_KEY,
@@ -33,7 +35,7 @@ function searchChannelsByUsername(username, service) {
             q: username,
             type: "channel",
             maxResults: 50
-        }, function (err, response) {
+        }, function (err : any, response : any) {
             if (err) {
                 return reject(err);
             }
@@ -43,7 +45,7 @@ function searchChannelsByUsername(username, service) {
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount(req.user, req.body.id));
+    res.json(await registerAccount((req as any).user, req.body.id));
 })
 
 router.post("/add", async (req, res) => {
@@ -51,14 +53,14 @@ router.post("/add", async (req, res) => {
     res.json(await registerAccount(user, req.body.id))
 })
 
-async function registerAccount(user, channelId) {
+async function registerAccount(user : any, channelId : string) {
     user.youtubeId = channelId;
     createYoutubePosts(channelId, user.id);
     registerWebhook(channelId, user.id);
     return await user.save();
 }
 
-async function registerWebhook(channelId, userId) {
+async function registerWebhook(channelId : string, userId : string) {
     try {
         const leaseTime = 60 * 60 * 24 * 7;
         const now = new Date();
@@ -87,18 +89,18 @@ async function registerWebhook(channelId, userId) {
     }
 }
 
-async function createYoutubePosts(channelId, userId) {
+async function createYoutubePosts(channelId : string, userId : string) {
     try {
         const service = google.youtube('v3');
         const channel = await getChannelById(service, channelId);
-        let uploadPage = await getUploadsPage(service, channel);
+        let uploadPage = await getUploadsPage(service, channel) as any;
         let flag = true;
         while (uploadPage.data.nextPageToken || flag) {
-            let videoIds = uploadPage.data.items.map((item) => {
+            let videoIds = uploadPage.data.items.map((item : any) => {
                 return item.contentDetails.videoId;
             });
-            const videos = await getVideos(service, videoIds);
-            await Promise.all(videos.data.items.map((video) => {
+            const videos = await getVideos(service, videoIds) as any;
+            await Promise.all(videos.data.items.map((video : any) => {
                 createVideoPost(video, userId);
             }));
             uploadPage = await getUploadsPage(service, channel, uploadPage.data.nextPageToken);
@@ -109,13 +111,13 @@ async function createYoutubePosts(channelId, userId) {
     }
 }
 
-function getChannelById(youtube, channelId) {
+function getChannelById(youtube : any, channelId : string) {
     return new Promise((resolve, reject) => {
         youtube.channels.list({
             auth: process.env.YOUTUBE_API_KEY,
             part: 'snippet,contentDetails,statistics',
             id: channelId
-        }, (err, response) => {
+        }, (err : any, response : any) => {
             if (err) {
                 return reject(err);
             }
@@ -124,7 +126,7 @@ function getChannelById(youtube, channelId) {
     });
 }
 
-async function getUploadsPage(youtube, channel, pageToken) {
+async function getUploadsPage(youtube : any, channel : any, pageToken : any = undefined) {
     return new Promise((resolve, reject) => {
         youtube.playlistItems.list({
             part: "contentDetails",
@@ -132,7 +134,7 @@ async function getUploadsPage(youtube, channel, pageToken) {
             auth: process.env.YOUTUBE_API_KEY,
             playlistId: channel.data.items[0].contentDetails.relatedPlaylists.uploads,
             maxResults: 50
-        }, (err, playlistItems) => {
+        }, (err : any, playlistItems : any[]) => {
             if (err) {
                 return reject(err);
             }
@@ -141,13 +143,13 @@ async function getUploadsPage(youtube, channel, pageToken) {
     })
 }
 
-function getVideos(youtube, videoIds) {
+function getVideos(youtube : any, videoIds : string[]) {
     return new Promise((resolve, reject) => {
         youtube.videos.list({
             part: "snippet,contentDetails,statistics,player,liveStreamingDetails",
             id: videoIds.join(","),
             auth: process.env.YOUTUBE_API_KEY
-        }, (err, videos) => {
+        }, (err : any, videos : any[]) => {
             if (err) {
                 return reject(err);
             }
@@ -156,7 +158,7 @@ function getVideos(youtube, videoIds) {
     })
 }
 
-function createVideoPost(video, userId) {
+function createVideoPost(video : any, userId : string) {
     const videoPost = new Post({
         type: "YOUTUBE_VIDEO",
         userId: userId,
@@ -171,7 +173,7 @@ function createVideoPost(video, userId) {
     return videoPost.save();
 }
 
-function getThumbnail(thumbnails) {
+function getThumbnail(thumbnails : any) {
     if (thumbnails.standard) {
         return thumbnails.standard.url
     }

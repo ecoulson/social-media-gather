@@ -1,11 +1,13 @@
-import router from "express";
+import { Router } from "express";
 import User from "../../Models/User";
 import jsonwebtoken from "jsonwebtoken";
 
+const router = Router();
+
 router.delete("/", async (req, res) => {
     try {
-        const decoded = jsonwebtoken.verify(req.headers.authorization.split('Bearer ')[1], process.env.AUTH_SECRET)
-        const user = await User.findByIdAndDelete(decoded.id);
+        const decoded = jsonwebtoken.verify(req.headers.authorization.split('Bearer ')[1], process.env.AUTH_SECRET) as any;
+        await User.findByIdAndDelete(decoded.id);
         res.json({
             message: "deleted"
         });

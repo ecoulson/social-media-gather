@@ -1,6 +1,8 @@
-import router from "express";
+import { Router } from "express";
 import User from "../../Models/User";
 import jsonwebtoken from "jsonwebtoken";
+
+const router = Router();
 
 router.get("/", async (req, res) => {
     try {

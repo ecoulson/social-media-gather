@@ -1,6 +1,8 @@
-import router from "express";
+import { Router } from "express";
 import Routes from "./Routes";
+
+const router = Router();
 
 router.use("/api", Routes);
 
-module.exports = router;
+export default router;

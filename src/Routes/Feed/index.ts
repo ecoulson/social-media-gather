@@ -1,18 +1,20 @@
-import router from "express";
+import { Router } from "express";
 import Post from "../../Models/Post";
 import Axios from "axios";
 import XmlParser from "express-xml-bodyparser";
 import { google } from "googleapis";
 import requiresAuth from "../../Middleware/RequiresAuth";
 
+const router = Router();
+
 router.get("/", requiresAuth(), async (req, res) => {
     const feed = await Post
         .find({
             userId: {
-                $in: req.user.following
+                $in: (req as any).user.following
             }
         })
-        .skip(parseInt(req.query.offset))
+        .skip(parseInt(req.query.offset as string))
         .sort({ timeCreated: -1 })
         .limit(20)
         .exec()
@@ -66,7 +68,7 @@ async function getTwitchAccessToken() {
     return response.data;
 }
 
-async function getGameName(accessToken, gameId) {
+async function getGameName(accessToken : any, gameId : string) {
     const response = await Axios.get(`https://api.twitch.tv/helix/games?id=${gameId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`,
@@ -85,21 +87,21 @@ router.get("/youtube/callback", (req, res) => {
 
 router.post("/youtube/callback", XmlParser({trim: false, explicitArray: false}), async (req, res) => {
     const service = google.youtube('v3');
-    const video = await getVideo(service, req.body.feed.entry["yt:videoid"]);
+    const video = await getVideo(service, req.body.feed.entry["yt:videoid"]) as any;
     if (await Post.findOne({ "youtubeVideo.videoId": video.id})) {
         return res.status(200).send();
     }
-    await createVideoPost(video, req.query.userId);
+    await createVideoPost(video, req.query.userId as string);
     return res.status(200).send();
 });
 
-function getVideo(youtube, videoId) {
+function getVideo(youtube : any, videoId : string) {
     return new Promise((resolve, reject) => {
         youtube.videos.list({
             part: "snippet,contentDetails,statistics,player,liveStreamingDetails",
             id: videoId,
             auth: process.env.YOUTUBE_API_KEY
-        }, (err, videos) => {
+        }, (err : any, videos : any) => {
             if (err) {
                 return reject(err);
             }
@@ -108,7 +110,7 @@ function getVideo(youtube, videoId) {
     })
 }
 
-function createVideoPost(video, userId) {
+function createVideoPost(video : any, userId : string) {
     const videoPost = new Post({
         type: "YOUTUBE_VIDEO",
         userId: userId,
@@ -123,7 +125,7 @@ function createVideoPost(video, userId) {
     return videoPost.save();
 }
 
-function getThumbnail(thumbnails) {
+function getThumbnail(thumbnails : any) {
     if (thumbnails.standard) {
         return thumbnails.standard.url
     }
