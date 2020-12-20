@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const User = require("../../Models/User");
-const Post = require("../../Models/Post");
+import router from "express";
+import User from "../../Models/User";
+import Post from "../../Models/Post";
 
 router.get("/:username", async (req, res) => {
     const user = await User.findOne({ username: req.params.username });

@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const Users = require("../../Models/User");
+import router from "express";
+import Users from "../../Models/User";
 
 router.get("/", async (req, res) => {
     const users = await Users.find();

@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const TwitterRoute = require("./RegisterTwitterAccount");
-const YouTubeRoute = require("./RegisterYouTubeAccount");
-const TwitchAccount = require("./RegisterTwitchAccount");
-const InstagramAccount = require("./RegisterInstagramAccount");
-const AccountRoute = require("./RegisterAccount");
+import router from "express";
+import TwitterRoute from "./RegisterTwitterAccount";
+import YouTubeRoute from "./RegisterYouTubeAccount";
+import TwitchAccount from "./RegisterTwitchAccount";
+import InstagramAccount from "./RegisterInstagramAccount";
+import AccountRoute from "./RegisterAccount";
 
 router.use("/", AccountRoute);
 router.use("/twitter", TwitterRoute);

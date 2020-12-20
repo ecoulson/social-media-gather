@@ -1,6 +1,6 @@
-const requiresAuth = require("../../Middleware/RequiresAuth");
-const router = require("express").Router();
-const User = require("../../Models/User");
+import requiresAuth from "../../Middleware/RequiresAuth";
+import router from "express";
+import User from "../../Models/User";
 
 router.delete("/", requiresAuth(), async (req, res) => {
     await User.findByIdAndDelete(req.user.id);

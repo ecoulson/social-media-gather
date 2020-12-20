@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const SearchPlaceholder = require("./SearchPlaceholder");
+import router from "express";
+import SearchPlaceholder from "./SearchPlaceholder";
 
 router.use("/placeholder", SearchPlaceholder);
 

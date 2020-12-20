@@ -13,11 +13,11 @@ async function fixDirectory(directoryPath) {
         if (await isDir(filePath)) {
             return fixDirectory(filePath);
         }
-        return await writeFile(filePath, fixFileImports(filePath));
+        return await writeFile(filePath, await fixFileImports(filePath));
     })
 }
 
-function fixFileImports(path) {
+async function fixFileImports(path) {
     let rawCode = await readFile(path);
     const matches = [...rawCode.matchAll(RequireRegex)];
     const requireStatements = matches
@@ -33,7 +33,7 @@ function transformRequireStatements(requireStatement) {
     const path = [...requireStatement.matchAll(RequireRegex)].map(match => match[2])[0];
     const name = [...requireStatement.matchAll(RequireRegex)].map(match => match[1])[0];
     return {
-        new: `import ${name} from ${path};\n`,
+        new: `import ${name} from "${path}";\n`,
         old: requireStatement
     };
         

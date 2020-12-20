@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const User = require("../../Models/User");
-const jsonwebtoken = require("jsonwebtoken");
+import router from "express";
+import User from "../../Models/User";
+import jsonwebtoken from "jsonwebtoken";
 
 router.delete("/", async (req, res) => {
     try {

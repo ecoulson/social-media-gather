@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const requiresAuth = require("../../Middleware/RequiresAuth");
-const User = require("../../Models/User");
+import router from "express";
+import requiresAuth from "../../Middleware/RequiresAuth";
+import User from "../../Models/User";
 
 router.get("/:followingUsername", requiresAuth(), async (req, res) => {
     return res.json({

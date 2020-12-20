@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const User = require("../../Models/User");
+import router from "express";
+import User from "../../Models/User";
 
 router.post("/", async (req, res) => {
     res.json(await createUser(req.body))

@@ -1,10 +1,10 @@
-const router = require("express").Router();
-const RegistrationRouter = require("./Register");
-const LoginRouter = require("./Login");
-const IsAuthenticatedRouter = require("./IsAuthenticated");
-const MeRouter = require("./Me");
-const DeleteRouter = require("./Delete");
-const VerifyRouter = require("./Verify");
+import router from "express";
+import RegistrationRouter from "./Register";
+import LoginRouter from "./Login";
+import IsAuthenticatedRouter from "./IsAuthenticated";
+import MeRouter from "./Me";
+import DeleteRouter from "./Delete";
+import VerifyRouter from "./Verify";
 
 router.use("/register", RegistrationRouter);
 router.use("/login", LoginRouter);

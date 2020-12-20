@@ -1,15 +1,15 @@
 require("dotenv").config();
-const express = require("express");
+import express from "express";
 const app = express();
-const mongoose = require("mongoose");
-const axios = require("axios").default;
-const Routes = require(".");
-const bodyParser = require('body-parser');
-const morgan = require("morgan");
-const path = require("path");
-const cookieParser = require('cookie-parser');
-const WebhookRefreshJob = require("./Jobs/WebhookRefreshJob");
-const TwitterRefreshJob = require("./Jobs/TwitterRefreshJob");
+import mongoose from "mongoose";
+import axios from "axios";
+import Routes from ".";
+import bodyParser from "body-parser";
+import morgan from "morgan";
+import path from "path";
+import cookieParser from "cookie-parser";
+import WebhookRefreshJob from "./Jobs/WebhookRefreshJob";
+import TwitterRefreshJob from "./Jobs/TwitterRefreshJob";
 
 const posts = [];
 const InstagramURL = "https://graph.instagram.com"

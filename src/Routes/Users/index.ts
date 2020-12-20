@@ -1,13 +1,13 @@
-const router = require("express").Router();
-const GetUserByUsernameRoute = require("./GetUserByUsername");
-const GetUserPosts = require("./GetUserPosts");
-const FollowUser = require("./FollowUser");
-const UnfollowUser = require("./UnfollowUser");
-const SearchUsers = require("./SearchUsers");
-const IsFollowing = require("./IsFollowing");
-const DeleteUser = require("./DeleteUser");
-const UpdateUser = require("./UpdateUser");
-const GetUserById = require("./GetUserById");
+import router from "express";
+import GetUserByUsernameRoute from "./GetUserByUsername";
+import GetUserPosts from "./GetUserPosts";
+import FollowUser from "./FollowUser";
+import UnfollowUser from "./UnfollowUser";
+import SearchUsers from "./SearchUsers";
+import IsFollowing from "./IsFollowing";
+import DeleteUser from "./DeleteUser";
+import UpdateUser from "./UpdateUser";
+import GetUserById from "./GetUserById";
 
 router.use("/get-by-username", GetUserByUsernameRoute);
 router.use("/get-user-posts", GetUserPosts);

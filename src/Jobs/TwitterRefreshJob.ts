@@ -1,6 +1,6 @@
-const Post = require("../Models/Post");
-const User = require("../Models/User");
-const axios = require("axios").default;
+import Post from "../Models/Post";
+import User from "../Models/User";
+import axios from "axios";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {

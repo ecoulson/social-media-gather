@@ -1,11 +1,11 @@
-const router = require("express").Router();
-const Post = require('../../Models/Post');
-const requiresAuth = require("../../Middleware/RequiresAuth");
+import router from "express";
+import Post from "../../Models/Post";
+import requiresAuth from "../../Middleware/RequiresAuth";
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
-const User = require("../../Models/User");
+import User from "../../Models/User";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-const axios = require("axios").default;
-const bigInt = require("big-integer");
+import axios from "axios";
+import bigInt from "big-integer";
 
 router.get("/", async (req, res) => {
     res.json(await getTwitterUsers(req.query.username));

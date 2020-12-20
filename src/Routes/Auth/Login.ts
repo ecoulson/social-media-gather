@@ -1,7 +1,7 @@
-const router = require("express").Router();
-const bcrypt = require("bcrypt");
-const User = require("../../Models/User");
-const jsonwebtoken = require("jsonwebtoken");
+import router from "express";
+import bcrypt from "bcrypt";
+import User from "../../Models/User";
+import jsonwebtoken from "jsonwebtoken";
 
 router.post("/", async (req, res) => {
     const user = await User.findOne({ username: req.body.username });

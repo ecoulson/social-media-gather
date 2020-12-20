@@ -1,11 +1,11 @@
-const router = require("express").Router();
-const { google } = require("googleapis");
-const Post = require("../../Models/Post");
-const Webhook = require("../../Models/Webhook");
-const { default: Axios } = require("axios");
-const User = require("../../Models/User");
-const qs = require('querystring');
-const requiresAuth = require("../../Middleware/RequiresAuth");
+import router from "express";
+import { google } from "googleapis";
+import Post from "../../Models/Post";
+import Webhook from "../../Models/Webhook";
+import { default: Axios } from "axios";
+import User from "../../Models/User";
+import qs from "querystring";
+import requiresAuth from "../../Middleware/RequiresAuth";
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
 
 router.get("/", async (req, res) => {

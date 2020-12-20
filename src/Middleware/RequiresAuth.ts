@@ -1,5 +1,5 @@
-const jsonwebtoken = require("jsonwebtoken");
-const User = require("../Models/User");
+import jsonwebtoken from "jsonwebtoken";
+import User from "../Models/User";
 
 function requiresAuth() {
     return async (req, res, next) => {

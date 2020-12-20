@@ -1,6 +1,6 @@
-const Axios = require("axios").default;
-const Webhook = require("../Models/Webhook");
-const qs = require('querystring');
+import Axios from "axios";
+import Webhook from "../Models/Webhook";
+import qs from "querystring";
 
 async function WebhookRefreshJob(thresholdDate) {
     const accessToken = await getTwitchAccessToken();

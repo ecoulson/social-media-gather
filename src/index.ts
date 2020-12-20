@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const Routes = require("./Routes");
+import router from "express";
+import Routes from "./Routes";
 
 router.use("/api", Routes);
 

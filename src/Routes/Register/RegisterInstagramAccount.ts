@@ -1,12 +1,12 @@
-const requiresAuth = require("../../Middleware/RequiresAuth");
-const IgApiClient = require("instagram-private-api").IgApiClient;
+import requiresAuth from "../../Middleware/RequiresAuth";
+import IgApiClient from "instagram-private-api";
 const ig = new IgApiClient();
-const router = require("express").Router();
-const Post = require("../../Models/Post");
-const User = require("../../Models/User");
-const fs = require('fs');
-const readline = require('readline');
-const {google} = require('googleapis');
+import router from "express";
+import Post from "../../Models/Post";
+import User from "../../Models/User";
+import fs from "fs";
+import readline from "readline";
+import {google} from "googleapis";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];

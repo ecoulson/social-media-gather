@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const RegisterRouter = require("./Register");
-const FeedRouter = require("./Feed");
-const AuthRouter = require("./Auth");
-const UsersRouter = require("./Users");
-const SearchRouter = require("./Search");
+import router from "express";
+import RegisterRouter from "./Register";
+import FeedRouter from "./Feed";
+import AuthRouter from "./Auth";
+import UsersRouter from "./Users";
+import SearchRouter from "./Search";
 
 router.use("/auth", AuthRouter);
 router.use("/register", RegisterRouter);

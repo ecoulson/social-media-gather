@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const jsonwebtoken = require("jsonwebtoken");
-const User = require("../../Models/User");
+import router from "express";
+import jsonwebtoken from "jsonwebtoken";
+import User from "../../Models/User";
 
 router.get("/", async (req, res) => {
     try {

@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const Post = require('../../Models/Post');
-const User = require("../../Models/User");
-const Webhook = require('../../Models/Webhook');
-const requiresAuth = require("../../Middleware/RequiresAuth");
-const Axios = require("axios").default
+import router from "express";
+import Post from "../../Models/Post";
+import User from "../../Models/User";
+import Webhook from "../../Models/Webhook";
+import requiresAuth from "../../Middleware/RequiresAuth";
+import Axios from "axios";
 
 router.get("/", async (req, res) => {
     res.json(await getUsers(req.query.username))

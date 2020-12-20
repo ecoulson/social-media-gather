@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const bcrypt = require("bcrypt");
-const User = require("../../Models/User");
+import router from "express";
+import bcrypt from "bcrypt";
+import User from "../../Models/User";
 
 router.post("/", async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);

@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const Post = require('../../Models/Post');
-const Axios = require("axios").default;
-const XmlParser = require("express-xml-bodyparser");
-const { google } = require("googleapis");
-const requiresAuth = require("../../Middleware/RequiresAuth");
+import router from "express";
+import Post from "../../Models/Post";
+import Axios from "axios";
+import XmlParser from "express-xml-bodyparser";
+import { google } from "googleapis";
+import requiresAuth from "../../Middleware/RequiresAuth";
 
 router.get("/", requiresAuth(), async (req, res) => {
     const feed = await Post
