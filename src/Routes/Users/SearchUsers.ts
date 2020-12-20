@@ -14,7 +14,7 @@ router.get("/:username", requiresAuth(), async (req, res) => {
         return {
             username: user.username,
             id: user.id,
-            following: (req as any).user.following.includes(user.id),
+            following: req.user.following.includes(user.id),
             twitterId: user.twitterId,
             twitchId: user.twitchId,
             youtubeId: user.youtubeId,

@@ -163,7 +163,7 @@ async function searchUsers(username : string) {
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount((req as any).user, req.body.id))
+    res.json(await registerAccount(req.user, req.body.id))
 })
 
 router.post("/add", requiresAuth(), async (req, res) => {

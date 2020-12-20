@@ -11,7 +11,7 @@ router.get("/", requiresAuth(), async (req, res) => {
     const feed = await Post
         .find({
             userId: {
-                $in: (req as any).user.following
+                $in: req.user.following
             }
         })
         .skip(parseInt(req.query.offset as string))

@@ -39,7 +39,7 @@ async function getTwitchAccessToken() {
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
-    res.json(await registerAccount((req as any).user, req.body.id));
+    res.json(await registerAccount(req.user, req.body.id));
 })
 
 router.post("/add", async (req, res) => {

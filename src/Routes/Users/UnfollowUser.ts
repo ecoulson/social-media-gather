@@ -8,8 +8,8 @@ router.post("/:username", requiresAuth(), async (req, res) => {
     const userToFollow = await User.findOne({
         username: req.params.username
     });
-    (req as any).user.following.splice((req as any).user.following.indexOf(userToFollow.id), 1);
-    await (req as any).user.save();
+    req.user.following.splice(req.user.following.indexOf(userToFollow.id), 1);
+    await req.user.save();
     res.send({ message: "followed!" })
 })
 

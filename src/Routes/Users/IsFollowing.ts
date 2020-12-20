@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/:followingUsername", requiresAuth(), async (req, res) => {
     return res.json({
-        isFollowing: await isFollowing((req as any).user, req.params.followingUsername)
+        isFollowing: await isFollowing(req.user, req.params.followingUsername)
     });
 });
 
