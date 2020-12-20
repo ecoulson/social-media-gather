@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 const FeedDateContainer = styled(Flex)`
 height: 25px;
-margin: 10px 0;
+margin: 20px 0;
 position: relative;
 text-align: center;
 justify-content: center;

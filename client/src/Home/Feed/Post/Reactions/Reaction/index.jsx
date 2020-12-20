@@ -1,8 +1,8 @@
 import { Flex, Icon, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
-import { AiFillEye, AiFillLike } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
+import { AiFillEye, AiFillLike, AiOutlineRetweet } from "react-icons/ai";
+import { FaComment, FaRetweet } from "react-icons/fa";
 import ConvertNumberToPlaces from "../../../../../Library/ConvertNumberToPlaces";
 
 const Layout = styled(Flex)`
@@ -32,7 +32,9 @@ function getIcon(type) {
         case "likes":
             return AiFillLike;
         case "comments":
-            return FaComment
+            return FaComment;
+        case "retweets":
+            return AiOutlineRetweet;
         default:
             return null;
     }

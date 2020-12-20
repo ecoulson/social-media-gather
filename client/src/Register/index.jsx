@@ -16,7 +16,6 @@ export default function Register(props) {
         const response = await Axios.post("/api/auth/register", {
             username, email, password
         })
-        console.log(response.data);
         history.push("/login")
     }
 

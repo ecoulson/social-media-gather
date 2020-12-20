@@ -22,7 +22,7 @@ export default function FollowedCreators() {
 
     return (
         <FollowedCreatorsContainer>
-            {users.map((user) => <Creator user={user} />)}
+            {users.map((user, i) => <Creator key={i} user={user} />)}
         </FollowedCreatorsContainer>
     )
 }

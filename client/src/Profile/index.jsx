@@ -8,6 +8,7 @@ import { ReactComponent as Check } from "../Assets/check.svg";
 import "./index.css";
 import { useRef } from "react";
 import Panel from "../Panel";
+import Feed from "../Home/Feed";
 
 export default function Profile(props) {
     const history = useHistory();
@@ -21,6 +22,7 @@ export default function Profile(props) {
                 // history.push('/')
             // } else {
             const response = await Axios.get(`/api/users/get-by-username/${props.match.params.username}`);
+            console.log(response.data);
             setUser(response.data);
             // }
         }
@@ -56,14 +58,13 @@ export default function Profile(props) {
         }
         return <Button innerRef={followButton} id="follow-button" onClick={follow}>Follow</Button>;
     }
-    console.log(user.username)
     return (
         <>
             <Panel className="profile-splash-container">
                 <h1 className="profile-username">{user.username}</h1>
                 {renderFollowButton()}
             </Panel>
-            <FeedFetcher feedUrl={`/api/users/get-user-posts/${user.username}`} />
+            <FeedFetcher Component={Feed} feedUrl={`/api/users/get-user-posts/${user.username}`} />
         </>
     )
 }

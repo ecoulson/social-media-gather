@@ -1,3 +1,4 @@
+import { GridItem } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -24,7 +25,9 @@ export default function Home() {
     return (
         <HomeLayout>
             <FollowedCreatorsSection />
-            <Feed />
+            <GridItem gridArea="feed">
+                <FeedFetcher Component={Feed} feedUrl="/api/feed" />
+            </GridItem>
         </HomeLayout>
     )
 }

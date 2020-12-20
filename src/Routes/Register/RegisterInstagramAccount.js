@@ -16,13 +16,13 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
-// fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content) => {
-//     if (err) {
-//         return console.log('Error loading client secret file:', err);
-//     }
-//     // Authorize a client with credentials, then call the Gmail API.
-//     authorize(JSON.parse(content), setupInstagram);
-// });
+fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content) => {
+    if (err) {
+        return console.log('Error loading client secret file:', err);
+    }
+    // Authorize a client with credentials, then call the Gmail API.
+    authorize(JSON.parse(content), setupInstagram);
+});
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -35,7 +35,6 @@ function authorize(credentials, callback) {
     const oAuth2Client = new google.auth.OAuth2(
         client_id, client_secret, redirect_uris[0]);
     
-    // Check if we have previously stored a token.
     oAuth2Client.setCredentials(JSON.parse(process.env.TOKEN));
     callback(oAuth2Client);
 }
@@ -58,7 +57,7 @@ function getNewToken(oAuth2Client, callback) {
     });
     rl.question('Enter the code from that page here: ', (code) => {
         rl.close();
-        oAuth2Client.getToken(code, (err, token) => {
+        oAuth2Client.getToken(decodeURIComponent(code), (err, token) => {
             if (err) {
                 return console.error('Error retrieving access token', err);
             }
@@ -80,56 +79,69 @@ function getNewToken(oAuth2Client, callback) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function getEmails(auth) {
-    return new Promise((resolve, reject) => {
+function getCode(auth) {
+    return new Promise(async (resolve, reject) => {
         const gmail = google.gmail({version: 'v1', auth});
+        const messages = await getAllMessages(gmail);
+        const threads = await Promise.all(messages.map((message) => getThread(gmail, message.threadId)));
+        const codeSnippet = threads
+            .map((thread) => [...thread][0])
+            .sort((a , b) => a.internalDate > b.internalDate)
+            .filter(mail => mail.payload.headers.find(header => header.name === "From" && header.value === "Instagram <security@mail.instagram.com>"))
+            .map(mail => { 
+                return {
+                    snippet: mail.snippet, 
+                    hasCode: /code to confirm your identity: \d{6}/.test(mail.snippet) 
+                }
+            })
+            .find(possibleCode => possibleCode.hasCode)
+            
+        resolve(codeSnippet.snippet.substring(codeSnippet.snippet.length - 7, codeSnippet.snippet.length - 1));
+    })
+}
+
+function getAllMessages(gmail) {
+    return new Promise((resolve, reject) => {
         gmail.users.messages.list({
             userId: 'me',
-            fields: "from: no-reply@mail.instagram.com"
         }, (err, res) => {
             if (err) {
-                return reject('The API returned an error: ' + err);
+                return reject(err);
             }
-            const messages = res.data.messages;
-            if (messages.length) {
-                const threads = [];
-                messages.forEach((message) => {
-                    gmail.users.threads.get({
-                        id: message.threadId,
-                        userId: 'me'
-                    }, (err, res) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        threads.push(res.data);
-                    });
-                });
-                resolve(threads);
-            } else {
-                reject('No messages found.');
+            return resolve(res.data.messages);
+        })
+    })
+}
+
+function getThread(gmail, threadId) {
+    return new Promise((resolve, reject) => {
+        gmail.users.threads.get({
+            id: threadId,
+            userId: 'me'
+        }, (err, res) => {
+            if (err) {
+                return reject(err);
             }
-        });
+            return resolve(res.data.messages)
+        })
     })
 }
 
 ig.state.generateDevice(process.env.INSTAGRAM_USER);
 
-async function setupInstagram(auth) {
+async function setupInstagram() {
     try {
         await ig.simulate.preLoginFlow();
         await ig.account.login(process.env.INSTAGRAM_USER, process.env.INSTAGRAM_PASSWORD);
-        process.nextTick(async () => await ig.simulate.postLoginFlow());
     } catch (e) {
-        console.log(e);
         let challenge = await ig.challenge.state();
         await ig.challenge.selectVerifyMethod(challenge.step_data.choice);
-        challenge = await ig.challenge.state();
-        emails = await getEmails(auth);
-        console.log(emails);
-        await ig.challenge.sendSecurityCode(challenge.nonce_code);
-        console.log(await ig.challenge.state());    
-        process.nextTick(async () => await ig.simulate.postLoginFlow());
+        const code = "014587"; //await getCode(auth);
+        await ig.challenge.sendSecurityCode(code);
+        console.log("here");
+        // console.log(await ig.challenge.state());
     }
+    process.nextTick(async () => await ig.simulate.postLoginFlow());
     console.log("instagram setup");
 }
 

@@ -6,8 +6,8 @@ export default ({ reactions }) => {
     return (
         <Flex>
             {
-                reactions.map(({type, value}) => {
-                    return <Reaction type={type} value={value} />
+                reactions.map(({type, value}, i) => {
+                    return <Reaction key={i} type={type} value={value} />
                 })
             }
         </Flex>

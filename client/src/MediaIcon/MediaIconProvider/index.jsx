@@ -19,6 +19,20 @@ const getStyle = (type) => {
                     background: "red"
                 }
             }
+        case MediaIconType.TWITCH:
+            return {
+                style: {
+                    fill: "white",
+                    background: "#6441A4"
+                }
+            }
+        case MediaIconType.TWITTER:
+            return {
+                style: {
+                    background: "#1DA1F2",
+                    fill: "white"
+                }
+            }
         default:
             return {};
     }

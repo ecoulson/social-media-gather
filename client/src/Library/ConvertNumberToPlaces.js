@@ -6,6 +6,9 @@ const prefixes = [
 ]
 
 const isInPlaceRange = (n, prefix) => {
+    if (n === 0 && prefix.unit === "") {
+        return true;
+    }
     const lowerBound = Math.pow(10, prefix.places);
     const upperBound = Math.pow(10, prefix.places + 3);
     return n > lowerBound && n < upperBound;
