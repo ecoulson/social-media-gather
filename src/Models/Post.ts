@@ -13,6 +13,7 @@ const TwitterUrls = new Schema({
     expandedUrl: String,
 })
 
+
 const TwitterUserMentions = new Schema({
     screenName: String,
     id: String,

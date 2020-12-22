@@ -23,7 +23,7 @@ fs.readFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, (err, content : any) => 
         return console.log('Error loading client secret file:', err);
     }
     // Authorize a client with credentials, then call the Gmail API.
-    authorize(JSON.parse(content), setupInstagram);
+    // authorize(JSON.parse(content), setupInstagram);
 });
 
 /**
