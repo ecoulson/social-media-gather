@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken";
-import User from "../Models/User";
+import User from "../DataStore/Mongo/Models/User/UserModel";
 
 function requiresAuth() {
     return async (req : any, res : any, next : any) => {

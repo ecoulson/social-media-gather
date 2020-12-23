@@ -1,18 +1,20 @@
+import IUser from "../User/IUser";
 import IEntity from "../IEntity";
-import { IImage } from "../Image/IImage";
+import IImage from "../Media/IImage";
 
 export default interface ITwitchStream extends IEntity {
     viewers() : number;
     updateViewers(viewers: number) : void;
     isLive(): boolean;
-    thumbnails(): IImage[];
-    timeStarted(): Date;
+    thumbnail(): IImage;
+    startedAt(): Date;
+    endedAt(): Date;
     url(): string;
     title(): string;
-    streamerName(): string;
-    creator(): any;
-    id(): string;
-    gameId(): string;
+    userId() : string;
+    screenName() : string;
+    user(): Promise<IUser>;
+    gameName(): string;
     streamId(): string;
     endStream(): void;
 }

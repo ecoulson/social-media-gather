@@ -1,6 +1,6 @@
 import { Router } from "express";
 import requiresAuth from "../../Middleware/RequiresAuth";
-import User from "../../Models/User";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 
 const router = Router();
 

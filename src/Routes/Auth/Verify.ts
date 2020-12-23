@@ -1,12 +1,12 @@
 import { Router } from "express";
-import User from "../../Models/User";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     const user = await User.findOne({ 
-        email: req.query.email,
-        username: req.query.username
+        email: req.query.email as string,
+        username: req.query.username as string
     }) as any;
     user.verified = true;
     await user.save();

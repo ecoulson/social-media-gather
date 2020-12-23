@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import User from "../../Models/User";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 import jsonwebtoken from "jsonwebtoken";
 
 const router = Router();

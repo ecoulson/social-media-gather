@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Post from "../../Models/Post";
+import Post from "../../DataStore/Mongo/Models/Post/PostModel";
 import Axios from "axios";
 import XmlParser from "express-xml-bodyparser";
 import { google } from "googleapis";
@@ -51,8 +51,8 @@ router.post("/twitch/callback", async (req, res) => {
         await twitchLiveStreamPost.save();
     } else {
         await Post.findOneAndUpdate({
-            "twitchStream.live": true,
-            userId: req.query.user_id
+            userId: req.query.user_id as string,
+            "twitchStream.live": true
         }, {
             $set: {
                 "twitchStream.live": false,

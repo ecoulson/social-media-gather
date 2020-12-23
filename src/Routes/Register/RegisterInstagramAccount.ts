@@ -1,8 +1,8 @@
 import requiresAuth from "../../Middleware/RequiresAuth";
 import { IgApiClient } from "instagram-private-api";
 import { Router } from "express";
-import Post from "../../Models/Post";
-import User from "../../Models/User";
+import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 import fs from "fs";
 import readline from "readline";
 import {google} from "googleapis";

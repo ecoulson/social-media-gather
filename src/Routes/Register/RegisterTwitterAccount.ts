@@ -1,8 +1,8 @@
 import { Router } from "express";
-import Post from "../../Models/Post";
+import Post from "../../DataStore/Mongo/Models/Post/PostModel";
 import requiresAuth from "../../Middleware/RequiresAuth";
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";
-import User from "../../Models/User";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 import axios from "axios";
 import bigInt from "big-integer";

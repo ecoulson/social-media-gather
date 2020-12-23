@@ -1,5 +1,5 @@
 import Axios from "axios";
-import Webhook from "../Models/Webhook";
+import Webhook from "../DataStore/Mongo/Models/Webhook/WebhookModel";
 import qs from "querystring";
 
 async function WebhookRefreshJob(thresholdDate : Date) {

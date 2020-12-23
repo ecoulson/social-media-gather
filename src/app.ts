@@ -16,9 +16,10 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true
-}).then(() => {
-    console.log("connected to db")
-}).catch(() => {
+}).then(async () => {
+    console.log("connected to db");
+}).catch((e) => {
+    console.log(e);
     console.log("failed to connect to db")
 });
 

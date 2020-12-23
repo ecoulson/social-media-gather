@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { google } from "googleapis";
-import Post from "../../Models/Post";
-import Webhook from "../../Models/Webhook";
+import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import Webhook from "../../DataStore/Mongo/Models/Webhook/WebhookModel";
 import Axios from "axios";
-import User from "../../Models/User";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
 import qs from "querystring";
 import requiresAuth from "../../Middleware/RequiresAuth";
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";

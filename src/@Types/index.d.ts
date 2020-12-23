@@ -7,7 +7,7 @@ declare global {
 
 }
 
-export type Transformer<A, B> = (x : A) => B;
+export type Transformer<A, B> = (object : A) => B;
 
 export type MixinConstructor<T = {}> = new (...args : any[]) => T;
 

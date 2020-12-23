@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Users from "../../Models/User";
+import Users from "../../DataStore/Mongo/Models/User/UserModel";
 
 const router = Router();
 

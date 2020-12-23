@@ -1,7 +1,7 @@
 import { Router } from "express";
-import Post from "../../Models/Post";
-import User from "../../Models/User";
-import Webhook from "../../Models/Webhook";
+import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import User from "../../DataStore/Mongo/Models/User/UserModel";
+import Webhook from "../../DataStore/Mongo/Models/Webhook/WebhookModel";
 import requiresAuth from "../../Middleware/RequiresAuth";
 import Axios from "axios";
 
