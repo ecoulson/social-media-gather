@@ -7,7 +7,7 @@ async function getAllTwitterUsers() {
     return (await User.find()).filter((user : any) => user.twitterId);
 }
 
-async function updatePosts() {
+async function TwitterRefreshJob() {
     const users = await getAllTwitterUsers();
     await Promise.all(users.map((user : any)=> createTwitterPostsForUser(user.twitterId, user.id)));
 }
@@ -108,4 +108,4 @@ function getMedia(tweet : any) {
     }
 }
 
-export default updatePosts;
+export default TwitterRefreshJob;
