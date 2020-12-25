@@ -6,5 +6,6 @@ export default {
     UserRecord: Symbol.for("UserRecord"),
     WebhookRecord: Symbol.for("WebhookRecord"),
     YouTubeVideoRecord: Symbol.for("YouTubeVideoRecord"),
-    RequiresAuthentication: Symbol.for("RequiresAuthentication")
+    RequiresAuthentication: Symbol.for("RequiresAuthentication"),
+    UserService: Symbol.for("UserService")
 }
