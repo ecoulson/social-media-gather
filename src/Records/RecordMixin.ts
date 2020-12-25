@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { MixinConstructor } from "../@Types";
 import IQuery from "../DataStore/IQuery";
 import IEntity from "../Entities/IEntity";
@@ -12,7 +13,7 @@ function RecordMixin<Entity extends IEntity>() {
                 return this.dataStore.findById(id);
             }
 
-            async find(query : IQuery) {
+            async find(query? : IQuery) {
                 return this.dataStore.find(query);
             }
 

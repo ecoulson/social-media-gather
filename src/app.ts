@@ -1,17 +1,14 @@
 require("dotenv").config();
-import express from "express";
 import Loaders from "./Loaders";
 
 async function startServer() {
-    const app = express();
+    const server = await Loaders({});
 
-    await Loaders({
-        app
-    });
-
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
         console.log("Server is listening on 8080");
     })
 }
 
-startServer();
+export default {
+    start: startServer
+};
