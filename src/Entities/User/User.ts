@@ -12,46 +12,46 @@ export default class User implements IUser {
         private username_: string,
         private verified_: boolean,
         private followingIds_: string[],
-        private userRecord: InstanceType<typeof UserRecord>,
-    ) { }
+        private userRecord: InstanceType<typeof UserRecord>
+    ) {}
 
-    id() { 
-        return this.id_; 
+    id(): string {
+        return this.id_;
     }
 
-    twitterId() {
+    twitterId(): string {
         return this.twitterId_;
     }
 
-    youTubeId() { 
+    youTubeId(): string {
         return this.youTubeId_;
     }
 
-    twitchId() { 
-        return this.twitchId_; 
+    twitchId(): string {
+        return this.twitchId_;
     }
 
-    instagramId() { 
-        return this.instagramId_; 
+    instagramId(): string {
+        return this.instagramId_;
     }
 
-    email() { 
-        return this.email_; 
+    email(): string {
+        return this.email_;
     }
 
-    username() { 
-        return this.username_; 
+    username(): string {
+        return this.username_;
     }
 
-    verified() { 
-        return this.verified_; 
+    verified(): boolean {
+        return this.verified_;
     }
 
-    async following() {
-        return Promise.all(this.followingIds_.map(id => this.userRecord.findById(id)));
+    async following(): Promise<IUser[]> {
+        return Promise.all(this.followingIds_.map((id) => this.userRecord.findById(id)));
     }
 
-    followingIds() {
+    followingIds(): string[] {
         return this.followingIds_;
     }
 }

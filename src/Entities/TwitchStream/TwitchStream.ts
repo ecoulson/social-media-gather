@@ -1,81 +1,82 @@
 import ITwitchStream from "./ITwitchStream";
 import UserRecord from "../../Records/User/UserRecord";
 import IImage from "../Media/IImage";
+import IUser from "../User/IUser";
 
 export default class TwitchStream implements ITwitchStream {
     constructor(
-        private viewers_ : number,
-        private isLive_ : boolean,
-        private thumbnail_ : IImage,
-        private timeStarted_ : Date,
-        private url_ : string,
-        private title_ : string,
-        private userId_ : string,
-        private screenName_ : string,
-        private id_ : string,
-        private gameName_ : string,
-        private streamId_ : string,
-        private userRecord_ : InstanceType<typeof UserRecord>,
-        private endedAt_? : Date
+        private viewers_: number,
+        private isLive_: boolean,
+        private thumbnail_: IImage,
+        private timeStarted_: Date,
+        private url_: string,
+        private title_: string,
+        private userId_: string,
+        private screenName_: string,
+        private id_: string,
+        private gameName_: string,
+        private streamId_: string,
+        private userRecord_: InstanceType<typeof UserRecord>,
+        private endedAt_?: Date
     ) {}
 
-    viewers() {
+    viewers(): number {
         return this.viewers_;
     }
 
-    updateViewers(viewers : number) {
+    updateViewers(viewers: number): void {
         this.viewers_ = viewers;
     }
 
-    isLive() {
+    isLive(): boolean {
         return this.isLive_;
     }
 
-    thumbnail() {
+    thumbnail(): IImage {
         return this.thumbnail_;
     }
 
-    startedAt() {
+    startedAt(): Date {
         return this.timeStarted_;
     }
 
-    url() {
+    url(): string {
         return this.url_;
     }
 
-    title() {
+    title(): string {
         return this.title_;
     }
 
-    userId() {
-        return this.userId_
+    userId(): string {
+        return this.userId_;
     }
 
-    screenName() {
+    screenName(): string {
         return this.screenName_;
     }
 
-    user() {
+    user(): Promise<IUser> {
         return this.userRecord_.findById(this.userId_);
     }
 
-    id() {
+    id(): string {
         return this.id_;
     }
 
-    gameName() {
+    gameName(): string {
         return this.gameName_;
     }
 
-    streamId() {
+    streamId(): string {
         return this.streamId_;
     }
 
-    endedAt() {
+    endedAt(): Date {
         return this.endedAt_;
     }
 
-    endStream() {
+    endStream(): void {
         this.isLive_ = false;
         this.endedAt_ = new Date();
     }

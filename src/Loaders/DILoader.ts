@@ -1,6 +1,7 @@
-import container from  "../bootstrap"
+import { Container } from "inversify";
+import container from "../bootstrap";
 
-function DILoader() {
+function DILoader(): Container {
     return container;
 }
 

@@ -1,53 +1,55 @@
 import UserRecord from "../../Records/User/UserRecord";
+import IImage from "../Media/IImage";
 import IMedia from "../Media/IMedia";
+import IUser from "../User/IUser";
 import IInstagramPost from "./IInstagramPost";
 
 export default class InstagramPost implements IInstagramPost {
     constructor(
-        private id_ : string,
-        private userId_ : string,
-        private postId_ : string,
-        private likes_ : number,
-        private takenAt_ : Date,
-        private caption_ : string,
-        private media_ : IMedia[],
-        private thumbnail_ : IMedia,
-        private userRecord : InstanceType<typeof UserRecord>
+        private id_: string,
+        private userId_: string,
+        private postId_: string,
+        private likes_: number,
+        private takenAt_: Date,
+        private caption_: string,
+        private media_: IMedia[],
+        private thumbnail_: IImage,
+        private userRecord: InstanceType<typeof UserRecord>
     ) {}
 
-    id() {
+    id(): string {
         return this.id_;
     }
 
-    userId() {
-        return this.userId_
+    userId(): string {
+        return this.userId_;
     }
 
-    user() {
-        return this.userRecord.findById(this.userId_)
+    user(): Promise<IUser> {
+        return this.userRecord.findById(this.userId_);
     }
 
-    postId() {
+    postId(): string {
         return this.postId_;
     }
 
-    likes() {
+    likes(): number {
         return this.likes_;
     }
 
-    takenAt() {
+    takenAt(): Date {
         return this.takenAt_;
     }
 
-    caption() {
+    caption(): string {
         return this.caption_;
     }
 
-    media() {
+    media(): IMedia[] {
         return this.media_;
     }
 
-    thumbnail() {
+    thumbnail(): IImage {
         return this.thumbnail_;
     }
 }

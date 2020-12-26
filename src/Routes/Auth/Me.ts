@@ -6,7 +6,12 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const decoded = jsonwebtoken.verify(req.headers.authorization.split('Bearer ')[1], process.env.AUTH_SECRET) as any;
+        const decoded = jsonwebtoken.verify(
+            req.headers.authorization.split("Bearer ")[1],
+            process.env.AUTH_SECRET
+        ) as {
+            id: string;
+        };
         const user = await User.findById(decoded.id);
         const serializedUser = user.toJSON();
         delete serializedUser.password;
@@ -14,8 +19,8 @@ router.get("/", async (req, res) => {
     } catch (error) {
         return res.json({
             error: "invalid jwt"
-        })
+        });
     }
-})
+});
 
 export default router;

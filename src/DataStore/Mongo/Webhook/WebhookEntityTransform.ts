@@ -5,7 +5,7 @@ import UserRecord from "../../../Records/User/UserRecord";
 import IWebhookDocument from "../Models/Webhook/IWebhookDocument";
 import UserMongoDataStore from "../User/UserMongoDataStore";
 
-const WebhookEntityTransformer : Transformer<IWebhookDocument, IWebhook> = (webhookDocument) => {
+const WebhookEntityTransformer: Transformer<IWebhookDocument, IWebhook> = (webhookDocument) => {
     return new Webhook(
         webhookDocument.id,
         webhookDocument.expirationDate,
@@ -17,6 +17,6 @@ const WebhookEntityTransformer : Transformer<IWebhookDocument, IWebhook> = (webh
         webhookDocument.userId,
         new UserRecord(new UserMongoDataStore())
     );
-}
+};
 
 export default WebhookEntityTransformer;

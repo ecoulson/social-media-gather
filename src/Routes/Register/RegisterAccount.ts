@@ -4,14 +4,14 @@ import User from "../../DataStore/Mongo/Models/User/UserModel";
 const router = Router();
 
 router.post("/", async (req, res) => {
-    res.json(await createUser(req.body))
+    res.json(await createUser(req.body));
 });
 
-async function createUser(body : any) {
-    const user = new User({ 
+async function createUser(body: { email: string; username: string }) {
+    const user = new User({
         email: body.email,
-        username: body.username,
-    }) as any;
+        username: body.username
+    });
     user.following.push(user.id);
     await user.save();
     return user;

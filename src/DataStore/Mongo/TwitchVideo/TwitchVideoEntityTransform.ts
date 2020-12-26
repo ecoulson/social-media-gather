@@ -6,8 +6,8 @@ import UserRecord from "../../../Records/User/UserRecord";
 import IPostDocument from "../Models/Post/IPostDocument";
 import UserMongoDataStore from "../User/UserMongoDataStore";
 
-const TwitchVideoEntityTransform : Transformer<IPostDocument, ITwitchVideo> = 
-    (post) => new TwitchVideo(
+const TwitchVideoEntityTransform: Transformer<IPostDocument, ITwitchVideo> = (post) =>
+    new TwitchVideo(
         post.id,
         post.twitchVideo.url,
         post.twitchVideo.gameName,
@@ -18,6 +18,6 @@ const TwitchVideoEntityTransform : Transformer<IPostDocument, ITwitchVideo> =
         post.twitchVideo.userName,
         post.userId,
         new UserRecord(new UserMongoDataStore())
-    )
+    );
 
 export default TwitchVideoEntityTransform;

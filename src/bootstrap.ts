@@ -19,7 +19,7 @@ import WebhookRecord from "./Records/Webhook/WebhookRecord";
 import YouTubeRecord from "./Records/YouTubeVideo/YouTubeRecord";
 import UserService from "./Services/UserService";
 
-let container = new Container();
+const container = new Container();
 
 const mongoInstagramRecord = new InstagramPostRecord(new InstagramPostMongoStore());
 const mongoTweetRecord = new TweetRecord(new TweetMongoDataStore());
@@ -29,15 +29,42 @@ const mongoUserRecord = new UserRecord(new UserMongoDataStore());
 const mongoWebhookRecord = new WebhookRecord(new WebhookMongoDataStore());
 const mongoYouTubeRecord = new YouTubeRecord(new YouTubeVideoMongoDataStore());
 
-container.bind<InstanceType<typeof UserRecord>>(Types.UserRecord).toConstantValue(mongoUserRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof InstagramPostRecord>>(Types.InstagramPostRecord).toConstantValue(mongoInstagramRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof TweetRecord>>(Types.TweetRecord).toConstantValue(mongoTweetRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof TwitchStreamRecord>>(Types.TwitchStreamRecord).toConstantValue(mongoTwitchStreamRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof TwitchVideoRecord>>(Types.TwitchVideoRecord).toConstantValue(mongoTwitchVideoRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof WebhookRecord>>(Types.WebhookRecord).toConstantValue(mongoWebhookRecord).whenTargetTagged(Tags.MONGO, true)
-container.bind<InstanceType<typeof YouTubeRecord>>(Types.WebhookRecord).toConstantValue(mongoYouTubeRecord).whenTargetTagged(Tags.MONGO, true)
+container
+    .bind<InstanceType<typeof UserRecord>>(Types.UserRecord)
+    .toConstantValue(mongoUserRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof InstagramPostRecord>>(Types.InstagramPostRecord)
+    .toConstantValue(mongoInstagramRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof TweetRecord>>(Types.TweetRecord)
+    .toConstantValue(mongoTweetRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof TwitchStreamRecord>>(Types.TwitchStreamRecord)
+    .toConstantValue(mongoTwitchStreamRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof TwitchVideoRecord>>(Types.TwitchVideoRecord)
+    .toConstantValue(mongoTwitchVideoRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof WebhookRecord>>(Types.WebhookRecord)
+    .toConstantValue(mongoWebhookRecord)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof YouTubeRecord>>(Types.WebhookRecord)
+    .toConstantValue(mongoYouTubeRecord)
+    .whenTargetTagged(Tags.MONGO, true);
 
-container.bind<RequestHandler>(Types.RequiresAuthentication).toConstantValue(requiresAuth(container.getTagged<InstanceType<typeof UserRecord>>(Types.UserRecord, Tags.MONGO, true)));
+container
+    .bind<RequestHandler>(Types.RequiresAuthentication)
+    .toConstantValue(
+        requiresAuth(
+            container.getTagged<InstanceType<typeof UserRecord>>(Types.UserRecord, Tags.MONGO, true)
+        )
+    );
 
 container.bind<UserService>(Types.UserService).to(UserService);
 

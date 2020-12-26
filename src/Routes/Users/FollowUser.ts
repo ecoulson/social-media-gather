@@ -8,9 +8,9 @@ router.post("/:username", requiresAuth(), async (req, res) => {
     const userToFollow = await User.findOne({
         username: req.params.username
     });
-    req.user.following.push(userToFollow.id)
+    req.user.following.push(userToFollow.id);
     await req.user.save();
-    res.send({ message: "followed!" })
-})
+    res.send({ message: "followed!" });
+});
 
 export default router;

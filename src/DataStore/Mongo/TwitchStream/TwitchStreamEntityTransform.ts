@@ -6,7 +6,7 @@ import IPostDocument from "../Models/Post/IPostDocument";
 import UserRecord from "../../../Records/User/UserRecord";
 import UserMongoDataStore from "../User/UserMongoDataStore";
 
-const TwitchStreamEntityTransform : Transformer<IPostDocument, ITwitchStream> = (post) => {
+const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (post) => {
     return new TwitchStream(
         0,
         post.twitchStream.live,
@@ -22,6 +22,6 @@ const TwitchStreamEntityTransform : Transformer<IPostDocument, ITwitchStream> = 
         new UserRecord(new UserMongoDataStore()),
         post.twitchStream.endedAt
     );
-}
+};
 
 export default TwitchStreamEntityTransform;

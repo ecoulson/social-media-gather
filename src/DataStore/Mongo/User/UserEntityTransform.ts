@@ -5,7 +5,7 @@ import IUser from "../../../Entities/User/IUser";
 import UserMongoDataStore from "./UserMongoDataStore";
 import UserRecord from "../../../Records/User/UserRecord";
 
-const UserEntityTransform : Transformer<IUserDocument, IUser> = (userDocument) => {
+const UserEntityTransform: Transformer<IUserDocument, IUser> = (userDocument) => {
     return new User(
         userDocument.id,
         userDocument.twitterId,
@@ -18,6 +18,6 @@ const UserEntityTransform : Transformer<IUserDocument, IUser> = (userDocument) =
         userDocument.following,
         new UserRecord(new UserMongoDataStore())
     );
-}
+};
 
 export default UserEntityTransform;

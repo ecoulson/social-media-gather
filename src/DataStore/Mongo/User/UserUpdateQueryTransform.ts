@@ -3,7 +3,7 @@ import { Transformer } from "../../../@Types";
 import IUser from "../../../Entities/User/IUser";
 import IUserDocument from "../Models/User/IUserDocument";
 
-const UserUpdateQueryTransform : Transformer<IUser, UpdateQuery<IUserDocument>> = (user) => {
+const UserUpdateQueryTransform: Transformer<IUser, UpdateQuery<IUserDocument>> = (user) => {
     return {
         _id: user.id(),
         email: user.email(),
@@ -13,8 +13,8 @@ const UserUpdateQueryTransform : Transformer<IUser, UpdateQuery<IUserDocument>> 
         twitterId: user.twitterId(),
         twitchId: user.twitchId(),
         instagramId: user.instagramId(),
-        youtubeId: user.youTubeId(),
-    }
-}
+        youtubeId: user.youTubeId()
+    };
+};
 
 export default UserUpdateQueryTransform;

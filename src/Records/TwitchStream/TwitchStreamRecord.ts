@@ -5,11 +5,11 @@ import BasicRecord from "../BasicRecord";
 import RecordMixin from "../RecordMixin";
 
 class TwitchStreamRecord extends BasicRecord<ITwitchStream> implements ITwitchStreamRecord {
-    constructor(dataStore : IDataStore<ITwitchStream>) {
+    constructor(dataStore: IDataStore<ITwitchStream>) {
         super(dataStore);
     }
 
-    async getAllLiveBroadcasts() : Promise<ITwitchStream[]> {
+    async getAllLiveBroadcasts(): Promise<ITwitchStream[]> {
         return await this.dataStore.find({
             "twitchStream.live": true
         });

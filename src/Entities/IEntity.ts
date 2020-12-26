@@ -1,3 +1,3 @@
 export default interface IEntity {
-    id() : string;
+    id(): string;
 }

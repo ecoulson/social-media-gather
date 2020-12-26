@@ -10,7 +10,7 @@ import UserMongoDataStore from "../User/UserMongoDataStore";
 
 const IMAGE_TYPE = "IMAGE";
 
-const InstagramPostEntityTransform : Transformer<IPostDocument, IInstagramPost> = (post) => {
+const InstagramPostEntityTransform: Transformer<IPostDocument, IInstagramPost> = (post) => {
     return new InstagramPost(
         post._id,
         post.userId,
@@ -18,21 +18,25 @@ const InstagramPostEntityTransform : Transformer<IPostDocument, IInstagramPost> 
         parseInt(post.instagram.likes),
         post.instagram.takenAt,
         post.instagram.caption,
-        post.instagram.media.map(mediaItem => transformInstagramMedia(mediaItem)),
-        transformInstagramMedia(post.instagram.thumbnail),
+        post.instagram.media.map((mediaItem) => transformInstagramMedia(mediaItem)),
+        new Image("", post.instagram.thumbnail.url, 0, 0),
         new UserRecord(new UserMongoDataStore())
     );
-}
+};
 
-const transformInstagramMedia : Transformer<{
-    url: string,
-    type: string
-}, IMedia> = (instagramMedia) => isImage(instagramMedia.type) ?
-        new Image("", instagramMedia.url, 0, 0) :
-        new Video("", instagramMedia.url, 0, 0, new Image("", "", 0, 0))
+const transformInstagramMedia: Transformer<
+    {
+        url: string;
+        type: string;
+    },
+    IMedia
+> = (instagramMedia) =>
+    isImage(instagramMedia.type)
+        ? new Image("", instagramMedia.url, 0, 0)
+        : new Video("", instagramMedia.url, 0, 0, new Image("", "", 0, 0));
 
-const isImage : Transformer<string, boolean> = (type: string) => {
+const isImage: Transformer<string, boolean> = (type: string) => {
     return type === IMAGE_TYPE;
-}
+};
 
 export default InstagramPostEntityTransform;

@@ -1,3 +1,8 @@
 {
-    "python.pythonPath": "/Users/evancoulson/anaconda3/bin/python"
+    "python.pythonPath": "/Users/evancoulson/anaconda3/bin/python",
+    "cSpell.ignoreWords": [
+        "id",
+        "maxres",
+        "youtube"
+    ]
 }

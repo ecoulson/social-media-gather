@@ -2,20 +2,17 @@ import IMedia from "./IMedia";
 import MediaType from "./MediaType";
 
 export default abstract class Media implements IMedia {
-    constructor(
-        protected id_ : string,
-        protected type_ : MediaType
-    ) {}
+    constructor(protected id_: string, protected type_: MediaType) {}
 
-    id() {
+    id(): string {
         return this.id_;
     }
 
-    type() {
+    type(): MediaType {
         return this.type_;
     }
 
-    isType(type : MediaType) {
+    isType(type: MediaType): boolean {
         return this.type_ === type;
     }
 }

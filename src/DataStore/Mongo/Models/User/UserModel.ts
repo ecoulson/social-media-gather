@@ -16,7 +16,7 @@ const UserSchema = new Schema({
         type: [String],
         default: []
     }
-})
+});
 
 UserSchema.index({ username: "text" });
 

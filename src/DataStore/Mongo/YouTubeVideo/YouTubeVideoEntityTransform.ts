@@ -5,7 +5,7 @@ import UserRecord from "../../../Records/User/UserRecord";
 import IPostDocument from "../Models/Post/IPostDocument";
 import UserMongoDataStore from "../User/UserMongoDataStore";
 
-const YouTubeVideoEntityTransform : Transformer<IPostDocument, IYouTubeVideo> = (post) => {
+const YouTubeVideoEntityTransform: Transformer<IPostDocument, IYouTubeVideo> = (post) => {
     return new YouTubeVideo(
         post.id,
         post.userId,
@@ -15,6 +15,6 @@ const YouTubeVideoEntityTransform : Transformer<IPostDocument, IYouTubeVideo> = 
         post.youtubeVideo.videoId,
         new UserRecord(new UserMongoDataStore())
     );
-}
+};
 
 export default YouTubeVideoEntityTransform;

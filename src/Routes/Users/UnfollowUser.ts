@@ -10,7 +10,7 @@ router.post("/:username", requiresAuth(), async (req, res) => {
     });
     req.user.following.splice(req.user.following.indexOf(userToFollow.id), 1);
     await req.user.save();
-    res.send({ message: "followed!" })
-})
+    res.send({ message: "followed!" });
+});
 
 export default router;

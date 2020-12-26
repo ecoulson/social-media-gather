@@ -1,4 +1,4 @@
 export default interface ITweetMention {
-    screenName() : string;
-    id() : string;
+    screenName(): string;
+    id(): string;
 }

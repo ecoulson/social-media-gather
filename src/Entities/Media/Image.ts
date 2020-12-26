@@ -4,22 +4,23 @@ import MediaType from "./MediaType";
 
 export default class Image extends Media implements IImage {
     constructor(
-        id_ : string,
-        private url_: string, 
-        private width_: number, 
-        private height_: number) {
-        super(id_, MediaType.IMAGE)
+        id_: string,
+        private url_: string,
+        private width_: number,
+        private height_: number
+    ) {
+        super(id_, MediaType.IMAGE);
     }
 
-    url() {
+    url(): string {
         return this.url_;
     }
 
-    width() {
+    width(): number {
         return this.width_;
     }
 
-    height() {
+    height(): number {
         return this.height_;
     }
 }

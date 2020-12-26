@@ -7,6 +7,6 @@ import TweetUpdateQueryTransform from "./TweetUpdateQueryTransform";
 
 export default class TweetMongoDataStore extends MongoDataStore<IPostDocument, ITweet> {
     constructor() {
-        super(PostModel, TweetEntityTransform, TweetUpdateQueryTransform)
+        super(PostModel, TweetEntityTransform, TweetUpdateQueryTransform);
     }
 }

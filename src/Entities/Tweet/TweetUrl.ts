@@ -1,21 +1,17 @@
 import ITweetUrl from "./ITweetUrl";
 
 export default class TweetUrl implements ITweetUrl {
-    constructor(
-        private url_ : string,
-        private displayUrl_ : string,
-        private expandedUrl_ : string,
-    ) {}
+    constructor(private url_: string, private displayUrl_: string, private expandedUrl_: string) {}
 
-    url() {
+    url(): string {
         return this.url_;
     }
 
-    displayUrl() {
+    displayUrl(): string {
         return this.displayUrl_;
     }
-    
-    expandedUrl() {
+
+    expandedUrl(): string {
         return this.expandedUrl_;
     }
 }

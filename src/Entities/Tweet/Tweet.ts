@@ -1,5 +1,6 @@
 import UserRecord from "../../Records/User/UserRecord";
 import IMedia from "../Media/IMedia";
+import IUser from "../User/IUser";
 import ITweet from "./ITweet";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
@@ -7,59 +8,59 @@ import ITweetUrl from "./ITweetUrl";
 export default class Tweet implements ITweet {
     constructor(
         private id_: string,
-        private text_ : string,
-        private publishedAt_ : Date,
-        private screenName_ : string,
-        private hashtags_ : string[],
-        private urls_ : ITweetUrl[],
-        private mentions_ : ITweetMention[],
-        private media_ : IMedia[],
-        private tweetId_ : string,
-        private userId_ : string,
-        private userRecord : InstanceType<typeof UserRecord>
+        private text_: string,
+        private publishedAt_: Date,
+        private screenName_: string,
+        private hashtags_: string[],
+        private urls_: ITweetUrl[],
+        private mentions_: ITweetMention[],
+        private media_: IMedia[],
+        private tweetId_: string,
+        private userId_: string,
+        private userRecord: InstanceType<typeof UserRecord>
     ) {}
 
-    id() {
+    id(): string {
         return this.id_;
     }
 
-    text() {
+    text(): string {
         return this.text_;
     }
 
-    publishedAt() {
+    publishedAt(): Date {
         return this.publishedAt_;
     }
 
-    screenName() {
+    screenName(): string {
         return this.screenName_;
     }
 
-    hashtags() {
+    hashtags(): string[] {
         return this.hashtags_;
     }
 
-    urls() {
+    urls(): ITweetUrl[] {
         return this.urls_;
     }
 
-    mentions() {
+    mentions(): ITweetMention[] {
         return this.mentions_;
     }
 
-    media() {
+    media(): IMedia[] {
         return this.media_;
     }
 
-    userId() {
+    userId(): string {
         return this.userId_;
     }
 
-    user() {
+    user(): Promise<IUser> {
         return this.userRecord.findById(this.userId_);
     }
 
-    tweetId() {
+    tweetId(): string {
         return this.tweetId_;
     }
 }

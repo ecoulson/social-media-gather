@@ -8,4 +8,4 @@ export default {
     YouTubeVideoRecord: Symbol.for("YouTubeVideoRecord"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     UserService: Symbol.for("UserService")
-}
+};

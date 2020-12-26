@@ -4,50 +4,58 @@ import User from "../../DataStore/Mongo/Models/User/UserModel";
 import Webhook from "../../DataStore/Mongo/Models/Webhook/WebhookModel";
 import requiresAuth from "../../Middleware/RequiresAuth";
 import Axios from "axios";
+import { TwitchChannelResponse } from "./TwitchChannelResponse";
+import IUserDocument from "../../DataStore/Mongo/Models/User/IUserDocument";
+import { ITwitchVideoResponse } from "./ITwitchVideoResponse";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-    res.json(await getUsers(req.query.username as string))
+    res.json(await getUsers(req.query.username as string));
 });
 
-async function getUsers(username : string) {
+async function getUsers(username: string) {
     return await getChannel(username);
 }
 
-async function getChannel(username : string) {
-    const tokenPayload = await getTwitchAccessToken()
-    const response = await Axios.get(`https://api.twitch.tv/helix/search/channels?query=${username}`, {
-        headers: {
-            "Authorization": `Bearer ${tokenPayload.access_token}`,
-            "Client-Id": process.env.TWITCH_CLIENT_ID
+async function getChannel(username: string) {
+    const tokenPayload = await getTwitchAccessToken();
+    const response = await Axios.get(
+        `https://api.twitch.tv/helix/search/channels?query=${username}`,
+        {
+            headers: {
+                Authorization: `Bearer ${tokenPayload.access_token}`,
+                "Client-Id": process.env.TWITCH_CLIENT_ID
+            }
         }
-    })
-    const channels = response.data.data.map((result: any) => {
+    );
+    const channels = response.data.data.map((result: TwitchChannelResponse) => {
         return {
             username: result.display_name,
             id: result.id,
             profilePicture: result.thumbnail_url
-        }
-    })
-    return channels
+        };
+    });
+    return channels;
 }
 
 async function getTwitchAccessToken() {
-    const response = await Axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`)
+    const response = await Axios.post(
+        `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`
+    );
     return response.data;
 }
 
 router.post("/", requiresAuth(), async (req, res) => {
     res.json(await registerAccount(req.user, req.body.id));
-})
+});
 
 router.post("/add", async (req, res) => {
     const user = await User.findOne({ _id: req.body.userId });
-    res.json(await registerAccount(user, req.body.id))
-})
+    res.json(await registerAccount(user, req.body.id));
+});
 
-async function registerAccount(user : any, twitchId : string) {
+async function registerAccount(user: IUserDocument, twitchId: string) {
     const tokenPayload = await getTwitchAccessToken();
     user.twitchId = twitchId;
     await Promise.all([
@@ -58,7 +66,7 @@ async function registerAccount(user : any, twitchId : string) {
     return await user.save();
 }
 
-async function registerWebhooks(accessToken : any, twitchId : string, userId : string) {
+async function registerWebhooks(accessToken: string, twitchId: string, userId: string) {
     try {
         const leaseTime = 60 * 60 * 24 * 7;
         const now = new Date();
@@ -69,24 +77,28 @@ async function registerWebhooks(accessToken : any, twitchId : string, userId : s
             callbackURL: `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
             userId: userId
         });
-        await Axios.post("https://api.twitch.tv/helix/webhooks/hub", {
-            "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
-            "hub.mode": "subscribe",
-            "hub.lease_seconds": leaseTime,
-            "hub.topic": `https://api.twitch.tv/helix/streams?user_id=${twitchId}`
-        }, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Client-Id": process.env.TWITCH_CLIENT_ID
+        await Axios.post(
+            "https://api.twitch.tv/helix/webhooks/hub",
+            {
+                "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
+                "hub.mode": "subscribe",
+                "hub.lease_seconds": leaseTime,
+                "hub.topic": `https://api.twitch.tv/helix/streams?user_id=${twitchId}`
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Client-Id": process.env.TWITCH_CLIENT_ID
+                }
             }
-        });
+        );
         await webhook.save();
     } catch (error) {
         console.log(error.response.data);
     }
 }
 
-async function createPostForLiveStream(accessToken : any, twitchId : string, userId : string) {
+async function createPostForLiveStream(accessToken: string, twitchId: string, userId: string) {
     try {
         const userLiveStreams = await getLiveStream(accessToken, twitchId);
         if (userLiveStreams.length === 1) {
@@ -102,9 +114,9 @@ async function createPostForLiveStream(accessToken : any, twitchId : string, use
                     startedAt: new Date(userLiveStreams[0].started_at),
                     title: userLiveStreams[0].title,
                     thumbnailUrl: userLiveStreams[0].thumbnail_url,
-                    userName: userLiveStreams[0].user_name,
+                    userName: userLiveStreams[0].user_name
                 }
-            })
+            });
             await twitchLiveStreamPost.save();
         }
     } catch (error) {
@@ -112,70 +124,84 @@ async function createPostForLiveStream(accessToken : any, twitchId : string, use
     }
 }
 
-async function getGameName(accessToken : any, gameId : string) {
+async function getGameName(accessToken: string, gameId: string) {
     const response = await Axios.get(`https://api.twitch.tv/helix/games?id=${gameId}`, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
             "Client-Id": process.env.TWITCH_CLIENT_ID
         }
-    })
+    });
     if (response.data.data.length === 0) {
         return "";
     }
     return response.data.data[0].name;
 }
 
-async function getLiveStream(accessToken : any, twitchId : string) {
+async function getLiveStream(accessToken: string, twitchId: string) {
     const response = await Axios.get(`https://api.twitch.tv/helix/streams?user_id=${twitchId}`, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
             "Client-Id": process.env.TWITCH_CLIENT_ID
         }
-    })
+    });
     return response.data.data;
 }
 
-async function createPostForVideos(accessToken : any, twitchId : string, userId : string) {
+async function createPostForVideos(accessToken: string, twitchId: string, userId: string) {
     let videoPageResponse = await getVideoPage(accessToken, twitchId);
     while (videoPageResponse.data.data.length !== 0) {
         if (videoPageResponse.headers["ratelimit-remaining"] <= 20) {
-            const waitTime = parseInt(videoPageResponse.headers["ratelimit-reset"]) - (new Date().getTime() / 1000);
+            const waitTime =
+                parseInt(videoPageResponse.headers["ratelimit-reset"]) -
+                new Date().getTime() / 1000;
             await wait(waitTime * 1000);
         }
-        await Promise.all(videoPageResponse.data.data.map((video : any) => {
-            createVideoPost(video, accessToken, userId)
-        }));
-        videoPageResponse = await getVideoPage(accessToken, twitchId, videoPageResponse.data.pagination.cursor);
+        await Promise.all(
+            videoPageResponse.data.data.map((video: ITwitchVideoResponse) => {
+                createVideoPost(video, accessToken, userId);
+            })
+        );
+        videoPageResponse = await getVideoPage(
+            accessToken,
+            twitchId,
+            videoPageResponse.data.pagination.cursor
+        );
     }
 }
 
-async function wait(miliseconds : number) {
+async function wait(milliseconds: number) {
     return new Promise((resolve) => {
-        setTimeout(resolve, miliseconds)
-    })
+        setTimeout(resolve, milliseconds);
+    });
 }
 
-async function getVideoPage(accessToken : any, twitchId : string, paginationCursor : any = undefined) {
+async function getVideoPage(
+    accessToken: string,
+    twitchId: string,
+    paginationCursor: string = undefined
+) {
     if (!paginationCursor) {
         const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${twitchId}`, {
             headers: {
-                "Authorization": `Bearer ${accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
                 "Client-Id": process.env.TWITCH_CLIENT_ID
             }
-        })
+        });
         return response;
     }
-    const response = await Axios.get(`https://api.twitch.tv/helix/videos?user_id=${twitchId}&after=${paginationCursor}`, {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`,
-            "Client-Id": process.env.TWITCH_CLIENT_ID
+    const response = await Axios.get(
+        `https://api.twitch.tv/helix/videos?user_id=${twitchId}&after=${paginationCursor}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Client-Id": process.env.TWITCH_CLIENT_ID
+            }
         }
-        
-    })
+    );
     return response;
 }
 
-async function createVideoPost(video : any, accessToken: any, userId : string) {
+async function createVideoPost(video: ITwitchVideoResponse, accessToken: string, userId: string) {
     const videoPost = new Post({
         type: "TWITCH_VIDEO",
         userId: userId,
@@ -187,10 +213,10 @@ async function createVideoPost(video : any, accessToken: any, userId : string) {
             title: video.title,
             description: video.description,
             thumbnailUrl: video.thumbnail_url,
-            userName: video.user_name,
+            userName: video.user_name
         }
-    })
-    return await videoPost.save()
+    });
+    return await videoPost.save();
 }
 
 export default router;

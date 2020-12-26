@@ -4,7 +4,7 @@ import BasicRecord from "../BasicRecord";
 import RecordMixin from "../RecordMixin";
 
 class YouTubeVideoRecord extends BasicRecord<IYouTubeVideo> {
-    constructor(dataStore : IDataStore<IYouTubeVideo>) {
+    constructor(dataStore: IDataStore<IYouTubeVideo>) {
         super(dataStore);
     }
 }

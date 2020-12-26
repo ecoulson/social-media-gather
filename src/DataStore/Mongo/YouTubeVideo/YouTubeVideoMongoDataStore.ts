@@ -5,8 +5,11 @@ import MongoDataStore from "../MongoDataStore";
 import YouTubeVideoEntityTransform from "./YouTubeVideoEntityTransform";
 import YouTubeVideoUpdateQueryTransform from "./YouTubeVideoUpdateQueryTransform";
 
-export default class YouTubeVideoMongoDataStore extends MongoDataStore<IPostDocument, IYouTubeVideo> {
+export default class YouTubeVideoMongoDataStore extends MongoDataStore<
+    IPostDocument,
+    IYouTubeVideo
+> {
     constructor() {
-        super(PostModel, YouTubeVideoEntityTransform, YouTubeVideoUpdateQueryTransform)
+        super(PostModel, YouTubeVideoEntityTransform, YouTubeVideoUpdateQueryTransform);
     }
 }

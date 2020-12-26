@@ -1,3 +1,3 @@
 export default {
-    MONGO: Symbol.for("MongoDataStore"),
-}
+    MONGO: Symbol.for("MongoDataStore")
+};

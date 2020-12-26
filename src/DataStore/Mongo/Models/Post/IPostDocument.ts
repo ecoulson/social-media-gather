@@ -7,8 +7,8 @@ import IYouTubeVideoDocument from "./IYouTubeVideoDocument";
 
 export default interface IPostDocument extends Document {
     type: string;
-    timeCreated: Date,
-    userId: string,
+    timeCreated: Date;
+    userId: string;
     twitchStream: ITwitchStreamDocument;
     twitchVideo: ITwitchVideoDocument;
     youtubeVideo: IYouTubeVideoDocument;

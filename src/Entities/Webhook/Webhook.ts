@@ -1,52 +1,53 @@
 import UserRecord from "../../Records/User/UserRecord";
+import IUser from "../User/IUser";
 import IWebhook from "./IWebhook";
 
 export default class Webhook implements IWebhook {
     constructor(
-        private id_ : string,
-        private expirationDate_ : Date,
-        private dateCreated_ : Date,
-        private platform_ : string,
-        private topicUrl_ : string,
-        private callbackUrl_ : string,
-        private channelId_ : string,
-        private userId_ : string,
-        private userRecord : InstanceType<typeof UserRecord>
+        private id_: string,
+        private expirationDate_: Date,
+        private dateCreated_: Date,
+        private platform_: string,
+        private topicUrl_: string,
+        private callbackUrl_: string,
+        private channelId_: string,
+        private userId_: string,
+        private userRecord: InstanceType<typeof UserRecord>
     ) {}
 
-    id() {
+    id(): string {
         return this.id_;
     }
 
-    expirationDate() {
+    expirationDate(): Date {
         return this.expirationDate_;
     }
 
-    dateCreated() {
+    dateCreated(): Date {
         return this.dateCreated_;
     }
 
-    platform() {
+    platform(): string {
         return this.platform_;
     }
 
-    topicUrl() {
+    topicUrl(): string {
         return this.topicUrl_;
     }
 
-    callbackUrl() {
+    callbackUrl(): string {
         return this.callbackUrl_;
     }
 
-    channelId() {
+    channelId(): string {
         return this.channelId_;
     }
 
-    user() {
+    user(): Promise<IUser> {
         return this.userRecord.findById(this.userId_);
     }
 
-    userId() {
+    userId(): string {
         return this.userId_;
     }
 }

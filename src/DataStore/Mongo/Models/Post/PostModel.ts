@@ -6,25 +6,25 @@ const { Schema } = mongoose;
 const InstagramMedia = new Schema({
     url: String,
     type: String
-})
+});
 
 const TwitterUrls = new Schema({
     displayUrl: String,
     url: String,
-    expandedUrl: String,
-})
+    expandedUrl: String
+});
 
 const TwitterUserMentions = new Schema({
     screenName: String,
-    id: String,
-})
+    id: String
+});
 
 const TwitterMedia = new Schema({
     type: String,
     id: String,
     thumbnailUrl: String,
     url: String
-})
+});
 
 const schema = new Schema({
     type: {
@@ -43,7 +43,7 @@ const schema = new Schema({
         userName: String,
         thumbnailUrl: String,
         title: String,
-        streamId: String,
+        streamId: String
     },
     twitchVideo: {
         url: String,
@@ -52,7 +52,7 @@ const schema = new Schema({
         title: String,
         description: String,
         thumbnailUrl: String,
-        userName: String,
+        userName: String
     },
     youtubeVideo: {
         publishedAt: Date,
@@ -63,7 +63,7 @@ const schema = new Schema({
     tweet: {
         id: String,
         text: String,
-        publishedAt:  Date,
+        publishedAt: Date,
         screenName: String,
         hashtags: [String],
         urls: [TwitterUrls],
@@ -78,6 +78,6 @@ const schema = new Schema({
         media: [InstagramMedia],
         thumbnail: InstagramMedia
     }
-})
+});
 
 export default mongoose.model<IPostDocument>("Post", schema);

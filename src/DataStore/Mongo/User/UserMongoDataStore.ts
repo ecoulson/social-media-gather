@@ -7,6 +7,6 @@ import UserUpdateQueryTransform from "./UserUpdateQueryTransform";
 
 export default class UserMongoDataStore extends MongoDataStore<IUserDocument, IUser> {
     constructor() {
-        super(UserModel, UserEntityTransform, UserUpdateQueryTransform)
+        super(UserModel, UserEntityTransform, UserUpdateQueryTransform);
     }
 }

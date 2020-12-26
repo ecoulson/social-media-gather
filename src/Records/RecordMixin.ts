@@ -1,31 +1,34 @@
-import { injectable } from "inversify";
 import { MixinConstructor } from "../@Types";
 import IQuery from "../DataStore/IQuery";
 import IEntity from "../Entities/IEntity";
 import BasicRecord from "./BasicRecord";
 
-export type RecordMixinConstructor<EntityType extends IEntity> = MixinConstructor<BasicRecord<EntityType>>
+export type RecordMixinConstructor<EntityType extends IEntity> = MixinConstructor<
+    BasicRecord<EntityType>
+>;
 
 function RecordMixin<Entity extends IEntity>() {
+    // TODO: resolve this return type
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return <BaseType extends RecordMixinConstructor<Entity>>(Base: BaseType) => {
         return class Record extends Base {
             async findById(id: string) {
                 return this.dataStore.findById(id);
             }
 
-            async find(query? : IQuery) {
+            async find(query?: IQuery) {
                 return this.dataStore.find(query);
             }
 
-            async save(entity : Entity) {
+            async save(entity: Entity) {
                 return this.dataStore.save(entity);
             }
 
-            async delete(entity : Entity) {
+            async delete(entity: Entity) {
                 return this.dataStore.delete(entity);
             }
         };
-    }
+    };
 }
 
 export default RecordMixin;

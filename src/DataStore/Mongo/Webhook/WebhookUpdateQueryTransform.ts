@@ -3,7 +3,9 @@ import { Transformer } from "../../../@Types";
 import IWebhook from "../../../Entities/Webhook/IWebhook";
 import IWebhookDocument from "../Models/Webhook/IWebhookDocument";
 
-const WebhookUpdateQueryTransform : Transformer<IWebhook, UpdateQuery<IWebhookDocument>> = (webhook) => {
+const WebhookUpdateQueryTransform: Transformer<IWebhook, UpdateQuery<IWebhookDocument>> = (
+    webhook
+) => {
     return {
         _id: webhook.id(),
         callbackURL: webhook.callbackUrl(),
@@ -13,7 +15,7 @@ const WebhookUpdateQueryTransform : Transformer<IWebhook, UpdateQuery<IWebhookDo
         channelId: webhook.channelId(),
         platform: webhook.platform(),
         userId: webhook.userId()
-    }
-} 
+    };
+};
 
 export default WebhookUpdateQueryTransform;
