@@ -10,62 +10,67 @@ import UserMongoDataStore from "./DataStore/Mongo/User/UserMongoDataStore";
 import WebhookMongoDataStore from "./DataStore/Mongo/Webhook/WebhookMongoDataStore";
 import YouTubeVideoMongoDataStore from "./DataStore/Mongo/YouTubeVideo/YouTubeVideoMongoDataStore";
 import requiresAuth from "./Middleware/RequiresAuth";
-import InstagramPostRecord from "./Records/InstagramPost/InstagramPostRecord";
-import TweetRecord from "./Records/Tweet/TweetRecord";
-import TwitchStreamRecord from "./Records/TwitchStream/TwitchStreamRecord";
-import TwitchVideoRecord from "./Records/TwitchVideo/TwitchVideoRecord";
-import UserRecord from "./Records/User/UserRecord";
-import WebhookRecord from "./Records/Webhook/WebhookRecord";
-import YouTubeRecord from "./Records/YouTubeVideo/YouTubeRecord";
+import InstagramPostRepository from "./Repositories/InstagramPost/InstagramPostRepository";
+import TweetRepository from "./Repositories/Tweet/TweetRepository";
+import TwitchStreamRepository from "./Repositories/TwitchStream/TwitchStreamRepository";
+import TwitchVideoRepository from "./Repositories/TwitchVideo/TwitchVideoRepository";
+import UserRepository from "./Repositories/User/UserRepository";
+import WebhookRepository from "./Repositories/Webhook/WebhookRepository";
+import YouTubeRepository from "./Repositories/YouTubeVideo/YouTubeRepository";
+import IUserService from "./Services/IUserService";
 import UserService from "./Services/UserService";
 
 const container = new Container();
 
-const mongoInstagramRecord = new InstagramPostRecord(new InstagramPostMongoStore());
-const mongoTweetRecord = new TweetRecord(new TweetMongoDataStore());
-const mongoTwitchStreamRecord = new TwitchStreamRecord(new TwitchStreamMongoDataStore());
-const mongoTwitchVideoRecord = new TwitchVideoRecord(new TwitchVideoMongoDataStore());
-const mongoUserRecord = new UserRecord(new UserMongoDataStore());
-const mongoWebhookRecord = new WebhookRecord(new WebhookMongoDataStore());
-const mongoYouTubeRecord = new YouTubeRecord(new YouTubeVideoMongoDataStore());
+const mongoInstagramRepository = new InstagramPostRepository(new InstagramPostMongoStore());
+const mongoTweetRepository = new TweetRepository(new TweetMongoDataStore());
+const mongoTwitchStreamRepository = new TwitchStreamRepository(new TwitchStreamMongoDataStore());
+const mongoTwitchVideoRepository = new TwitchVideoRepository(new TwitchVideoMongoDataStore());
+const mongoUserRepository = new UserRepository(new UserMongoDataStore());
+const mongoWebhookRepository = new WebhookRepository(new WebhookMongoDataStore());
+const mongoYouTubeRepository = new YouTubeRepository(new YouTubeVideoMongoDataStore());
 
 container
-    .bind<InstanceType<typeof UserRecord>>(Types.UserRecord)
-    .toConstantValue(mongoUserRecord)
+    .bind<InstanceType<typeof UserRepository>>(Types.UserRepository)
+    .toConstantValue(mongoUserRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof InstagramPostRecord>>(Types.InstagramPostRecord)
-    .toConstantValue(mongoInstagramRecord)
+    .bind<InstanceType<typeof InstagramPostRepository>>(Types.InstagramPostRepository)
+    .toConstantValue(mongoInstagramRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof TweetRecord>>(Types.TweetRecord)
-    .toConstantValue(mongoTweetRecord)
+    .bind<InstanceType<typeof TweetRepository>>(Types.TweetRepository)
+    .toConstantValue(mongoTweetRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof TwitchStreamRecord>>(Types.TwitchStreamRecord)
-    .toConstantValue(mongoTwitchStreamRecord)
+    .bind<InstanceType<typeof TwitchStreamRepository>>(Types.TwitchStreamRepository)
+    .toConstantValue(mongoTwitchStreamRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof TwitchVideoRecord>>(Types.TwitchVideoRecord)
-    .toConstantValue(mongoTwitchVideoRecord)
+    .bind<InstanceType<typeof TwitchVideoRepository>>(Types.TwitchVideoRepository)
+    .toConstantValue(mongoTwitchVideoRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof WebhookRecord>>(Types.WebhookRecord)
-    .toConstantValue(mongoWebhookRecord)
+    .bind<InstanceType<typeof WebhookRepository>>(Types.WebhookRepository)
+    .toConstantValue(mongoWebhookRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof YouTubeRecord>>(Types.WebhookRecord)
-    .toConstantValue(mongoYouTubeRecord)
+    .bind<InstanceType<typeof YouTubeRepository>>(Types.WebhookRepository)
+    .toConstantValue(mongoYouTubeRepository)
     .whenTargetTagged(Tags.MONGO, true);
 
 container
     .bind<RequestHandler>(Types.RequiresAuthentication)
     .toConstantValue(
         requiresAuth(
-            container.getTagged<InstanceType<typeof UserRecord>>(Types.UserRecord, Tags.MONGO, true)
+            container.getTagged<InstanceType<typeof UserRepository>>(
+                Types.UserRepository,
+                Tags.MONGO,
+                true
+            )
         )
     );
 
-container.bind<UserService>(Types.UserService).to(UserService);
+container.bind<IUserService>(Types.UserService).to(UserService);
 
 export default container;

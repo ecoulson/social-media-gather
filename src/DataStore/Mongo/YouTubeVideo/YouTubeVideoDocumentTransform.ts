@@ -3,11 +3,10 @@ import { Transformer } from "../../../@Types";
 import IYouTubeVideo from "../../../Entities/YouTubeVideo/IYouTubeVideo";
 import IPostDocument from "../Models/Post/IPostDocument";
 
-const YouTubeVideoUpdateQueryTransform: Transformer<IYouTubeVideo, UpdateQuery<IPostDocument>> = (
+const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, UpdateQuery<IPostDocument>> = (
     post
 ) => {
     return {
-        _id: post.id(),
         userId: post.userId(),
         youtubeVideo: {
             publishedAt: post.publishedAt(),
@@ -18,4 +17,4 @@ const YouTubeVideoUpdateQueryTransform: Transformer<IYouTubeVideo, UpdateQuery<I
     };
 };
 
-export default YouTubeVideoUpdateQueryTransform;
+export default YouTubeVideoDocumentTransform;

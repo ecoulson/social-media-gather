@@ -1,4 +1,3 @@
-import IUser from "../User/IUser";
 import IEntity from "../IEntity";
 import IImage from "../Media/IImage";
 
@@ -13,7 +12,6 @@ export default interface ITwitchStream extends IEntity {
     title(): string;
     userId(): string;
     screenName(): string;
-    user(): Promise<IUser>;
     gameName(): string;
     streamId(): string;
     endStream(): void;

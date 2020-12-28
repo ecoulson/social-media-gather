@@ -3,11 +3,10 @@ import { UpdateQuery } from "mongoose";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
 import IPostDocument from "../Models/Post/IPostDocument";
 
-const TwitchStreamUpdateQueryTransform: Transformer<ITwitchStream, UpdateQuery<IPostDocument>> = (
+const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPostDocument>> = (
     stream
 ) => {
     return {
-        _id: stream.id(),
         userId: stream.userId(),
         twitchStream: {
             endedAt: stream.endedAt(),
@@ -23,4 +22,4 @@ const TwitchStreamUpdateQueryTransform: Transformer<ITwitchStream, UpdateQuery<I
     };
 };
 
-export default TwitchStreamUpdateQueryTransform;
+export default TwitchStreamDocumentTransform;

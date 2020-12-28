@@ -1,10 +1,12 @@
 import IDataStore from "../../DataStore/IDataStore";
 import ITwitchStream from "../../Entities/TwitchStream/ITwitchStream";
-import ITwitchStreamRecord from "./ITwitchStreamRecord";
-import BasicRecord from "../BasicRecord";
-import RecordMixin from "../RecordMixin";
+import ITwitchStreamRepository from "./ITwitchStreamRepository";
+import CoreRepository from "../CoreRepository";
+import RepositoryMixin from "../RepositoryMixin";
 
-class TwitchStreamRecord extends BasicRecord<ITwitchStream> implements ITwitchStreamRecord {
+class TwitchStreamRepository
+    extends CoreRepository<ITwitchStream>
+    implements ITwitchStreamRepository {
     constructor(dataStore: IDataStore<ITwitchStream>) {
         super(dataStore);
     }
@@ -16,4 +18,4 @@ class TwitchStreamRecord extends BasicRecord<ITwitchStream> implements ITwitchSt
     }
 }
 
-export default RecordMixin<ITwitchStream>()(TwitchStreamRecord);
+export default RepositoryMixin<ITwitchStream>()(TwitchStreamRepository);

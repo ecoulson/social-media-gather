@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import jsonwebtoken from "jsonwebtoken";
 import User from "../DataStore/Mongo/Models/User/UserModel";
-import UserRecord from "../Records/User/UserRecord";
+import UserRepository from "../Repositories/User/UserRepository";
 
-function requiresAuth(record?: InstanceType<typeof UserRecord>): RequestHandler {
+function requiresAuth(record?: InstanceType<typeof UserRepository>): RequestHandler {
     return async (req, res, next) => {
         try {
             const token = req.cookies.token || req.headers.authorization.split("Bearer ")[1];

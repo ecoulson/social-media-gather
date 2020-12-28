@@ -1,6 +1,4 @@
-import UserRecord from "../../Records/User/UserRecord";
 import IMedia from "../Media/IMedia";
-import IUser from "../User/IUser";
 import ITweet from "./ITweet";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
@@ -16,8 +14,7 @@ export default class Tweet implements ITweet {
         private mentions_: ITweetMention[],
         private media_: IMedia[],
         private tweetId_: string,
-        private userId_: string,
-        private userRecord: InstanceType<typeof UserRecord>
+        private userId_: string
     ) {}
 
     id(): string {
@@ -54,10 +51,6 @@ export default class Tweet implements ITweet {
 
     userId(): string {
         return this.userId_;
-    }
-
-    user(): Promise<IUser> {
-        return this.userRecord.findById(this.userId_);
     }
 
     tweetId(): string {

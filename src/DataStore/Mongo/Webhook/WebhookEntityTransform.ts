@@ -1,9 +1,7 @@
 import { Transformer } from "../../../@Types";
 import IWebhook from "../../../Entities/Webhook/IWebhook";
 import Webhook from "../../../Entities/Webhook/Webhook";
-import UserRecord from "../../../Records/User/UserRecord";
 import IWebhookDocument from "../Models/Webhook/IWebhookDocument";
-import UserMongoDataStore from "../User/UserMongoDataStore";
 
 const WebhookEntityTransformer: Transformer<IWebhookDocument, IWebhook> = (webhookDocument) => {
     return new Webhook(
@@ -14,8 +12,7 @@ const WebhookEntityTransformer: Transformer<IWebhookDocument, IWebhook> = (webho
         webhookDocument.topicURL,
         webhookDocument.callbackURL,
         webhookDocument.channelId,
-        webhookDocument.userId,
-        new UserRecord(new UserMongoDataStore())
+        webhookDocument.userId
     );
 };
 

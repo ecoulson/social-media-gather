@@ -2,8 +2,6 @@ import { Transformer } from "../../../@Types";
 import IUserDocument from "../Models/User/IUserDocument";
 import User from "../../../Entities/User/User";
 import IUser from "../../../Entities/User/IUser";
-import UserMongoDataStore from "./UserMongoDataStore";
-import UserRecord from "../../../Records/User/UserRecord";
 
 const UserEntityTransform: Transformer<IUserDocument, IUser> = (userDocument) => {
     return new User(
@@ -14,9 +12,9 @@ const UserEntityTransform: Transformer<IUserDocument, IUser> = (userDocument) =>
         userDocument.instagramId,
         userDocument.email,
         userDocument.username,
+        userDocument.password,
         userDocument.verified,
-        userDocument.following,
-        new UserRecord(new UserMongoDataStore())
+        userDocument.following
     );
 };
 

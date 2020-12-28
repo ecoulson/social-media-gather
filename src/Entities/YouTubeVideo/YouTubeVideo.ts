@@ -1,5 +1,3 @@
-import UserRecord from "../../Records/User/UserRecord";
-import IUser from "../User/IUser";
 import IYouTubeVideo from "./IYouTubeVideo";
 
 export default class YouTubeVideo implements IYouTubeVideo {
@@ -9,8 +7,7 @@ export default class YouTubeVideo implements IYouTubeVideo {
         private publishedAt_: Date,
         private thumbnailUrl_: string,
         private title_: string,
-        private videoId_: string,
-        private userRecord: InstanceType<typeof UserRecord>
+        private videoId_: string
     ) {}
 
     id(): string {
@@ -19,10 +16,6 @@ export default class YouTubeVideo implements IYouTubeVideo {
 
     userId(): string {
         return this.userId_;
-    }
-
-    user(): Promise<IUser> {
-        return this.userRecord.findById(this.id_);
     }
 
     publishedAt(): Date {

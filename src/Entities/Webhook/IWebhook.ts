@@ -1,5 +1,4 @@
 import IEntity from "../IEntity";
-import IUser from "../User/IUser";
 
 export default interface IWebhook extends IEntity {
     expirationDate(): Date;
@@ -8,6 +7,5 @@ export default interface IWebhook extends IEntity {
     topicUrl(): string;
     callbackUrl(): string;
     channelId(): string;
-    user(): Promise<IUser>;
     userId(): string;
 }

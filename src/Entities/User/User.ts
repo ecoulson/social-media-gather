@@ -1,4 +1,3 @@
-import UserRecord from "../../Records/User/UserRecord";
 import IUser from "./IUser";
 
 export default class User implements IUser {
@@ -10,9 +9,9 @@ export default class User implements IUser {
         private instagramId_: string,
         private email_: string,
         private username_: string,
+        private password_: string,
         private verified_: boolean,
-        private followingIds_: string[],
-        private userRecord: InstanceType<typeof UserRecord>
+        private followingIds_: string[]
     ) {}
 
     id(): string {
@@ -47,11 +46,19 @@ export default class User implements IUser {
         return this.verified_;
     }
 
-    async following(): Promise<IUser[]> {
-        return Promise.all(this.followingIds_.map((id) => this.userRecord.findById(id)));
+    following(): string[] {
+        return this.followingIds_;
     }
 
-    followingIds(): string[] {
-        return this.followingIds_;
+    verify(): void {
+        this.verified_ = true;
+    }
+
+    password(): string {
+        return this.password_;
+    }
+
+    addFollower(user: IUser) {
+        this.followingIds_.push(user.id());
     }
 }

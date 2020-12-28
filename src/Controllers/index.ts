@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Container } from "inversify";
-import AuthenticationControllerFactory from "./AuthenticationController";
+import AuthenticationController from "./AuthenticationController";
 
-export default function ControllerFactory(container: Container): void {
-    AuthenticationControllerFactory(container);
+export default function ControllerFactory(container: Container): unknown[] {
+    return [AuthenticationController];
 }

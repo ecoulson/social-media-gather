@@ -3,8 +3,6 @@ import Image from "../../../Entities/Media/Image";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
 import TwitchStream from "../../../Entities/TwitchStream/TwitchStream";
 import IPostDocument from "../Models/Post/IPostDocument";
-import UserRecord from "../../../Records/User/UserRecord";
-import UserMongoDataStore from "../User/UserMongoDataStore";
 
 const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (post) => {
     return new TwitchStream(
@@ -19,7 +17,6 @@ const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (
         post.twitchStream.gameName,
         post.twitchStream.streamId,
         post.twitchStream.username,
-        new UserRecord(new UserMongoDataStore()),
         post.twitchStream.endedAt
     );
 };

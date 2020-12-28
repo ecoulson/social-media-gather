@@ -1,11 +1,11 @@
 export default {
-    InstagramPostRecord: Symbol.for("InstagramPostRecord"),
-    TweetRecord: Symbol.for("TweetRecord"),
-    TwitchStreamRecord: Symbol.for("TwitchStreamRecord"),
-    TwitchVideoRecord: Symbol.for("TwitchVideoRecord"),
-    UserRecord: Symbol.for("UserRecord"),
-    WebhookRecord: Symbol.for("WebhookRecord"),
-    YouTubeVideoRecord: Symbol.for("YouTubeVideoRecord"),
+    InstagramPostRepository: Symbol.for("InstagramPostRepository"),
+    TweetRepository: Symbol.for("TweetRepository"),
+    TwitchStreamRepository: Symbol.for("TwitchStreamRepository"),
+    TwitchVideoRepository: Symbol.for("TwitchVideoRepository"),
+    UserRepository: Symbol.for("UserRepository"),
+    WebhookRepository: Symbol.for("WebhookRepository"),
+    YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     UserService: Symbol.for("UserService")
 };

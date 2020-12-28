@@ -12,9 +12,8 @@ import ITweetMentionDocument from "../Models/Post/ITweetMentionDocument";
 import IImage from "../../../Entities/Media/IImage";
 import IVideo from "../../../Entities/Media/IVideo";
 
-const TweetUpdateQueryTransform: Transformer<ITweet, UpdateQuery<IPostDocument>> = (tweet) => {
+const TweetDocumentTransform: Transformer<ITweet, UpdateQuery<IPostDocument>> = (tweet) => {
     return {
-        _id: tweet.id(),
         userId: tweet.userId(),
         tweet: {
             publishedAt: tweet.publishedAt(),
@@ -64,4 +63,4 @@ const transformUrl: Transformer<ITweetUrl, ITweetUrlDocument> = (url) => {
     };
 };
 
-export default TweetUpdateQueryTransform;
+export default TweetDocumentTransform;

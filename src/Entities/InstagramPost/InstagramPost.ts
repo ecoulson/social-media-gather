@@ -1,7 +1,5 @@
-import UserRecord from "../../Records/User/UserRecord";
 import IImage from "../Media/IImage";
 import IMedia from "../Media/IMedia";
-import IUser from "../User/IUser";
 import IInstagramPost from "./IInstagramPost";
 
 export default class InstagramPost implements IInstagramPost {
@@ -13,8 +11,7 @@ export default class InstagramPost implements IInstagramPost {
         private takenAt_: Date,
         private caption_: string,
         private media_: IMedia[],
-        private thumbnail_: IImage,
-        private userRecord: InstanceType<typeof UserRecord>
+        private thumbnail_: IImage
     ) {}
 
     id(): string {
@@ -23,10 +20,6 @@ export default class InstagramPost implements IInstagramPost {
 
     userId(): string {
         return this.userId_;
-    }
-
-    user(): Promise<IUser> {
-        return this.userRecord.findById(this.userId_);
     }
 
     postId(): string {

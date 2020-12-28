@@ -1,7 +1,5 @@
 import ITwitchStream from "./ITwitchStream";
-import UserRecord from "../../Records/User/UserRecord";
 import IImage from "../Media/IImage";
-import IUser from "../User/IUser";
 
 export default class TwitchStream implements ITwitchStream {
     constructor(
@@ -16,7 +14,6 @@ export default class TwitchStream implements ITwitchStream {
         private id_: string,
         private gameName_: string,
         private streamId_: string,
-        private userRecord_: InstanceType<typeof UserRecord>,
         private endedAt_?: Date
     ) {}
 
@@ -54,10 +51,6 @@ export default class TwitchStream implements ITwitchStream {
 
     screenName(): string {
         return this.screenName_;
-    }
-
-    user(): Promise<IUser> {
-        return this.userRecord_.findById(this.userId_);
     }
 
     id(): string {

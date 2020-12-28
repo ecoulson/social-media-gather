@@ -1,5 +1,5 @@
 import ITwitchStream from "../../Entities/TwitchStream/ITwitchStream";
 
-export default interface ITwitchStreamRecord {
+export default interface ITwitchStreamRepository {
     getAllLiveBroadcasts(): Promise<ITwitchStream[]>;
 }

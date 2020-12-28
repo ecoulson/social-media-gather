@@ -1,17 +1,17 @@
 import { MixinConstructor } from "../@Types";
 import IQuery from "../DataStore/IQuery";
 import IEntity from "../Entities/IEntity";
-import BasicRecord from "./BasicRecord";
+import CoreRepository from "./CoreRepository";
 
-export type RecordMixinConstructor<EntityType extends IEntity> = MixinConstructor<
-    BasicRecord<EntityType>
+export type RepositoryMixinConstructor<EntityType extends IEntity> = MixinConstructor<
+    CoreRepository<EntityType>
 >;
 
-function RecordMixin<Entity extends IEntity>() {
+function RepositoryMixin<Entity extends IEntity>() {
     // TODO: resolve this return type
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    return <BaseType extends RecordMixinConstructor<Entity>>(Base: BaseType) => {
-        return class Record extends Base {
+    return <BaseType extends RepositoryMixinConstructor<Entity>>(Base: BaseType) => {
+        return class Repository extends Base {
             async findById(id: string) {
                 return this.dataStore.findById(id);
             }
@@ -20,15 +20,19 @@ function RecordMixin<Entity extends IEntity>() {
                 return this.dataStore.find(query);
             }
 
-            async save(entity: Entity) {
-                return this.dataStore.save(entity);
+            async update(entity: Entity) {
+                return this.dataStore.update(entity);
             }
 
             async delete(entity: Entity) {
                 return this.dataStore.delete(entity);
             }
+
+            async create(entity: Entity) {
+                return this.dataStore.persist(entity);
+            }
         };
     };
 }
 
-export default RecordMixin;
+export default RepositoryMixin;

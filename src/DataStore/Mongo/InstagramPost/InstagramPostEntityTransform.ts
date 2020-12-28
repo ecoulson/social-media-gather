@@ -4,9 +4,7 @@ import InstagramPost from "../../../Entities/InstagramPost/InstagramPost";
 import Image from "../../../Entities/Media/Image";
 import IMedia from "../../../Entities/Media/IMedia";
 import Video from "../../../Entities/Media/Video";
-import UserRecord from "../../../Records/User/UserRecord";
 import IPostDocument from "../Models/Post/IPostDocument";
-import UserMongoDataStore from "../User/UserMongoDataStore";
 
 const IMAGE_TYPE = "IMAGE";
 
@@ -19,8 +17,7 @@ const InstagramPostEntityTransform: Transformer<IPostDocument, IInstagramPost> =
         post.instagram.takenAt,
         post.instagram.caption,
         post.instagram.media.map((mediaItem) => transformInstagramMedia(mediaItem)),
-        new Image("", post.instagram.thumbnail.url, 0, 0),
-        new UserRecord(new UserMongoDataStore())
+        new Image("", post.instagram.thumbnail.url, 0, 0)
     );
 };
 

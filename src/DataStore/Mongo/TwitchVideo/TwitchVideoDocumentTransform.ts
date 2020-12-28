@@ -3,11 +3,10 @@ import { Transformer } from "../../../@Types";
 import ITwitchVideo from "../../../Entities/TwitchVideo/ITwitchVideo";
 import IPostDocument from "../Models/Post/IPostDocument";
 
-const TwitchVideoUpdateQueryTransform: Transformer<ITwitchVideo, UpdateQuery<IPostDocument>> = (
+const TwitchVideoDocumentTransform: Transformer<ITwitchVideo, UpdateQuery<IPostDocument>> = (
     video
 ) => {
     return {
-        _id: video.id(),
         userId: video.userId(),
         twitchVideo: {
             gameName: video.gameName(),
@@ -21,4 +20,4 @@ const TwitchVideoUpdateQueryTransform: Transformer<ITwitchVideo, UpdateQuery<IPo
     };
 };
 
-export default TwitchVideoUpdateQueryTransform;
+export default TwitchVideoDocumentTransform;

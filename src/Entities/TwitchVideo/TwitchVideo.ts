@@ -1,6 +1,4 @@
-import UserRecord from "../../Records/User/UserRecord";
 import IImage from "../Media/IImage";
-import IUser from "../User/IUser";
 import ITwitchVideo from "./ITwitchVideo";
 
 export default class TwitchVideo implements ITwitchVideo {
@@ -13,8 +11,7 @@ export default class TwitchVideo implements ITwitchVideo {
         private description_: string,
         private thumbnail_: IImage,
         private screenName_: string,
-        private userId_: string,
-        private userRecord_: InstanceType<typeof UserRecord>
+        private userId_: string
     ) {}
 
     id(): string {
@@ -51,9 +48,5 @@ export default class TwitchVideo implements ITwitchVideo {
 
     userId(): string {
         return this.userId_;
-    }
-
-    user(): Promise<IUser> {
-        return this.userRecord_.findById(this.userId_);
     }
 }

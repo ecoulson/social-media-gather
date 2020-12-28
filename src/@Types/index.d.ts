@@ -5,8 +5,8 @@ import IUser from "../Entities/User/IUser";
 declare global {
     namespace Express {
         export interface Request {
-            user: IUserDocument;
-            userEntity(): IUser;
+            user: IUserDocument | null;
+            userEntity?(): IUser;
         }
     }
 }

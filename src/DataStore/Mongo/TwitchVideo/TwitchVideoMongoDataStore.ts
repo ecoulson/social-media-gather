@@ -3,10 +3,10 @@ import IPostDocument from "../Models/Post/IPostDocument";
 import PostModel from "../Models/Post/PostModel";
 import MongoDataStore from "../MongoDataStore";
 import TwitchVideoEntityTransform from "./TwitchVideoEntityTransform";
-import TwitchVideoUpdateQueryTransform from "./TwitchVideoUpdateQueryTransform";
+import TwitchVideoDocumentTransform from "./TwitchVideoDocumentTransform";
 
 export default class TwitchVideoMongoDataStore extends MongoDataStore<IPostDocument, ITwitchVideo> {
     constructor() {
-        super(PostModel, TwitchVideoEntityTransform, TwitchVideoUpdateQueryTransform);
+        super(PostModel, TwitchVideoEntityTransform, TwitchVideoDocumentTransform);
     }
 }

@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import isAuthenticated from "../Auth/IsAuthenticated";
 import Button from "../Button";
 import FeedFetcher from "../FeedFetcher";
+import Feed from "../Home/Feed";
 import Cookie from "../Library/Cookie";
 import Loader from "../Loader";
 import Panel from "../Panel";
@@ -48,7 +49,7 @@ export default function Me() {
                 <Button to="/edit-profile">Edit Profile</Button>
                 <Button to="/logout">Logout</Button>
             </Panel>
-            <FeedFetcher feedUrl={`/api/users/get-user-posts/${user.username}`} />
+            <FeedFetcher Component={Feed} feedUrl={`/api/users/get-user-posts/${user.username}`} />
         </>
     )
 }

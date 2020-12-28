@@ -7,7 +7,9 @@ export default interface IUser extends IEntity {
     instagramId(): string;
     email(): string;
     username(): string;
+    password(): string;
     verified(): boolean;
-    following(): Promise<IUser[]>;
-    followingIds(): string[];
+    following(): string[];
+    verify(): void;
+    addFollower(user: IUser): void;
 }

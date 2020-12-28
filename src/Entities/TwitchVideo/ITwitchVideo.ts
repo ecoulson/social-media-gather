@@ -1,6 +1,5 @@
 import IEntity from "../IEntity";
 import IImage from "../Media/IImage";
-import IUser from "../User/IUser";
 
 export default interface ITwitchVideo extends IEntity {
     url(): string;
@@ -11,5 +10,4 @@ export default interface ITwitchVideo extends IEntity {
     thumbnail(): IImage;
     screenName(): string;
     userId(): string;
-    user(): Promise<IUser>;
 }
