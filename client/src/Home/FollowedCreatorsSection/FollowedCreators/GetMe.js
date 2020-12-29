@@ -6,5 +6,5 @@ export default async function GetMe() {
         headers: {
             authorization: `Bearer ${Cookie.getCookie("token")}`
         }
-    })).data;
+    })).data.data.users[0];
 }

@@ -18,8 +18,8 @@ export default function Login() {
             username,
             password
         });
-        if (response.data.token) {
-            Cookie.setCookie("token", response.data.token, 10 * 365 * 24 * 60 * 60);
+        if (response.data.data.token) {
+            Cookie.setCookie("token", response.data.data.token, 10 * 365 * 24 * 60 * 60);
             history.push("/")
         }
     }
