@@ -9,26 +9,108 @@ import Types from "../../../src/@Types/Types";
 import { Request } from "express";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
+import IAuthenticationService from "../../../src/Services/IAuthenticationService";
+import UserExistsException from "../../../src/Exceptions/UserExistsExceptions";
+import MessageType from "../../../src/Messages/MessageType";
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
 describe("Authentication Controller Suite", () => {
     let mockUserService: Mock<IUserService>;
+    let mockAuthenticationService: Mock<IAuthenticationService>;
     let controller: AuthenticationController;
     let user: IUser;
 
     beforeEach(() => {
         user = new User("", "", "", "", "", "", "", "", false, []);
         mockUserService = new Mock<IUserService>();
+        mockAuthenticationService = new Mock<IAuthenticationService>();
 
         container.rebind<IUserService>(Types.UserService).toConstantValue(mockUserService.object());
-        controller = new AuthenticationController(mockUserService.object());
+        container
+            .rebind<IAuthenticationService>(Types.AuthenticationService)
+            .toConstantValue(mockAuthenticationService.object());
+
+        controller = new AuthenticationController(
+            mockUserService.object(),
+            mockAuthenticationService.object()
+        );
+    });
+
+    describe("Register", () => {
+        test("User already exists", async () => {
+            mockUserService
+                .setup((userService) => userService.doesUserExist)
+                .returns(() => Promise.resolve(true));
+            mockAuthenticationService
+                .setup((authenticationService) => authenticationService.register)
+                .returns(() =>
+                    Promise.reject(new UserExistsException(user.username(), user.email()))
+                );
+
+            expect(
+                await controller.register({
+                    password: "",
+                    email: "",
+                    username: ""
+                })
+            ).toEqual({
+                metadata: {
+                    success: false,
+                    type: MessageType.UserExistsMessage
+                },
+                data: {
+                    message: `A user with either the username '' or the email '' already exists`
+                }
+            });
+        });
+
+        test("Should register user", async () => {
+            mockUserService
+                .setup((userService) => userService.doesUserExist)
+                .returns(() => Promise.resolve(false))
+                .setup((userService) => userService.createUser)
+                .returns((user) => Promise.resolve(user))
+                .setup((userService) => userService.updateUser)
+                .returns((user) => Promise.resolve(user));
+            mockAuthenticationService
+                .setup((authenticationService) => authenticationService.register)
+                .returns(() => Promise.resolve(user));
+
+            expect(
+                await controller.register({
+                    password: user.password(),
+                    email: user.email(),
+                    username: user.username()
+                })
+            ).toEqual({
+                metadata: {
+                    type: MessageType.RetrievedUsersMessage,
+                    success: true
+                },
+                data: {
+                    users: [
+                        {
+                            id: user.id(),
+                            twitchId: user.twitchId(),
+                            twitterId: user.twitterId(),
+                            instagramId: user.instagramId(),
+                            youtubeId: user.youTubeId(),
+                            username: user.username(),
+                            email: user.email(),
+                            verified: user.verified(),
+                            following: []
+                        }
+                    ]
+                }
+            });
+        });
     });
 
     describe("Logs in user", () => {
         test("Should fail to find user", async () => {
             mockUserService
-                .setup((user) => user.getUserByUsername)
+                .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(null));
 
             expect(
@@ -71,7 +153,7 @@ describe("Authentication Controller Suite", () => {
                 );
             jsonwebtoken.sign = jest.fn().mockReturnValue("");
             mockUserService
-                .setup((userRepository) => userRepository.getUserByUsername)
+                .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(user));
 
             expect(
@@ -90,7 +172,7 @@ describe("Authentication Controller Suite", () => {
     describe("Verify Authenticated User", () => {
         test("Verifies user", async () => {
             mockUserService
-                .setup((userRepository) => userRepository.saveUser)
+                .setup((userRepository) => userRepository.updateUser)
                 .returns((user: IUser) => Promise.resolve(user));
 
             expect(
@@ -162,7 +244,7 @@ describe("Authentication Controller Suite", () => {
     describe("Delete User", () => {
         test("Deletes user", async () => {
             mockUserService
-                .setup((userRepository) => userRepository.deleteUser)
+                .setup((userService) => userService.deleteUser)
                 .returns((user: IUser) => Promise.resolve(user));
 
             const message = await controller.deleteAuthenticatedUser({
@@ -176,7 +258,7 @@ describe("Authentication Controller Suite", () => {
 
         test("Fails to delete user", async () => {
             mockUserService
-                .setup((userRepository) => userRepository.deleteUser)
+                .setup((userService) => userService.deleteUser)
                 .returns(() => Promise.reject("Failure"));
 
             const message = await controller.deleteAuthenticatedUser({

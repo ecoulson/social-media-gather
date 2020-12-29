@@ -17,6 +17,10 @@ import TwitchVideoRepository from "./Repositories/TwitchVideo/TwitchVideoReposit
 import UserRepository from "./Repositories/User/UserRepository";
 import WebhookRepository from "./Repositories/Webhook/WebhookRepository";
 import YouTubeRepository from "./Repositories/YouTubeVideo/YouTubeRepository";
+import BcryptPasswordManager from "./Security/PasswordManagers/BcryptPasswordManager";
+import IPasswordManager from "./Security/PasswordManagers/IPasswordManager";
+import AuthenticationService from "./Services/AuthenticationService";
+import IAuthenticationService from "./Services/IAuthenticationService";
 import IUserService from "./Services/IUserService";
 import UserService from "./Services/UserService";
 
@@ -71,6 +75,9 @@ container
         )
     );
 
+container.bind<IPasswordManager>(Types.PasswordManager).to(BcryptPasswordManager);
+
 container.bind<IUserService>(Types.UserService).to(UserService);
+container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
 
 export default container;

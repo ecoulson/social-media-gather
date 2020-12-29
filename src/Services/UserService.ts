@@ -14,8 +14,6 @@ export default class UserService implements IUserService {
     ) {}
 
     deleteUser(user: IUser): Promise<IUser> {
-        // do any clean up
-        // should emit that this user has been deleted
         return this.userRepository.delete(user);
     }
 
@@ -23,7 +21,7 @@ export default class UserService implements IUserService {
         return this.userRepository.create(user);
     }
 
-    saveUser(user: IUser): Promise<IUser> {
+    updateUser(user: IUser): Promise<IUser> {
         return this.userRepository.update(user);
     }
 

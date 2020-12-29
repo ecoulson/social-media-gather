@@ -18,7 +18,9 @@ describe("User Service Suite", () => {
         mockUserRepository
             .setup((userRepository) => userRepository.delete)
             .returns(() => Promise.resolve(user))
-            .setup((userRepository) => userRepository.save)
+            .setup((userRepository) => userRepository.update)
+            .returns(() => Promise.resolve(user))
+            .setup((userRepository) => userRepository.create)
             .returns(() => Promise.resolve(user))
             .setup((userRepository) => userRepository.find)
             .returns(() => Promise.resolve([user]));
@@ -30,9 +32,36 @@ describe("User Service Suite", () => {
         service = container.get<UserService>(Types.UserService);
     });
 
-    describe("Save User", () => {
-        test("Should save user", async () => {
-            await service.saveUser(user);
+    describe("Does user exist", () => {
+        test("User does exist", async () => {
+            const userExists = await service.doesUserExist("", "");
+
+            expect(userExists).toBeTruthy();
+        });
+
+        test("User does not exist", async () => {
+            mockUserRepository
+                .setup((userRepository) => userRepository.find)
+                .returns(() => Promise.resolve([]));
+            const userExists = await service.doesUserExist("", "");
+
+            expect(userExists).toBeFalsy();
+        });
+    });
+
+    describe("Create user", () => {
+        test("Should create user", async () => {
+            const newUser = await service.createUser(user);
+
+            expect(newUser).toEqual(user);
+        });
+    });
+
+    describe("Update User", () => {
+        test("Should update user", async () => {
+            const savedUser = await service.updateUser(user);
+
+            expect(savedUser).toEqual(user);
         });
     });
 

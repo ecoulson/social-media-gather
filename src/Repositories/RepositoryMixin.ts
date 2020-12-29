@@ -1,11 +1,14 @@
 import { MixinConstructor } from "../@Types";
 import IQuery from "../DataStore/IQuery";
+import assert from "assert";
 import IEntity from "../Entities/IEntity";
 import CoreRepository from "./CoreRepository";
 
 export type RepositoryMixinConstructor<EntityType extends IEntity> = MixinConstructor<
     CoreRepository<EntityType>
 >;
+
+const EmptyId = "";
 
 function RepositoryMixin<Entity extends IEntity>() {
     // TODO: resolve this return type
@@ -29,7 +32,13 @@ function RepositoryMixin<Entity extends IEntity>() {
             }
 
             async create(entity: Entity) {
-                return this.dataStore.persist(entity);
+                const createdEntity = await this.dataStore.persist(entity);
+                assert.notStrictEqual(
+                    createdEntity.id(),
+                    EmptyId,
+                    "The data store should set the id of the newly persisted entity"
+                );
+                return createdEntity;
             }
         };
     };

@@ -8,7 +8,13 @@ import UserTransformer from "./ResponseTransforms/UserTransformer";
 import { IUserResponse } from "./ResponseTransforms/IUserResponse";
 import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import User from "../Entities/User/User";
+import UserExistsMessage from "../Messages/UserExistsMessage";
+import IUserRegistrationBody from "./RequestBodies/IUserRegistrationBody";
+import IAuthenticationService from "../Services/IAuthenticationService";
+import UserExistsException from "../Exceptions/UserExistsExceptions";
+import ErrorMessage from "../Messages/ErrorMessage";
+import IMessageStructure from "../Messages/IMessageStructure";
+import RetrievedUsersMessage from "../Messages/RetrievedUsersMessage";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);
 
@@ -16,7 +22,9 @@ const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAut
 export default class AuthenticationController {
     constructor(
         @inject(Types.UserService)
-        private userService: IUserService
+        private userService: IUserService,
+        @inject(Types.AuthenticationService)
+        private authenticationService: IAuthenticationService
     ) {}
 
     @httpGet("/me", AuthenticationMiddleware)
@@ -60,7 +68,6 @@ export default class AuthenticationController {
                 error: "No user with the provided username"
             };
         }
-        console.log(user.password());
         if (await bcrypt.compare(body.password, user.password())) {
             const options = {
                 expiresIn: undefined as string | number
@@ -68,7 +75,7 @@ export default class AuthenticationController {
             if (!body.rememberMe) {
                 options.expiresIn = "1d";
             }
-            const token = jsonwebtoken.sign({ id: user.id }, process.env.AUTH_SECRET, options);
+            const token = jsonwebtoken.sign({ id: user.id() }, process.env.AUTH_SECRET, options);
             return {
                 token,
                 expiresIn: options.expiresIn
@@ -81,33 +88,27 @@ export default class AuthenticationController {
     }
 
     @httpPost("/register")
-    async register(
-        @requestBody() body: { password: string; email: string; username: string }
-    ): Promise<
-        | IUserResponse
-        | {
-              error: string;
-          }
-    > {
-        const hashedPassword = await bcrypt.hash(body.password, 10);
-        if (await this.userService.doesUserExist(body.email, body.username)) {
-            return {
-                error: "Username or email is already taken"
-            };
+    async register(@requestBody() body: IUserRegistrationBody): Promise<IMessageStructure> {
+        try {
+            const user = await this.authenticationService.register(
+                body.username,
+                body.email,
+                body.password
+            );
+            return new RetrievedUsersMessage([user]).create();
+        } catch (error) {
+            if (error instanceof UserExistsException) {
+                return new UserExistsMessage(body.username, body.email).create();
+            }
+            return new ErrorMessage(error).create();
         }
-        const user = await this.userService.createUser(
-            new User("", "", "", "", "", body.email, body.username, hashedPassword, false, [])
-        );
-        user.addFollower(user);
-        await this.userService.saveUser(user);
-        return UserTransformer(user);
     }
 
     @httpPost("/verify", AuthenticationMiddleware)
     async verifyUser(request: Request): Promise<IUserResponse> {
         const user = request.userEntity();
         user.verify();
-        await this.userService.saveUser(user);
+        await this.userService.updateUser(user);
         return UserTransformer(user);
     }
 

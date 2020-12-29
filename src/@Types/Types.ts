@@ -7,5 +7,7 @@ export default {
     WebhookRepository: Symbol.for("WebhookRepository"),
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
-    UserService: Symbol.for("UserService")
+    PasswordManager: Symbol.for("PasswordManager"),
+    UserService: Symbol.for("UserService"),
+    AuthenticationService: Symbol.for("AuthenticationService")
 };
