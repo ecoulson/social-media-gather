@@ -19,9 +19,12 @@ import WebhookRepository from "./Repositories/Webhook/WebhookRepository";
 import YouTubeRepository from "./Repositories/YouTubeVideo/YouTubeRepository";
 import BcryptPasswordManager from "./Security/PasswordManagers/BcryptPasswordManager";
 import IPasswordManager from "./Security/PasswordManagers/IPasswordManager";
+import ITokenFactory from "./Security/Tokens/ITokenFactory";
+import TokenFactory from "./Security/Tokens/TokenFactory";
 import AuthenticationService from "./Services/AuthenticationService";
 import IAuthenticationService from "./Services/IAuthenticationService";
 import IUserService from "./Services/IUserService";
+import IUserTokenPayload from "./Services/IUserTokenPayload";
 import UserService from "./Services/UserService";
 
 const container = new Container();
@@ -74,8 +77,11 @@ container
             )
         )
     );
-
 container.bind<IPasswordManager>(Types.PasswordManager).to(BcryptPasswordManager);
+container
+    .bind<ITokenFactory<IUserTokenPayload>>(Types.TokenFactory)
+    .to(TokenFactory)
+    .whenInjectedInto(AuthenticationService);
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);

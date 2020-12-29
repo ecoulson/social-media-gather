@@ -7,13 +7,18 @@ import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
 import { Request } from "express";
-import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken";
 import IAuthenticationService from "../../../src/Services/IAuthenticationService";
 import UserExistsException from "../../../src/Exceptions/UserExistsExceptions";
-import MessageType from "../../../src/Messages/MessageType";
-jest.mock("bcrypt");
-jest.mock("jsonwebtoken");
+import UserDoesNotExistsException from "../../../src/Exceptions/UserDoesNotExistException";
+import IllegalLoginException from "../../../src/Exceptions/IllegalLoginException";
+import IUserTokenPayload from "../../../src/Services/IUserTokenPayload";
+import IToken from "../../../src/Security/Tokens/IToken";
+import UserExistsMessage from "../../../src/Messages/UserExistsMessage";
+import UsersMessage from "../../../src/Messages/UsersMessage";
+import UnauthenticatedMessage from "../../../src/Messages/UnauthenticatedMessage";
+import TokenMessage from "../../../src/Messages/TokenMessage";
+import UserDoesNotExistMessage from "../../../src/Messages/UserDoesNotExistMessage";
+import AuthenticatedMessage from "../../../src/Messages/AuthenticatedMessage";
 
 describe("Authentication Controller Suite", () => {
     let mockUserService: Mock<IUserService>;
@@ -50,19 +55,11 @@ describe("Authentication Controller Suite", () => {
 
             expect(
                 await controller.register({
-                    password: "",
-                    email: "",
-                    username: ""
+                    password: user.password(),
+                    email: user.email(),
+                    username: user.username()
                 })
-            ).toEqual({
-                metadata: {
-                    success: false,
-                    type: MessageType.UserExistsMessage
-                },
-                data: {
-                    message: `A user with either the username '' or the email '' already exists`
-                }
-            });
+            ).toEqual(new UserExistsMessage(user.username(), user.email()).create());
         });
 
         test("Should register user", async () => {
@@ -83,56 +80,29 @@ describe("Authentication Controller Suite", () => {
                     email: user.email(),
                     username: user.username()
                 })
-            ).toEqual({
-                metadata: {
-                    type: MessageType.RetrievedUsersMessage,
-                    success: true
-                },
-                data: {
-                    users: [
-                        {
-                            id: user.id(),
-                            twitchId: user.twitchId(),
-                            twitterId: user.twitterId(),
-                            instagramId: user.instagramId(),
-                            youtubeId: user.youTubeId(),
-                            username: user.username(),
-                            email: user.email(),
-                            verified: user.verified(),
-                            following: []
-                        }
-                    ]
-                }
-            });
+            ).toEqual(new UsersMessage([user]).create());
         });
     });
 
     describe("Logs in user", () => {
         test("Should fail to find user", async () => {
-            mockUserService
-                .setup((userService) => userService.getUserByUsername)
-                .returns(() => Promise.resolve(null));
+            mockAuthenticationService
+                .setup((authenticationService) => authenticationService.login)
+                .returns(() => Promise.reject(new UserDoesNotExistsException(user.username())));
 
             expect(
                 await controller.login({
                     rememberMe: false,
-                    username: "",
-                    password: ""
+                    username: user.username(),
+                    password: user.password()
                 })
-            ).toEqual({
-                error: "No user with the provided username"
-            });
+            ).toEqual(new UserDoesNotExistMessage(user.username()).create());
         });
 
         test("Password does not match", async () => {
-            bcrypt.compare = jest
-                .fn()
-                .mockImplementation((actualPassword, expectedPassword) =>
-                    Promise.resolve(actualPassword === expectedPassword)
-                );
-            mockUserService
-                .setup((userRepository) => userRepository.getUserByUsername)
-                .returns(() => Promise.resolve(user));
+            mockAuthenticationService
+                .setup((authenticationService) => authenticationService.login)
+                .returns(() => Promise.reject(new IllegalLoginException(user)));
 
             expect(
                 await controller.login({
@@ -140,56 +110,37 @@ describe("Authentication Controller Suite", () => {
                     username: "",
                     password: "wrong"
                 })
-            ).toEqual({
-                error: "Passwords do not match"
-            });
+            ).toEqual(new UnauthenticatedMessage().create());
         });
 
         test("Password matches", async () => {
-            bcrypt.compare = jest
-                .fn()
-                .mockImplementation((actualPassword, expectedPassword) =>
-                    Promise.resolve(actualPassword === expectedPassword)
-                );
-            jsonwebtoken.sign = jest.fn().mockReturnValue("");
-            mockUserService
-                .setup((userService) => userService.getUserByUsername)
-                .returns(() => Promise.resolve(user));
+            const token = new Mock<IToken<IUserTokenPayload>>();
+            token.setup((token) => token.sign).returns(() => "token");
+            mockAuthenticationService
+                .setup((authenticationService) => authenticationService.login)
+                .returns(() => Promise.resolve(token.object()));
 
             expect(
                 await controller.login({
                     rememberMe: false,
-                    username: "",
-                    password: ""
+                    username: user.username(),
+                    password: user.password()
                 })
-            ).toEqual({
-                token: "",
-                expiresIn: "1d"
-            });
+            ).toEqual(new TokenMessage(token.object()).create());
         });
     });
 
     describe("Verify Authenticated User", () => {
         test("Verifies user", async () => {
             mockUserService
-                .setup((userRepository) => userRepository.updateUser)
+                .setup((userService) => userService.verifyUser)
                 .returns((user: IUser) => Promise.resolve(user));
 
             expect(
                 await controller.verifyUser({
                     userEntity: () => user
                 } as Request)
-            ).toEqual({
-                id: "",
-                email: "",
-                twitchId: "",
-                following: [],
-                instagramId: "",
-                twitterId: "",
-                username: "",
-                verified: true,
-                youtubeId: ""
-            });
+            ).toEqual(new UsersMessage([user]).create());
         });
     });
 
@@ -199,25 +150,15 @@ describe("Authentication Controller Suite", () => {
                 controller.getAuthenticatedUser({
                     userEntity: () => user
                 } as Request)
-            ).toEqual({
-                id: "",
-                email: "",
-                twitchId: "",
-                following: [],
-                instagramId: "",
-                twitterId: "",
-                username: "",
-                verified: false,
-                youtubeId: ""
-            });
+            ).toEqual(new UsersMessage([user]).create());
         });
     });
 
     describe("Is Authenticated", () => {
         test("No user entity", () => {
-            expect(controller.isAuthenticated({} as Request)).toEqual({
-                isAuthenticated: false
-            });
+            expect(controller.isAuthenticated({} as Request)).toEqual(
+                new AuthenticatedMessage(false).create()
+            );
         });
 
         test("Null user", () => {
@@ -225,9 +166,7 @@ describe("Authentication Controller Suite", () => {
                 controller.isAuthenticated({
                     userEntity: () => null
                 } as Request)
-            ).toEqual({
-                isAuthenticated: false
-            });
+            ).toEqual(new AuthenticatedMessage(false).create());
         });
 
         test("Authenticated User", () => {
@@ -235,9 +174,7 @@ describe("Authentication Controller Suite", () => {
                 controller.isAuthenticated({
                     userEntity: () => user
                 } as Request)
-            ).toEqual({
-                isAuthenticated: true
-            });
+            ).toEqual(new AuthenticatedMessage(true).create());
         });
     });
 

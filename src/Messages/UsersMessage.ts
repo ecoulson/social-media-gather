@@ -4,14 +4,14 @@ import IMessage from "./IMessage";
 import IMessageStructure from "./IMessageStructure";
 import MessageType from "./MessageType";
 
-export default class RetrievedUsersMessage implements IMessage {
+export default class UsersMessage implements IMessage {
     constructor(private users: IUser[]) {}
 
     create(): IMessageStructure {
         return {
             metadata: {
                 success: true,
-                type: MessageType.RetrievedUsersMessage
+                type: MessageType.UsersMessage
             },
             data: {
                 users: this.users.map((user) => UserTransformer(user))

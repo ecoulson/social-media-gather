@@ -58,7 +58,7 @@ export default class User implements IUser {
         return this.password_;
     }
 
-    addFollower(user: IUser) {
+    addFollower(user: IUser): void {
         this.followingIds_.push(user.id());
     }
 }

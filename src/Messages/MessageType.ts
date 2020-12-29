@@ -1,7 +1,11 @@
 enum MessageType {
     UserExistsMessage,
+    UserDoesNotExistMessage,
     Error,
-    RetrievedUsersMessage
+    UsersMessage,
+    Unauthenticated,
+    TokenMessage,
+    Authenticated
 }
 
 export default MessageType;

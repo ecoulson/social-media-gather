@@ -32,6 +32,11 @@ describe("User Service Suite", () => {
         service = container.get<UserService>(Types.UserService);
     });
 
+    describe("Verify user", () => {
+        // test("Verifies user", async () => {
+        // });
+    });
+
     describe("Does user exist", () => {
         test("User does exist", async () => {
             const userExists = await service.doesUserExist("", "");

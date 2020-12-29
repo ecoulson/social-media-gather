@@ -2,6 +2,7 @@ import { inject, injectable, tagged } from "inversify";
 import Tags from "../@Types/Tags";
 import Types from "../@Types/Types";
 import IUser from "../Entities/User/IUser";
+import UserDoesNotExistsException from "../Exceptions/UserDoesNotExistException";
 import UserRepository from "../Repositories/User/UserRepository";
 import IUserService from "./IUserService";
 
@@ -26,7 +27,15 @@ export default class UserService implements IUserService {
     }
 
     async getUserByUsername(username: string): Promise<IUser> {
-        return (await this.userRepository.find({ username }))[0];
+        const users = await this.userRepository.find({ username });
+        if (!this.hasFoundUsers(users)) {
+            throw new UserDoesNotExistsException(username);
+        }
+        return users[0];
+    }
+
+    private hasFoundUsers(users: IUser[]) {
+        return users.length >= 1;
     }
 
     async doesUserExist(email: string, username: string): Promise<boolean> {
@@ -34,5 +43,10 @@ export default class UserService implements IUserService {
             $or: [{ email }, { username }]
         });
         return users.length !== 0;
+    }
+
+    async verifyUser(user: IUser): Promise<IUser> {
+        user.verify();
+        return await this.updateUser(user);
     }
 }

@@ -8,6 +8,7 @@ export default {
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     PasswordManager: Symbol.for("PasswordManager"),
+    TokenFactory: Symbol.for("TokenFactory"),
     UserService: Symbol.for("UserService"),
     AuthenticationService: Symbol.for("AuthenticationService")
 };
