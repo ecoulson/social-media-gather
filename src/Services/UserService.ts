@@ -19,7 +19,7 @@ export default class UserService implements IUserService {
     }
 
     createUser(user: IUser): Promise<IUser> {
-        return this.userRepository.create(user);
+        return this.userRepository.add(user);
     }
 
     updateUser(user: IUser): Promise<IUser> {
@@ -27,26 +27,28 @@ export default class UserService implements IUserService {
     }
 
     async getUserByUsername(username: string): Promise<IUser> {
-        const users = await this.userRepository.find({ username });
-        if (!this.hasFoundUsers(users)) {
+        const user = await this.userRepository.findByUsername(username);
+        if (!this.hasFoundUsers(user)) {
             throw new UserDoesNotExistsException(username);
         }
-        return users[0];
+        return user;
     }
 
-    private hasFoundUsers(users: IUser[]) {
-        return users.length >= 1;
+    private hasFoundUsers(user: IUser) {
+        return user !== null;
     }
 
     async doesUserExist(email: string, username: string): Promise<boolean> {
-        const users = await this.userRepository.find({
-            $or: [{ email }, { username }]
-        });
-        return users.length !== 0;
+        const user = await this.userRepository.findByUsernameOrEmail(username, email);
+        return this.hasFoundUsers(user);
     }
 
     async verifyUser(user: IUser): Promise<IUser> {
         user.verify();
         return await this.updateUser(user);
+    }
+
+    async getUserById(userId: string): Promise<IUser> {
+        return await this.userRepository.findById(userId);
     }
 }

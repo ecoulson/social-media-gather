@@ -3,6 +3,7 @@ import IQuery from "../DataStore/IQuery";
 import assert from "assert";
 import IEntity from "../Entities/IEntity";
 import CoreRepository from "./CoreRepository";
+import IRepositoryMixin from "./IRepositoryMixin";
 
 export type RepositoryMixinConstructor<EntityType extends IEntity> = MixinConstructor<
     CoreRepository<EntityType>
@@ -14,7 +15,7 @@ function RepositoryMixin<Entity extends IEntity>() {
     // TODO: resolve this return type
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return <BaseType extends RepositoryMixinConstructor<Entity>>(Base: BaseType) => {
-        return class Repository extends Base {
+        return class RepositoryMixin extends Base implements IRepositoryMixin<Entity> {
             async findById(id: string) {
                 return this.dataStore.findById(id);
             }
@@ -31,7 +32,7 @@ function RepositoryMixin<Entity extends IEntity>() {
                 return this.dataStore.delete(entity);
             }
 
-            async create(entity: Entity) {
+            async add(entity: Entity) {
                 const createdEntity = await this.dataStore.persist(entity);
                 assert.notStrictEqual(
                     createdEntity.id(),

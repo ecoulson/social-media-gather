@@ -10,5 +10,6 @@ export default {
     PasswordManager: Symbol.for("PasswordManager"),
     TokenFactory: Symbol.for("TokenFactory"),
     UserService: Symbol.for("UserService"),
+    SearchService: Symbol.for("SearchService"),
     AuthenticationService: Symbol.for("AuthenticationService")
 };

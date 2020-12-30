@@ -6,9 +6,10 @@ import container from "../../../src/bootstrap";
 import Types from "../../../src/@Types/Types";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
+import IUserService from "../../../src/Services/IUserService";
 
 describe("User Service Suite", () => {
-    let service: UserService;
+    let service: IUserService;
     let mockUserRepository: Mock<InstanceType<typeof UserRepository>>;
     let user: IUser;
 
@@ -20,7 +21,7 @@ describe("User Service Suite", () => {
             .returns(() => Promise.resolve(user))
             .setup((userRepository) => userRepository.update)
             .returns(() => Promise.resolve(user))
-            .setup((userRepository) => userRepository.create)
+            .setup((userRepository) => userRepository.add)
             .returns(() => Promise.resolve(user))
             .setup((userRepository) => userRepository.find)
             .returns(() => Promise.resolve([user]));
@@ -33,22 +34,30 @@ describe("User Service Suite", () => {
     });
 
     describe("Verify user", () => {
-        // test("Verifies user", async () => {
-        // });
+        test("Verifies user", async () => {
+            await service.verifyUser(user);
+
+            expect(user.verified()).toBeTruthy();
+        });
     });
 
     describe("Does user exist", () => {
         test("User does exist", async () => {
-            const userExists = await service.doesUserExist("", "");
+            mockUserRepository
+                .setup((userRepository) => userRepository.findByUsernameOrEmail)
+                .returns(() => Promise.resolve(user));
+
+            const userExists = await service.doesUserExist(user.email(), user.username());
 
             expect(userExists).toBeTruthy();
         });
 
         test("User does not exist", async () => {
             mockUserRepository
-                .setup((userRepository) => userRepository.find)
-                .returns(() => Promise.resolve([]));
-            const userExists = await service.doesUserExist("", "");
+                .setup((userRepository) => userRepository.findByUsernameOrEmail)
+                .returns(() => Promise.resolve(null));
+
+            const userExists = await service.doesUserExist(user.email(), user.username());
 
             expect(userExists).toBeFalsy();
         });
@@ -78,9 +87,25 @@ describe("User Service Suite", () => {
 
     describe("Finds user by username", () => {
         test("Should find user", async () => {
-            const userWithUsername = await service.getUserByUsername("");
+            mockUserRepository
+                .setup((userRepository) => userRepository.findByUsername)
+                .returns(() => Promise.resolve(user));
+
+            const userWithUsername = await service.getUserByUsername(user.username());
 
             expect(userWithUsername).toEqual(user);
+        });
+    });
+
+    describe("Gets user by id", () => {
+        test("Should get user by id", async () => {
+            mockUserRepository
+                .setup((userRepository) => userRepository.findById)
+                .returns(() => Promise.resolve(user));
+
+            const userWithId = await service.getUserById(user.id());
+
+            expect(userWithId).toEqual(user);
         });
     });
 });

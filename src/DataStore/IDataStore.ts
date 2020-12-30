@@ -7,4 +7,6 @@ export default interface IDataStore<Entity extends IEntity> {
     update(entity: Entity): Promise<Entity>;
     delete(entity: Entity): Promise<Entity>;
     persist(entity: Entity): Promise<Entity>;
+    count(): Promise<number>;
+    estimatedCount(): Promise<number>;
 }

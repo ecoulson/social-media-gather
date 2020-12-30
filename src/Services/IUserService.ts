@@ -6,5 +6,6 @@ export default interface IUserService {
     createUser(user: IUser): Promise<IUser>;
     verifyUser(user: IUser): Promise<IUser>;
     getUserByUsername(username: string): Promise<IUser>;
+    getUserById(id: string): Promise<IUser>;
     doesUserExist(email: string, username: string): Promise<boolean>;
 }

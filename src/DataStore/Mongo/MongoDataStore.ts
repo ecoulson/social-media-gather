@@ -2,6 +2,7 @@ import { Document as MongooseDocument, Model, MongooseFilterQuery, UpdateQuery }
 import { Transformer } from "../../@Types";
 import IEntity from "../../Entities/IEntity";
 import IDataStore from "../IDataStore";
+import IQuery from "../IQuery";
 
 type Query<T> = MongooseFilterQuery<T>;
 
@@ -15,8 +16,20 @@ export default abstract class MongoDataStore<
         protected documentTransform: Transformer<Entity, UpdateQuery<Document>>
     ) {}
 
-    async find(query: Query<Document>): Promise<Entity[]> {
-        const documents = await this.model.find(query).exec();
+    async count(): Promise<number> {
+        return this.model.estimatedDocumentCount();
+    }
+
+    async estimatedCount(): Promise<number> {
+        return this.model.countDocuments();
+    }
+
+    async find(query: IQuery): Promise<Entity[]> {
+        const documents = await this.model
+            .find(query.query as Query<Document>)
+            .skip(query.skip ? query.skip : 0)
+            .limit(query.limit ? query.limit : 0)
+            .exec();
         return documents.map((document) => this.entityTransform(document));
     }
 

@@ -23,8 +23,10 @@ import ITokenFactory from "./Security/Tokens/ITokenFactory";
 import TokenFactory from "./Security/Tokens/TokenFactory";
 import AuthenticationService from "./Services/AuthenticationService";
 import IAuthenticationService from "./Services/IAuthenticationService";
+import ISearchService from "./Services/ISearchService";
 import IUserService from "./Services/IUserService";
 import IUserTokenPayload from "./Services/IUserTokenPayload";
+import SearchService from "./Services/SearchService";
 import UserService from "./Services/UserService";
 
 const container = new Container();
@@ -85,5 +87,6 @@ container
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
+container.bind<ISearchService>(Types.SearchService).to(SearchService);
 
 export default container;

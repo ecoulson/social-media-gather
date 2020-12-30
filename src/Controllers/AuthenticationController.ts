@@ -18,6 +18,7 @@ import IllegalLoginException from "../Exceptions/IllegalLoginException";
 import UnauthenticatedMessage from "../Messages/UnauthenticatedMessage";
 import TokenMessage from "../Messages/TokenMessage";
 import AuthenticatedMessage from "../Messages/AuthenticatedMessage";
+import DeletedUserMessage from "../Messages/DeletedUserMessage";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);
 
@@ -36,21 +37,9 @@ export default class AuthenticationController {
     }
 
     @httpDelete("/", AuthenticationMiddleware)
-    async deleteAuthenticatedUser(
-        request: Request
-    ): Promise<{
-        message: string;
-    }> {
-        try {
-            await this.userService.deleteUser(request.userEntity());
-            return {
-                message: "deleted"
-            };
-        } catch (error) {
-            return {
-                message: "failed to delete"
-            };
-        }
+    async deleteAuthenticatedUser(request: Request): Promise<IMessageStructure> {
+        await this.userService.deleteUser(request.userEntity());
+        return new DeletedUserMessage(request.userEntity().id()).create();
     }
 
     @httpPost("/login")

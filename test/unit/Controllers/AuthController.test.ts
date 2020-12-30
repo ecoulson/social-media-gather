@@ -19,6 +19,7 @@ import UnauthenticatedMessage from "../../../src/Messages/UnauthenticatedMessage
 import TokenMessage from "../../../src/Messages/TokenMessage";
 import UserDoesNotExistMessage from "../../../src/Messages/UserDoesNotExistMessage";
 import AuthenticatedMessage from "../../../src/Messages/AuthenticatedMessage";
+import DeletedUserMessage from "../../../src/Messages/DeletedUserMessage";
 
 describe("Authentication Controller Suite", () => {
     let mockUserService: Mock<IUserService>;
@@ -188,23 +189,7 @@ describe("Authentication Controller Suite", () => {
                 userEntity: () => user
             } as Request);
 
-            expect(message).toEqual({
-                message: "deleted"
-            });
-        });
-
-        test("Fails to delete user", async () => {
-            mockUserService
-                .setup((userService) => userService.deleteUser)
-                .returns(() => Promise.reject("Failure"));
-
-            const message = await controller.deleteAuthenticatedUser({
-                userEntity: () => user
-            } as Request);
-
-            expect(message).toEqual({
-                message: "failed to delete"
-            });
+            expect(message).toEqual(new DeletedUserMessage(user.id()).create());
         });
     });
 });
