@@ -26,9 +26,10 @@ export default abstract class MongoDataStore<
 
     async find(query: IQuery): Promise<Entity[]> {
         const documents = await this.model
-            .find(query.query as Query<Document>)
+            .find(query.where as Query<Document>)
             .skip(query.skip ? query.skip : 0)
             .limit(query.limit ? query.limit : 0)
+            .sort(query.sort ? query.sort : {})
             .exec();
         return documents.map((document) => this.entityTransform(document));
     }

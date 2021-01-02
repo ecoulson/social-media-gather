@@ -6,6 +6,7 @@ import IUser from "../Entities/User/IUser";
 import PostRepository from "../Repositories/Post/PostRepository";
 import UserRepository from "../Repositories/User/UserRepository";
 import IFeedService from "./IFeedService";
+const BATCH_SIZE = 20;
 
 @injectable()
 export default class FeedService implements IFeedService {
@@ -18,22 +19,28 @@ export default class FeedService implements IFeedService {
         private userRepository: InstanceType<typeof UserRepository>
     ) {}
 
-    async getFeed(user: IUser): Promise<IPost[]> {
+    async getUsersFeed(user: IUser, postOffset: number): Promise<IPost[]> {
         return await this.postRepository.find({
-            query: {
+            where: {
                 userId: {
                     $in: user.following()
                 }
-            }
+            },
+            limit: BATCH_SIZE,
+            skip: postOffset,
+            sort: { timeCreated: -1 }
         });
     }
 
-    async getUsersPosts(userId: string): Promise<IPost[]> {
+    async getUsersPosts(userId: string, postOffset: number): Promise<IPost[]> {
         const userToGetPostsFor = await this.userRepository.findById(userId);
         return await this.postRepository.find({
-            query: {
+            where: {
                 userId: userToGetPostsFor.id()
-            }
+            },
+            limit: BATCH_SIZE,
+            skip: postOffset,
+            sort: { timeCreated: -1 }
         });
     }
 }

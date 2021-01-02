@@ -13,7 +13,7 @@ class UserRepository extends CoreRepository<IUser> implements IUserRepository {
     async findByUsername(username: string): Promise<IUser> {
         return (
             await this.dataStore.find({
-                query: { username }
+                where: { username }
             })
         )[0];
     }
@@ -21,7 +21,7 @@ class UserRepository extends CoreRepository<IUser> implements IUserRepository {
     async findByUsernameOrEmail(username: string, email: string): Promise<IUser> {
         return (
             await this.dataStore.find({
-                query: {
+                where: {
                     $or: [{ email }, { username }]
                 }
             })
@@ -31,7 +31,7 @@ class UserRepository extends CoreRepository<IUser> implements IUserRepository {
     async findNthUser(offset: number): Promise<IUser> {
         return (
             await this.dataStore.find({
-                query: {},
+                where: {},
                 skip: offset,
                 limit: 1
             })
@@ -40,7 +40,7 @@ class UserRepository extends CoreRepository<IUser> implements IUserRepository {
 
     async searchForUser(query: string): Promise<IUser[]> {
         return await this.dataStore.find({
-            query: {
+            where: {
                 username: {
                     $regex: new RegExp(`${query}.*`, "i")
                 }

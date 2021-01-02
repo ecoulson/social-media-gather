@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export default interface IQuery {
     skip?: number;
-    query?: unknown;
+    where?: unknown;
     limit?: number;
+    sort?: unknown;
 }

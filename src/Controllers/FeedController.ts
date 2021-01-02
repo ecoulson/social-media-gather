@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from "express";
 import { inject } from "inversify";
-import { controller, httpGet, requestParam } from "inversify-express-utils";
+import { controller, httpGet, queryParam, requestParam } from "inversify-express-utils";
 import Types from "../@Types/Types";
 import container from "../bootstrap";
 import FeedMessage from "../Messages/FeedMessage";
@@ -14,14 +14,20 @@ export default class FeedController {
     constructor(@inject(Types.FeedService) private feedService: IFeedService) {}
 
     @httpGet("/", AuthenticationMiddleware)
-    async getFeedForUser(request: Request): Promise<IMessageStructure> {
-        const feed = await this.feedService.getFeed(request.userEntity());
+    async getUsersFeed(request: Request): Promise<IMessageStructure> {
+        const feed = await this.feedService.getUsersFeed(
+            request.userEntity(),
+            parseInt(request.query.offset as string)
+        );
         return new FeedMessage(feed).create();
     }
 
     @httpGet("/:userId")
-    async getUsersFeed(@requestParam("userId") userId: string): Promise<IMessageStructure> {
-        const usersPosts = await this.feedService.getUsersPosts(userId);
+    async getUsersPosts(
+        @requestParam("userId") userId: string,
+        @queryParam("offset") offset: string
+    ): Promise<IMessageStructure> {
+        const usersPosts = await this.feedService.getUsersPosts(userId, parseInt(offset));
         return new FeedMessage(usersPosts).create();
     }
 }
