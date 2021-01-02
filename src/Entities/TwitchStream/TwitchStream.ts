@@ -1,76 +1,76 @@
 import ITwitchStream from "./ITwitchStream";
 import IImage from "../Media/IImage";
+import Post from "../Post/Post";
+import PostType from "../Post/PostType";
 
-export default class TwitchStream implements ITwitchStream {
+export default class TwitchStream extends Post implements ITwitchStream {
     constructor(
-        private viewers_: number,
-        private isLive_: boolean,
-        private thumbnail_: IImage,
-        private timeStarted_: Date,
-        private url_: string,
-        private title_: string,
-        private userId_: string,
-        private screenName_: string,
-        private id_: string,
-        private gameName_: string,
-        private streamId_: string,
-        private endedAt_?: Date
-    ) {}
+        private _viewers: number,
+        private _isLive: boolean,
+        private _thumbnail: IImage,
+        private _timeStarted: Date,
+        private _url: string,
+        private _title: string,
+        private _userId: string,
+        private _screenName: string,
+        _id: string,
+        private _gameName: string,
+        private _streamId: string,
+        private _endedAt?: Date
+    ) {
+        super(PostType.TWITCH_STREAM, _id);
+    }
 
     viewers(): number {
-        return this.viewers_;
+        return this._viewers;
     }
 
     updateViewers(viewers: number): void {
-        this.viewers_ = viewers;
+        this._viewers = viewers;
     }
 
     isLive(): boolean {
-        return this.isLive_;
+        return this._isLive;
     }
 
     thumbnail(): IImage {
-        return this.thumbnail_;
+        return this._thumbnail;
     }
 
     startedAt(): Date {
-        return this.timeStarted_;
+        return this._timeStarted;
     }
 
     url(): string {
-        return this.url_;
+        return this._url;
     }
 
     title(): string {
-        return this.title_;
+        return this._title;
     }
 
     userId(): string {
-        return this.userId_;
+        return this._userId;
     }
 
     screenName(): string {
-        return this.screenName_;
-    }
-
-    id(): string {
-        return this.id_;
+        return this._screenName;
     }
 
     gameName(): string {
-        return this.gameName_;
+        return this._gameName;
     }
 
     streamId(): string {
-        return this.streamId_;
+        return this._streamId;
     }
 
     endedAt(): Date {
-        return this.endedAt_;
+        return this._endedAt;
     }
 
     endStream(): void {
-        this.isLive_ = false;
-        this.endedAt_ = new Date();
+        this._isLive = false;
+        this._endedAt = new Date();
     }
 }

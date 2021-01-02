@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import Post from "../../Schemas/Mongo/Post/PostModel";
 import Axios from "axios";
 import XmlParser from "express-xml-bodyparser";
 import { google, youtube_v3 } from "googleapis";

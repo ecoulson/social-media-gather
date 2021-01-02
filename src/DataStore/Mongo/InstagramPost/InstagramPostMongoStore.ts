@@ -1,12 +1,12 @@
 import IInstagramPost from "../../../Entities/InstagramPost/IInstagramPost";
-import IPostDocument from "../Models/Post/IPostDocument";
-import PostModel from "../Models/Post/PostModel";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
+import PostModel from "../../../Schemas/Mongo/Post/PostModel";
 import MongoDataStore from "../MongoDataStore";
 import InstagramPostEntityTransform from "./InstagramPostEntityTransform";
-import InstagramPostUpdateQueryTransform from "./InstagramPostUpdateQueryTransform";
+import InstagramPostDocumentTransform from "./InstagramPostDocumentTransform";
 
 export default class InstagramPostMongoStore extends MongoDataStore<IPostDocument, IInstagramPost> {
     constructor() {
-        super(PostModel, InstagramPostEntityTransform, InstagramPostUpdateQueryTransform);
+        super(PostModel, InstagramPostEntityTransform, InstagramPostDocumentTransform);
     }
 }

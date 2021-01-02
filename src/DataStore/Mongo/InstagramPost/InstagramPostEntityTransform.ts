@@ -4,7 +4,7 @@ import InstagramPost from "../../../Entities/InstagramPost/InstagramPost";
 import Image from "../../../Entities/Media/Image";
 import IMedia from "../../../Entities/Media/IMedia";
 import Video from "../../../Entities/Media/Video";
-import IPostDocument from "../Models/Post/IPostDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const IMAGE_TYPE = "IMAGE";
 

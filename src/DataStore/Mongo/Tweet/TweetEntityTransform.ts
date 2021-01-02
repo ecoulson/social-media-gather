@@ -8,10 +8,10 @@ import ITweetUrl from "../../../Entities/Tweet/ITweetUrl";
 import Tweet from "../../../Entities/Tweet/Tweet";
 import TweetMention from "../../../Entities/Tweet/TweetMention";
 import TweetUrl from "../../../Entities/Tweet/TweetUrl";
-import IPostDocument from "../Models/Post/IPostDocument";
-import ITweetMediaDocument from "../Models/Post/ITweetMediaDocument";
-import ITweetUrlDocument from "../Models/Post/ITweetUrlDocument";
-import ITweetMentionDocument from "../Models/Post/ITweetMentionDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
+import ITweetMediaDocument from "../../../Schemas/Mongo/Post/ITweetMediaDocument";
+import ITweetUrlDocument from "../../../Schemas/Mongo/Post/ITweetUrlDocument";
+import ITweetMentionDocument from "../../../Schemas/Mongo/Post/ITweetMentionDocument";
 
 const IMAGE_TYPE = "photo";
 

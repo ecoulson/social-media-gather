@@ -1,6 +1,7 @@
 import { inject, injectable, tagged } from "inversify";
 import Tags from "../@Types/Tags";
 import Types from "../@Types/Types";
+import IUpdateUserBody from "../Controllers/RequestBodies/IUpdateUserBody";
 import IUser from "../Entities/User/IUser";
 import UserDoesNotExistsException from "../Exceptions/UserDoesNotExistException";
 import UserRepository from "../Repositories/User/UserRepository";
@@ -22,7 +23,10 @@ export default class UserService implements IUserService {
         return this.userRepository.add(user);
     }
 
-    updateUser(user: IUser): Promise<IUser> {
+    updateUser(user: IUser, updateInformation?: IUpdateUserBody): Promise<IUser> {
+        if (updateInformation) {
+            user.setEmail(updateInformation.email);
+        }
         return this.userRepository.update(user);
     }
 
@@ -50,5 +54,22 @@ export default class UserService implements IUserService {
 
     async getUserById(userId: string): Promise<IUser> {
         return await this.userRepository.findById(userId);
+    }
+
+    async follow(actingUser: IUser, userToFollowId: string): Promise<IUser> {
+        const userToFollow = await this.getUserById(userToFollowId);
+        actingUser.addFollower(userToFollow);
+        return await this.updateUser(actingUser);
+    }
+
+    async unfollow(actingUser: IUser, userToUnfollowId: string): Promise<IUser> {
+        const userToUnfollow = await this.getUserById(userToUnfollowId);
+        actingUser.removeFollower(userToUnfollow);
+        return await this.updateUser(actingUser);
+    }
+
+    async isFollowing(userToCheck: IUser, followerUsername: string): Promise<boolean> {
+        const userWithUsername = await this.getUserByUsername(followerUsername);
+        return userToCheck.following().includes(userWithUsername.id());
     }
 }

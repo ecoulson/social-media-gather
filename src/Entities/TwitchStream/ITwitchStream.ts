@@ -1,7 +1,7 @@
-import IEntity from "../IEntity";
 import IImage from "../Media/IImage";
+import IPost from "../Post/IPost";
 
-export default interface ITwitchStream extends IEntity {
+export default interface ITwitchStream extends IPost {
     viewers(): number;
     updateViewers(viewers: number): void;
     isLive(): boolean;

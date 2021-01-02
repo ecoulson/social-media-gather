@@ -1,36 +1,36 @@
+import Post from "../Post/Post";
+import PostType from "../Post/PostType";
 import IYouTubeVideo from "./IYouTubeVideo";
 
-export default class YouTubeVideo implements IYouTubeVideo {
+export default class YouTubeVideo extends Post implements IYouTubeVideo {
     constructor(
-        private id_: string,
-        private userId_: string,
-        private publishedAt_: Date,
-        private thumbnailUrl_: string,
-        private title_: string,
-        private videoId_: string
-    ) {}
-
-    id(): string {
-        return this.id_;
+        _id: string,
+        private _userId: string,
+        private _publishedAt: Date,
+        private _thumbnailUrl: string,
+        private _title: string,
+        private _videoId: string
+    ) {
+        super(PostType.YOUTUBE_VIDEO, _id);
     }
 
     userId(): string {
-        return this.userId_;
+        return this._userId;
     }
 
     publishedAt(): Date {
-        return this.publishedAt_;
+        return this._publishedAt;
     }
 
     thumbnailUrl(): string {
-        return this.thumbnailUrl_;
+        return this._thumbnailUrl;
     }
 
     title(): string {
-        return this.title_;
+        return this._title;
     }
 
     videoId(): string {
-        return this.videoId_;
+        return this._videoId;
     }
 }

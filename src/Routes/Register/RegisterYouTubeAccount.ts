@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { google, youtube_v3 } from "googleapis";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
-import Webhook from "../../DataStore/Mongo/Models/Webhook/WebhookModel";
+import Post from "../../Schemas/Mongo/Post/PostModel";
+import Webhook from "../../Schemas/Mongo/Webhook/WebhookModel";
 import Axios from "axios";
-import User from "../../DataStore/Mongo/Models/User/UserModel";
+import User from "../../Schemas/Mongo/User/UserModel";
 import qs from "querystring";
 import requiresAuth from "../../Middleware/RequiresAuth";
-import IUserDocument from "../../DataStore/Mongo/Models/User/IUserDocument";
+import IUserDocument from "../../Schemas/Mongo/User/IUserDocument";
 const WebhookHubUrl = "https://pubsubhubbub.appspot.com/subscribe";
 
 const router = Router();

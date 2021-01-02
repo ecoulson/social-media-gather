@@ -1,7 +1,7 @@
 import Axios from "axios";
-import Webhook from "../DataStore/Mongo/Models/Webhook/WebhookModel";
+import Webhook from "../Schemas/Mongo/Webhook/WebhookModel";
 import qs from "querystring";
-import IWebhookDocument from "../DataStore/Mongo/Models/Webhook/IWebhookDocument";
+import IWebhookDocument from "../Schemas/Mongo/Webhook/IWebhookDocument";
 
 async function WebhookRefreshJob(thresholdDate: Date): Promise<void> {
     const accessToken = await getTwitchAccessToken();

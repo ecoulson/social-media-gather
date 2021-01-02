@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import jsonwebtoken from "jsonwebtoken";
-import User from "../DataStore/Mongo/Models/User/UserModel";
+import User from "../Schemas/Mongo/User/UserModel";
 import UserRepository from "../Repositories/User/UserRepository";
 
 function requiresAuth(repository?: InstanceType<typeof UserRepository>): RequestHandler {

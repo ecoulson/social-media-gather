@@ -6,7 +6,9 @@ enum MessageType {
     Unauthenticated = "Unauthenticated",
     TokenMessage = "TokenMessage",
     Authenticated = "Authenticated",
-    DeletedUserMessage = "UserDeleted"
+    DeletedUserMessage = "UserDeleted",
+    IsFollowingMessage = "IsFollowing",
+    FeedMessage = "Feed"
 }
 
 export default MessageType;

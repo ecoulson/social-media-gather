@@ -1,9 +1,9 @@
-import IEntity from "../IEntity";
 import IMedia from "../Media/IMedia";
+import IPost from "../Post/IPost";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
 
-export default interface ITweet extends IEntity {
+export default interface ITweet extends IPost {
     text(): string;
     publishedAt(): Date;
     screenName(): string;

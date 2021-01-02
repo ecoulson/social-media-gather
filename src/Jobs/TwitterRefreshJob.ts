@@ -1,5 +1,5 @@
-import Post from "../DataStore/Mongo/Models/Post/PostModel";
-import User from "../DataStore/Mongo/Models/User/UserModel";
+import Post from "../Schemas/Mongo/Post/PostModel";
+import User from "../Schemas/Mongo/User/UserModel";
 import axios from "axios";
 import { ITweetResponse } from "../Routes/Register/ITweetResponse";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";

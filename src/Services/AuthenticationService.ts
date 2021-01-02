@@ -43,10 +43,10 @@ export default class AuthenticationService implements IAuthenticationService {
     }
 
     async register(username: string, email: string, password: string): Promise<IUser> {
-        const hashedPassword = await this.passwordManager.hash(password, 10);
         if (await this.userService.doesUserExist(email, username)) {
             throw new UserExistsException(username, email);
         }
+        const hashedPassword = await this.passwordManager.hash(password, 10);
         const user = await this.userService.createUser(
             new UserBuilder()
                 .setEmail(email)

@@ -2,7 +2,7 @@ import { Transformer } from "../../../@Types";
 import Image from "../../../Entities/Media/Image";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
 import TwitchStream from "../../../Entities/TwitchStream/TwitchStream";
-import IPostDocument from "../Models/Post/IPostDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (post) => {
     return new TwitchStream(

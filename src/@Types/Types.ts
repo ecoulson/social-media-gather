@@ -11,5 +11,7 @@ export default {
     TokenFactory: Symbol.for("TokenFactory"),
     UserService: Symbol.for("UserService"),
     SearchService: Symbol.for("SearchService"),
-    AuthenticationService: Symbol.for("AuthenticationService")
+    FeedService: Symbol.for("FeedService"),
+    AuthenticationService: Symbol.for("AuthenticationService"),
+    PostRepository: Symbol.for("PostRepository")
 };

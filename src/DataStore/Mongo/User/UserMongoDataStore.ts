@@ -1,7 +1,7 @@
 import IUser from "../../../Entities/User/IUser";
 import UserEntityTransform from "./UserEntityTransform";
-import IUserDocument from "../Models/User/IUserDocument";
-import UserModel from "../Models/User/UserModel";
+import IUserDocument from "../../../Schemas/Mongo/User/IUserDocument";
+import UserModel from "../../../Schemas/Mongo/User/UserModel";
 import MongoDataStore from "../MongoDataStore";
 import UserDocumentTransform from "./UserDocumentTransformer";
 

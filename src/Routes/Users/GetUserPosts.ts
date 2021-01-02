@@ -1,6 +1,6 @@
 import { Router } from "express";
-import User from "../../DataStore/Mongo/Models/User/UserModel";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import User from "../../Schemas/Mongo/User/UserModel";
+import Post from "../../Schemas/Mongo/Post/PostModel";
 
 const router = Router();
 

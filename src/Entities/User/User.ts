@@ -38,6 +38,10 @@ export default class User implements IUser {
         return this.email_;
     }
 
+    setEmail(newEmail: string): void {
+        this.email_ = newEmail;
+    }
+
     username(): string {
         return this.username_;
     }
@@ -60,5 +64,9 @@ export default class User implements IUser {
 
     addFollower(user: IUser): void {
         this.followingIds_.push(user.id());
+    }
+
+    removeFollower(user: IUser): void {
+        this.followingIds_ = this.followingIds_.filter((id) => user.id() !== id);
     }
 }

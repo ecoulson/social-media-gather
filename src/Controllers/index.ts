@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Container } from "inversify";
 import AuthenticationController from "./AuthenticationController";
+import FeedController from "./FeedController";
 import SearchController from "./SearchController";
 import UserController from "./UsersController";
 
 export default function ControllerFactory(container: Container): unknown[] {
-    return [AuthenticationController, SearchController, UserController];
+    return [AuthenticationController, SearchController, UserController, FeedController];
 }

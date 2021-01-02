@@ -5,10 +5,10 @@ import MediaType from "../../../Entities/Media/MediaType";
 import ITweet from "../../../Entities/Tweet/ITweet";
 import ITweetMention from "../../../Entities/Tweet/ITweetMentions";
 import ITweetUrl from "../../../Entities/Tweet/ITweetUrl";
-import IPostDocument from "../Models/Post/IPostDocument";
-import ITweetMediaDocument from "../Models/Post/ITweetMediaDocument";
-import ITweetUrlDocument from "../Models/Post/ITweetUrlDocument";
-import ITweetMentionDocument from "../Models/Post/ITweetMentionDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
+import ITweetMediaDocument from "../../../Schemas/Mongo/Post/ITweetMediaDocument";
+import ITweetUrlDocument from "../../../Schemas/Mongo/Post/ITweetUrlDocument";
+import ITweetMentionDocument from "../../../Schemas/Mongo/Post/ITweetMentionDocument";
 import IImage from "../../../Entities/Media/IImage";
 import IVideo from "../../../Entities/Media/IVideo";
 

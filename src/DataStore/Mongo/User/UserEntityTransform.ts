@@ -1,5 +1,5 @@
 import { Transformer } from "../../../@Types";
-import IUserDocument from "../Models/User/IUserDocument";
+import IUserDocument from "../../../Schemas/Mongo/User/IUserDocument";
 import User from "../../../Entities/User/User";
 import IUser from "../../../Entities/User/IUser";
 

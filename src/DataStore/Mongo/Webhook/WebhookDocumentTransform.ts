@@ -1,7 +1,7 @@
 import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IWebhook from "../../../Entities/Webhook/IWebhook";
-import IWebhookDocument from "../Models/Webhook/IWebhookDocument";
+import IWebhookDocument from "../../../Schemas/Mongo/Webhook/IWebhookDocument";
 
 const WebhookDocumentTransform: Transformer<IWebhook, UpdateQuery<IWebhookDocument>> = (
     webhook

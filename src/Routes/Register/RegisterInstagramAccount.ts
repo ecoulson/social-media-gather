@@ -1,9 +1,9 @@
 import requiresAuth from "../../Middleware/RequiresAuth";
 import { IgApiClient } from "instagram-private-api";
 import { Router } from "express";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
-import User from "../../DataStore/Mongo/Models/User/UserModel";
-import IUserDocument from "../../DataStore/Mongo/Models/User/IUserDocument";
+import Post from "../../Schemas/Mongo/Post/PostModel";
+import User from "../../Schemas/Mongo/User/UserModel";
+import IUserDocument from "../../Schemas/Mongo/User/IUserDocument";
 // import fs from "fs";
 // import readline from "readline";
 // import { google, Auth, gmail_v1 } from "googleapis";

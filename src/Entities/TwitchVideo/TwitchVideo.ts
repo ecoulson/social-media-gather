@@ -1,52 +1,52 @@
 import IImage from "../Media/IImage";
+import Post from "../Post/Post";
+import PostType from "../Post/PostType";
 import ITwitchVideo from "./ITwitchVideo";
 
-export default class TwitchVideo implements ITwitchVideo {
+export default class TwitchVideo extends Post implements ITwitchVideo {
     constructor(
-        private id_: string,
-        private url_: string,
-        private gameName_: string,
-        private publishedAt_: Date,
-        private title_: string,
-        private description_: string,
-        private thumbnail_: IImage,
-        private screenName_: string,
-        private userId_: string
-    ) {}
-
-    id(): string {
-        return this.id_;
+        _id: string,
+        private _url: string,
+        private _gameName: string,
+        private _publishedAt: Date,
+        private _title: string,
+        private _description: string,
+        private _thumbnail: IImage,
+        private _screenName: string,
+        private _userId: string
+    ) {
+        super(PostType.TWITCH_VIDEO, _id);
     }
 
     url(): string {
-        return this.url_;
+        return this._url;
     }
 
     gameName(): string {
-        return this.gameName_;
+        return this._gameName;
     }
 
     publishedAt(): Date {
-        return this.publishedAt_;
+        return this._publishedAt;
     }
 
     title(): string {
-        return this.title_;
+        return this._title;
     }
 
     description(): string {
-        return this.description_;
+        return this._description;
     }
 
     thumbnail(): IImage {
-        return this.thumbnail_;
+        return this._thumbnail;
     }
 
     screenName(): string {
-        return this.screenName_;
+        return this._screenName;
     }
 
     userId(): string {
-        return this.userId_;
+        return this._userId;
     }
 }

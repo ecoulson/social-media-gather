@@ -2,7 +2,7 @@ import { Transformer } from "../../../@Types";
 import Image from "../../../Entities/Media/Image";
 import ITwitchVideo from "../../../Entities/TwitchVideo/ITwitchVideo";
 import TwitchVideo from "../../../Entities/TwitchVideo/TwitchVideo";
-import IPostDocument from "../Models/Post/IPostDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const TwitchVideoEntityTransform: Transformer<IPostDocument, ITwitchVideo> = (post) =>
     new TwitchVideo(

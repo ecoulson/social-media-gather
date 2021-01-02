@@ -1,4 +1,4 @@
-export interface IUserResponse {
+export interface IUserJSONSchema {
     id: string;
     twitchId: string;
     twitterId: string;

@@ -1,8 +1,8 @@
-import { Transformer } from "../../@Types";
-import IUser from "../../Entities/User/IUser";
-import { IUserResponse } from "./IUserResponse";
+import { Transformer } from "../@Types";
+import IUser from "../Entities/User/IUser";
+import { IUserJSONSchema } from "../Schemas/JSON/IUserJSONSchema";
 
-const UserTransformer: Transformer<IUser, IUserResponse> = (user) => {
+const UserSerializer: Transformer<IUser, IUserJSONSchema> = (user) => {
     return {
         id: user.id(),
         twitchId: user.twitchId(),
@@ -16,4 +16,4 @@ const UserTransformer: Transformer<IUser, IUserResponse> = (user) => {
     };
 };
 
-export default UserTransformer;
+export default UserSerializer;

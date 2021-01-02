@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import IUserDocument from "../DataStore/Mongo/Models/User/IUserDocument";
+import IUserDocument from "../Schemas/Mongo/User/IUserDocument";
 import IUser from "../Entities/User/IUser";
 
 declare global {

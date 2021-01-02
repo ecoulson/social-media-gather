@@ -1,11 +1,11 @@
 import { Router } from "express";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
-import User from "../../DataStore/Mongo/Models/User/UserModel";
-import Webhook from "../../DataStore/Mongo/Models/Webhook/WebhookModel";
+import Post from "../../Schemas/Mongo/Post/PostModel";
+import User from "../../Schemas/Mongo/User/UserModel";
+import Webhook from "../../Schemas/Mongo/Webhook/WebhookModel";
 import requiresAuth from "../../Middleware/RequiresAuth";
 import Axios from "axios";
 import { TwitchChannelResponse } from "./TwitchChannelResponse";
-import IUserDocument from "../../DataStore/Mongo/Models/User/IUserDocument";
+import IUserDocument from "../../Schemas/Mongo/User/IUserDocument";
 import { ITwitchVideoResponse } from "./ITwitchVideoResponse";
 
 const router = Router();

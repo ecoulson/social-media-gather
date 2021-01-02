@@ -1,6 +1,6 @@
-import IEntity from "../IEntity";
+import IPost from "../Post/IPost";
 
-export default interface IYouTubeVideo extends IEntity {
+export default interface IYouTubeVideo extends IPost {
     publishedAt(): Date;
     thumbnailUrl(): string;
     title(): string;

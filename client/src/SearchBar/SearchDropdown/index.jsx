@@ -48,7 +48,7 @@ export default function SearchDropdown(props) {
     function follow(user) {
         return async (event) => {
             event.stopPropagation();
-            await Axios.post(`/api/users/follow/${user.username}`);
+            await Axios.put(`/api/users/follow/${user.id}`);
             updateFollowedUser(user, true);
         }
     }
@@ -69,7 +69,7 @@ export default function SearchDropdown(props) {
     function unfollow(user) {
         return async (event) => {
             event.stopPropagation();
-            await Axios.post(`/api/users/unfollow/${user.username}`);
+            await Axios.put(`/api/users/unfollow/${user.id}`);
             updateFollowedUser(user, false);
         }
     }

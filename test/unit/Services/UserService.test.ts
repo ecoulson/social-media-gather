@@ -20,7 +20,7 @@ describe("User Service Suite", () => {
             .setup((userRepository) => userRepository.delete)
             .returns(() => Promise.resolve(user))
             .setup((userRepository) => userRepository.update)
-            .returns(() => Promise.resolve(user))
+            .returns((user) => Promise.resolve(user))
             .setup((userRepository) => userRepository.add)
             .returns(() => Promise.resolve(user))
             .setup((userRepository) => userRepository.find)
@@ -73,9 +73,12 @@ describe("User Service Suite", () => {
 
     describe("Update User", () => {
         test("Should update user", async () => {
-            const savedUser = await service.updateUser(user);
+            const newEmail = "test@test.com";
+            const savedUser = await service.updateUser(user, {
+                email: newEmail
+            });
 
-            expect(savedUser).toEqual(user);
+            expect(savedUser.email()).toEqual(newEmail);
         });
     });
 
@@ -106,6 +109,54 @@ describe("User Service Suite", () => {
             const userWithId = await service.getUserById(user.id());
 
             expect(userWithId).toEqual(user);
+        });
+    });
+
+    describe("Follow user", () => {
+        test("Should follow a user", async () => {
+            const userToFollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+            mockUserRepository
+                .setup((userRepository) => userRepository.update)
+                .returns((user) => Promise.resolve(user));
+            mockUserRepository
+                .setup((userRepository) => userRepository.findById)
+                .returns(() => Promise.resolve(userToFollow));
+
+            await service.follow(user, userToFollow.id());
+
+            expect(user.following()).toEqual(["followerId"]);
+        });
+    });
+
+    describe("Unfollow user", () => {
+        test("Should unfollow a user", async () => {
+            const userToUnfollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+            user.addFollower(userToUnfollow);
+            mockUserRepository
+                .setup((userRepository) => userRepository.update)
+                .returns((user) => Promise.resolve(user));
+            mockUserRepository
+                .setup((userRepository) => userRepository.findById)
+                .returns(() => Promise.resolve(userToUnfollow));
+            expect(user.following()).toEqual(["followerId"]);
+
+            await service.unfollow(user, userToUnfollow.id());
+
+            expect(user.following()).toEqual([]);
+        });
+    });
+
+    describe("Is following", () => {
+        test("Should be following a user", async () => {
+            const followedUser = new User("followerId", "", "", "", "", "", "", "", false, []);
+            mockUserRepository
+                .setup((userRepository) => userRepository.findByUsername)
+                .returns(() => Promise.resolve(followedUser));
+            user.addFollower(followedUser);
+
+            const isFollowing = await service.isFollowing(user, followedUser.username());
+
+            expect(isFollowing).toBeTruthy();
         });
     });
 });

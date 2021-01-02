@@ -38,9 +38,10 @@ export default abstract class MongoDataStore<
     }
 
     async update(entity: Entity): Promise<Entity> {
-        return this.entityTransform(
-            await this.model.findByIdAndUpdate(entity.id(), this.documentTransform(entity)).exec()
-        );
+        const updatedDocument = await this.model
+            .findByIdAndUpdate(entity.id(), this.documentTransform(entity), { new: true })
+            .exec();
+        return this.entityTransform(updatedDocument);
     }
 
     async delete(entity: Entity): Promise<Entity> {

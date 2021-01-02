@@ -1,4 +1,4 @@
-import UserTransformer from "../Controllers/ResponseTransforms/UserTransformer";
+import UserSerializer from "../Serializer/UserJSONSerializer";
 import IUser from "../Entities/User/IUser";
 import IMessage from "./IMessage";
 import IMessageStructure from "./IMessageStructure";
@@ -14,7 +14,7 @@ export default class UsersMessage implements IMessage {
                 type: MessageType.UsersMessage
             },
             data: {
-                users: this.users.map((user) => UserTransformer(user))
+                users: this.users.map((user) => UserSerializer(user))
             }
         };
     }

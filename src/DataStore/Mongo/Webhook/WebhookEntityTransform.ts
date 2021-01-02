@@ -1,7 +1,7 @@
 import { Transformer } from "../../../@Types";
 import IWebhook from "../../../Entities/Webhook/IWebhook";
 import Webhook from "../../../Entities/Webhook/Webhook";
-import IWebhookDocument from "../Models/Webhook/IWebhookDocument";
+import IWebhookDocument from "../../../Schemas/Mongo/Webhook/IWebhookDocument";
 
 const WebhookEntityTransformer: Transformer<IWebhookDocument, IWebhook> = (webhookDocument) => {
     return new Webhook(

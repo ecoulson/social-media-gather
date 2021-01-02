@@ -1,10 +1,10 @@
 import { Router } from "express";
-import Post from "../../DataStore/Mongo/Models/Post/PostModel";
+import Post from "../../Schemas/Mongo/Post/PostModel";
 import requiresAuth from "../../Middleware/RequiresAuth";
-import User from "../../DataStore/Mongo/Models/User/UserModel";
+import User from "../../Schemas/Mongo/User/UserModel";
 import axios from "axios";
 import bigInt from "big-integer";
-import IUserDocument from "../../DataStore/Mongo/Models/User/IUserDocument";
+import IUserDocument from "../../Schemas/Mongo/User/IUserDocument";
 import { ITwitterUser } from "./ITwitterUser";
 import { ITweetResponse } from "./ITweetResponse";
 const TwitterSearchEndpoint = "https://api.twitter.com/1.1/users/lookup.json";

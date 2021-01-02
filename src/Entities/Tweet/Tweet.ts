@@ -1,59 +1,59 @@
 import IMedia from "../Media/IMedia";
+import Post from "../Post/Post";
+import PostType from "../Post/PostType";
 import ITweet from "./ITweet";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
 
-export default class Tweet implements ITweet {
+export default class Tweet extends Post implements ITweet {
     constructor(
-        private id_: string,
-        private text_: string,
-        private publishedAt_: Date,
-        private screenName_: string,
-        private hashtags_: string[],
-        private urls_: ITweetUrl[],
-        private mentions_: ITweetMention[],
-        private media_: IMedia[],
-        private tweetId_: string,
-        private userId_: string
-    ) {}
-
-    id(): string {
-        return this.id_;
+        _id: string,
+        private _text: string,
+        private _publishedAt: Date,
+        private _screenName: string,
+        private _hashtags: string[],
+        private _urls: ITweetUrl[],
+        private _mentions: ITweetMention[],
+        private _media: IMedia[],
+        private _tweetId: string,
+        private _userId: string
+    ) {
+        super(PostType.TWEET, _id);
     }
 
     text(): string {
-        return this.text_;
+        return this._text;
     }
 
     publishedAt(): Date {
-        return this.publishedAt_;
+        return this._publishedAt;
     }
 
     screenName(): string {
-        return this.screenName_;
+        return this._screenName;
     }
 
     hashtags(): string[] {
-        return this.hashtags_;
+        return this._hashtags;
     }
 
     urls(): ITweetUrl[] {
-        return this.urls_;
+        return this._urls;
     }
 
     mentions(): ITweetMention[] {
-        return this.mentions_;
+        return this._mentions;
     }
 
     media(): IMedia[] {
-        return this.media_;
+        return this._media;
     }
 
     userId(): string {
-        return this.userId_;
+        return this._userId;
     }
 
     tweetId(): string {
-        return this.tweetId_;
+        return this._tweetId;
     }
 }

@@ -1,7 +1,7 @@
 import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IUser from "../../../Entities/User/IUser";
-import IUserDocument from "../Models/User/IUserDocument";
+import IUserDocument from "../../../Schemas/Mongo/User/IUserDocument";
 
 const UserDocumentTransform: Transformer<IUser, UpdateQuery<IUserDocument>> = (user) => {
     return {

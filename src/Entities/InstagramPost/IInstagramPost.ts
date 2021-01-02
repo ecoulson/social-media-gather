@@ -1,7 +1,7 @@
-import IEntity from "../IEntity";
 import IMedia from "../Media/IMedia";
+import IPost from "../Post/IPost";
 
-export default interface IInstagramPost extends IEntity {
+export default interface IInstagramPost extends IPost {
     takenAt(): Date;
     likes(): number;
     caption(): string;

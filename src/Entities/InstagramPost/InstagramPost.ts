@@ -1,48 +1,48 @@
 import IImage from "../Media/IImage";
 import IMedia from "../Media/IMedia";
+import Post from "../Post/Post";
+import PostType from "../Post/PostType";
 import IInstagramPost from "./IInstagramPost";
 
-export default class InstagramPost implements IInstagramPost {
+export default class InstagramPost extends Post implements IInstagramPost {
     constructor(
-        private id_: string,
-        private userId_: string,
-        private postId_: string,
-        private likes_: number,
-        private takenAt_: Date,
-        private caption_: string,
-        private media_: IMedia[],
-        private thumbnail_: IImage
-    ) {}
-
-    id(): string {
-        return this.id_;
+        _id: string,
+        private _userId: string,
+        private _postId: string,
+        private _likes: number,
+        private _takenAt: Date,
+        private _caption: string,
+        private _media: IMedia[],
+        private _thumbnail: IImage
+    ) {
+        super(PostType.INSTAGRAM_POST, _id);
     }
 
     userId(): string {
-        return this.userId_;
+        return this._userId;
     }
 
     postId(): string {
-        return this.postId_;
+        return this._postId;
     }
 
     likes(): number {
-        return this.likes_;
+        return this._likes;
     }
 
     takenAt(): Date {
-        return this.takenAt_;
+        return this._takenAt;
     }
 
     caption(): string {
-        return this.caption_;
+        return this._caption;
     }
 
     media(): IMedia[] {
-        return this.media_;
+        return this._media;
     }
 
     thumbnail(): IImage {
-        return this.thumbnail_;
+        return this._thumbnail;
     }
 }

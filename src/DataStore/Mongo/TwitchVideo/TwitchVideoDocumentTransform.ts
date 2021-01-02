@@ -1,7 +1,7 @@
 import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import ITwitchVideo from "../../../Entities/TwitchVideo/ITwitchVideo";
-import IPostDocument from "../Models/Post/IPostDocument";
+import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const TwitchVideoDocumentTransform: Transformer<ITwitchVideo, UpdateQuery<IPostDocument>> = (
     video

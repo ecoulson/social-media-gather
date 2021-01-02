@@ -1,7 +1,7 @@
-import IEntity from "../IEntity";
 import IImage from "../Media/IImage";
+import IPost from "../Post/IPost";
 
-export default interface ITwitchVideo extends IEntity {
+export default interface ITwitchVideo extends IPost {
     url(): string;
     gameName(): string;
     publishedAt(): Date;
