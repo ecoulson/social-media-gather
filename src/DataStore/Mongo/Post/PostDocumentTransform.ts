@@ -37,7 +37,7 @@ const PostDocumentTransform: Transformer<IPost, IPostDocument> = (postEntity) =>
                 type: "TWITCH_STREAM",
                 timeCreated: twitchStream.startedAt(),
                 userId: twitchStream.userId(),
-                tweet: TwitchStreamDocumentTransform(twitchStream)
+                twitchStream: TwitchStreamDocumentTransform(twitchStream)
             } as IPostDocument;
         case PostType.TWITCH_VIDEO:
             const twitchVideo = postEntity as ITwitchVideo;
@@ -45,7 +45,7 @@ const PostDocumentTransform: Transformer<IPost, IPostDocument> = (postEntity) =>
                 type: "TWITCH_VIDEO",
                 timeCreated: twitchVideo.publishedAt(),
                 userId: twitchVideo.userId(),
-                tweet: TwitchVideoDocumentTransform(twitchVideo)
+                twitchVideo: TwitchVideoDocumentTransform(twitchVideo)
             } as IPostDocument;
         case PostType.YOUTUBE_VIDEO:
             const youtubeVideo = postEntity as IYouTubeVideo;
@@ -53,7 +53,7 @@ const PostDocumentTransform: Transformer<IPost, IPostDocument> = (postEntity) =>
                 type: "YOUTUBE_VIDEO",
                 timeCreated: youtubeVideo.publishedAt(),
                 userId: youtubeVideo.userId(),
-                tweet: YouTubeVideoDocumentTransform(youtubeVideo)
+                youtubeVideo: YouTubeVideoDocumentTransform(youtubeVideo)
             } as IPostDocument;
     }
 };

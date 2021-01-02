@@ -1,6 +1,6 @@
 import { Transformer } from "../@Types";
 import IUser from "../Entities/User/IUser";
-import { IUserJSONSchema } from "../Schemas/JSON/IUserJSONSchema";
+import { IUserJSONSchema } from "../Schemas/JSON/User/IUserJSONSchema";
 
 const UserSerializer: Transformer<IUser, IUserJSONSchema> = (user) => {
     return {

@@ -1,12 +1,61 @@
 import { Transformer } from "../@Types";
+import IInstagramPost from "../Entities/InstagramPost/IInstagramPost";
 import IPost from "../Entities/Post/IPost";
-import { IPostJSONSchema } from "../Schemas/JSON/IPostJSONSchema";
+import PostType from "../Entities/Post/PostType";
+import ITweet from "../Entities/Tweet/ITweet";
+import ITwitchStream from "../Entities/TwitchStream/ITwitchStream";
+import ITwitchVideo from "../Entities/TwitchVideo/ITwitchVideo";
+import IYouTubeVideo from "../Entities/YouTubeVideo/IYouTubeVideo";
+import { IPostJSONSchema } from "../Schemas/JSON/Post/IPostJSONSchema";
+import InstagramJSONSerializer from "./InstagramJSONSerializer";
+import TweetJSONSerializer from "./TweetJSONSerializer";
+import TwitchStreamJSONSerializer from "./TwitchStreamJSONSerializer";
+import TwitchVideoJSONSerializer from "./TwitchVideoJSONSerializer";
+import YouTubeVideoJSONSerializer from "./YouTubeVideoJSONSerializer";
 
 const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => {
-    return {
-        id: postEntity.id(),
-        type: postEntity.type()
-    };
+    switch (postEntity.type()) {
+        case PostType.INSTAGRAM_POST:
+            const instagram = postEntity as IInstagramPost;
+            return {
+                type: postEntity.type(),
+                timeCreated: instagram.takenAt(),
+                userId: instagram.userId(),
+                instagram: InstagramJSONSerializer(instagram)
+            };
+        case PostType.TWEET:
+            const tweet = postEntity as ITweet;
+            return {
+                type: tweet.type(),
+                timeCreated: tweet.publishedAt(),
+                userId: tweet.userId(),
+                tweet: TweetJSONSerializer(tweet)
+            };
+        case PostType.TWITCH_STREAM:
+            const twitchStream = postEntity as ITwitchStream;
+            return {
+                type: twitchStream.type(),
+                timeCreated: twitchStream.startedAt(),
+                userId: twitchStream.userId(),
+                twitchStream: TwitchStreamJSONSerializer(twitchStream)
+            };
+        case PostType.TWITCH_VIDEO:
+            const twitchVideo = postEntity as ITwitchVideo;
+            return {
+                type: twitchVideo.type(),
+                timeCreated: twitchVideo.publishedAt(),
+                userId: twitchVideo.userId(),
+                twitchVideo: TwitchVideoJSONSerializer(twitchVideo)
+            };
+        case PostType.YOUTUBE_VIDEO:
+            const youTubeVideo = postEntity as IYouTubeVideo;
+            return {
+                type: youTubeVideo.type(),
+                timeCreated: youTubeVideo.publishedAt(),
+                userId: youTubeVideo.userId(),
+                youtubeVideo: YouTubeVideoJSONSerializer(youTubeVideo)
+            };
+    }
 };
 
 export default PostJSONSerializer;

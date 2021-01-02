@@ -9,9 +9,9 @@ export default interface IPostDocument extends Document {
     type: string;
     timeCreated: Date;
     userId: string;
-    twitchStream: ITwitchStreamDocument;
-    twitchVideo: ITwitchVideoDocument;
-    youtubeVideo: IYouTubeVideoDocument;
-    tweet: ITweetDocument;
-    instagram: IInstagramPostDocument;
+    twitchStream?: ITwitchStreamDocument;
+    twitchVideo?: ITwitchVideoDocument;
+    youtubeVideo?: IYouTubeVideoDocument;
+    tweet?: ITweetDocument;
+    instagram?: IInstagramPostDocument;
 }
