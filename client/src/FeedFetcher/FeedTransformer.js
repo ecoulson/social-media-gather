@@ -87,7 +87,7 @@ function transformTwitchStream(post) {
 
 function transformTweet(post) {
     return {
-        id: post._id,
+        id: post.id,
         type: post.type,
         author: post.tweet.screenName,
         publishedAt: post.tweet.publishedAt,

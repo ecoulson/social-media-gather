@@ -18,6 +18,7 @@ const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => 
         case PostType.INSTAGRAM_POST:
             const instagram = postEntity as IInstagramPost;
             return {
+                id: postEntity.id(),
                 type: postEntity.type(),
                 timeCreated: instagram.takenAt(),
                 userId: instagram.userId(),
@@ -26,6 +27,7 @@ const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => 
         case PostType.TWEET:
             const tweet = postEntity as ITweet;
             return {
+                id: postEntity.id(),
                 type: tweet.type(),
                 timeCreated: tweet.publishedAt(),
                 userId: tweet.userId(),
@@ -34,6 +36,7 @@ const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => 
         case PostType.TWITCH_STREAM:
             const twitchStream = postEntity as ITwitchStream;
             return {
+                id: postEntity.id(),
                 type: twitchStream.type(),
                 timeCreated: twitchStream.startedAt(),
                 userId: twitchStream.userId(),
@@ -42,6 +45,7 @@ const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => 
         case PostType.TWITCH_VIDEO:
             const twitchVideo = postEntity as ITwitchVideo;
             return {
+                id: postEntity.id(),
                 type: twitchVideo.type(),
                 timeCreated: twitchVideo.publishedAt(),
                 userId: twitchVideo.userId(),
@@ -50,6 +54,7 @@ const PostJSONSerializer: Transformer<IPost, IPostJSONSchema> = (postEntity) => 
         case PostType.YOUTUBE_VIDEO:
             const youTubeVideo = postEntity as IYouTubeVideo;
             return {
+                id: postEntity.id(),
                 type: youTubeVideo.type(),
                 timeCreated: youTubeVideo.publishedAt(),
                 userId: youTubeVideo.userId(),

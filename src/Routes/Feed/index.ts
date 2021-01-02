@@ -3,22 +3,8 @@ import Post from "../../Schemas/Mongo/Post/PostModel";
 import Axios from "axios";
 import XmlParser from "express-xml-bodyparser";
 import { google, youtube_v3 } from "googleapis";
-import requiresAuth from "../../Middleware/RequiresAuth";
 
 const router = Router();
-
-router.get("/", requiresAuth(), async (req, res) => {
-    const feed = await Post.find({
-        userId: {
-            $in: req.user.following
-        }
-    })
-        .skip(parseInt(req.query.offset as string))
-        .sort({ timeCreated: -1 })
-        .limit(20)
-        .exec();
-    return res.json(feed);
-});
 
 router.get("/twitch/callback", (req, res) => {
     res.type("text/plain").status(200).send(req.query["hub.challenge"]);

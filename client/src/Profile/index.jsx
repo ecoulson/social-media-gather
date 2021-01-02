@@ -67,7 +67,7 @@ export default function Profile(props) {
                 <h1 className="profile-username">{user.username}</h1>
                 {renderFollowButton()}
             </Panel>
-            <FeedFetcher Component={Feed} feedUrl={`/api/users/get-user-posts/${user.username}`} />
+            <FeedFetcher Component={Feed} feedUrl={`/api/feed/${user.id}`} />
         </>
     )
 }

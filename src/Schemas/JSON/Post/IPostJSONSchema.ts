@@ -7,6 +7,7 @@ import IYouTubeVideoJSONSchema from "../YouTubeVideo/IYouTubeVideoJSONSchema";
 
 export interface IPostJSONSchema {
     type: PostType;
+    id: string;
     timeCreated: Date;
     userId: string;
     twitchStream?: ITwitchStreamJSONSchema;

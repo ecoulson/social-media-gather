@@ -49,7 +49,7 @@ export default function Me() {
                 <Button to="/edit-profile">Edit Profile</Button>
                 <Button to="/logout">Logout</Button>
             </Panel>
-            <FeedFetcher Component={Feed} feedUrl={`/api/users/get-user-posts/${user.username}`} />
+            <FeedFetcher Component={Feed} feedUrl={`/api/feed/${user.id}`} />
         </>
     )
 }
