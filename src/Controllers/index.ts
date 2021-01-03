@@ -5,6 +5,7 @@ import FeedController from "./FeedController";
 import SearchController from "./SearchController";
 import TwitchWebhookCallbackController from "./TwitchWebhookCallbackController";
 import UserController from "./UsersController";
+import YouTubeWebhookCallbackController from "./YouTubeWebhookCallbackController";
 
 export default function ControllerFactory(container: Container): unknown[] {
     return [
@@ -12,6 +13,7 @@ export default function ControllerFactory(container: Container): unknown[] {
         SearchController,
         UserController,
         FeedController,
-        TwitchWebhookCallbackController
+        TwitchWebhookCallbackController,
+        YouTubeWebhookCallbackController
     ];
 }

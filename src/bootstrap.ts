@@ -37,6 +37,9 @@ import SearchService from "./Services/SearchService";
 import TwitchWebhookCallbackService from "./Services/TwitchWebhookCallbackService";
 import UserService from "./Services/UserService";
 import { config as configureEnvironment } from "dotenv";
+import IYouTubeWebhookCallbackData from "./Services/IYouTubeWebhookCallbackData";
+import YouTubeWebhookCallbackService from "./Services/YouTubeWebhookCallbackService";
+import YouTubeAPIClient from "./Library/YouTube/YouTubeAPIClient";
 
 configureEnvironment();
 
@@ -76,7 +79,7 @@ container
     .toConstantValue(mongoWebhookRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof YouTubeRepository>>(Types.WebhookRepository)
+    .bind<InstanceType<typeof YouTubeRepository>>(Types.YouTubeVideoRepository)
     .toConstantValue(mongoYouTubeRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
@@ -105,6 +108,9 @@ container
     .toConstantValue(
         new TwitchAPIClient(process.env.TWITCH_CLIENT_ID, process.env.TWITCH_CLIENT_SECRET)
     );
+container
+    .bind<YouTubeAPIClient>(Types.YouTubeAPIClient)
+    .toConstantValue(new YouTubeAPIClient(process.env.YOUTUBE_API_KEY));
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
@@ -113,5 +119,8 @@ container.bind<IFeedService>(Types.FeedService).to(FeedService);
 container
     .bind<IWebhookCallbackService<ITwitchWebhookCallbackData>>(Types.TwitchWebhookCallbackService)
     .to(TwitchWebhookCallbackService);
+container
+    .bind<IWebhookCallbackService<IYouTubeWebhookCallbackData>>(Types.YouTubeWebhookCallbackService)
+    .to(YouTubeWebhookCallbackService);
 
 export default container;

@@ -11,9 +11,11 @@ export default {
     PasswordManager: Symbol.for("PasswordManager"),
     TokenFactory: Symbol.for("TokenFactory"),
     TwitchAPIClient: Symbol.for("TwitchAPIClient"),
+    YouTubeAPIClient: Symbol.for("YouTubeAPIClient"),
     UserService: Symbol.for("UserService"),
     SearchService: Symbol.for("SearchService"),
     TwitchWebhookCallbackService: Symbol.for("TwitchWebhookCallbackService"),
+    YouTubeWebhookCallbackService: Symbol.for("YouTubeWebhookCallbackService"),
     FeedService: Symbol.for("FeedService"),
     AuthenticationService: Symbol.for("AuthenticationService")
 };

@@ -61,7 +61,7 @@ router.post("/add", async (req, res) => {
 });
 
 async function registerAccount(user: IUserDocument, channelId: string) {
-    user.youtubeId = channelId;
+    user.youtubeId = channelId[0];
     createYoutubePosts(channelId, user.id);
     registerWebhook(channelId, user.id);
     return await user.save();
@@ -73,7 +73,7 @@ async function registerWebhook(channelId: string, userId: string) {
         const now = new Date();
         const webhookPostData = {
             "hub.mode": "subscribe",
-            "hub.callback": `${process.env.BASE_URL}/api/feed/youtube/callback?userId=${userId}`,
+            "hub.callback": `${process.env.BASE_URL}/api/webhook/youtube/callback?userId=${userId}`,
             "hub.verify": "async",
             "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`
         };
@@ -81,9 +81,9 @@ async function registerWebhook(channelId: string, userId: string) {
             expirationDate: now.setSeconds(now.getSeconds() + leaseTime),
             platform: "youtube",
             topicURL: `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
-            callbackURL: `${process.env.BASE_URL}/api/feed/youtube/callback?userId=${userId}`,
+            callbackURL: `${process.env.BASE_URL}/api/webhook/youtube/callback?userId=${userId}`,
             userId: userId,
-            channelId: channelId
+            channelId: channelId[0]
         });
         webhook.save();
         await Axios.post(WebhookHubUrl, qs.stringify(webhookPostData), {

@@ -7,8 +7,8 @@
     "test": "jest --runInBand --watch",
     "build": "tsc -p .",
     "client-build": "cd client && npm install && npm run build",
-    "start": "node ./dist/index.js",
-    "dev": "nodemon --config nodemon.json src/index.ts",
+    "start": "node --unhandled-rejections=strict ./dist/index.js",
+    "dev": "nodemon --unhandled-rejections=strict --config nodemon.json src/index.ts",
     "dev:debug": "nodemon --config nodemon.json --inspect-brk src/index.ts",
     "lint": "eslint '{src,test}/**/*.ts' --fix"
   },
