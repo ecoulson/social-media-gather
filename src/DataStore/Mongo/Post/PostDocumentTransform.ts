@@ -8,7 +8,7 @@ import ITwitchVideo from "../../../Entities/TwitchVideo/ITwitchVideo";
 import IYouTubeVideo from "../../../Entities/YouTubeVideo/IYouTubeVideo";
 import InstagramPostDocumentTransform from "../InstagramPost/InstagramPostDocumentTransform";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
-import TweetDocumentTransform from "../Tweet/TweetUpdateQueryTransform";
+import TweetDocumentTransform from "../Tweet/TweetDocumentTransform";
 import TwitchStreamDocumentTransform from "../TwitchStream/TwitchStreamDocumentTransform";
 import TwitchVideoDocumentTransform from "../TwitchVideo/TwitchVideoDocumentTransform";
 import YouTubeVideoDocumentTransform from "../YouTubeVideo/YouTubeVideoDocumentTransform";

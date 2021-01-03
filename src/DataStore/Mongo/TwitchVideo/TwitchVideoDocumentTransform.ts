@@ -7,7 +7,9 @@ const TwitchVideoDocumentTransform: Transformer<ITwitchVideo, UpdateQuery<IPostD
     video
 ) => {
     return {
+        type: "TWITCH_VIDEO",
         userId: video.userId(),
+        timeCreated: video.publishedAt(),
         twitchVideo: {
             gameName: video.gameName(),
             description: video.description(),

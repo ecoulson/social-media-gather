@@ -29,6 +29,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
     async function getFeed() {
         const response = await Axios.get(`${feedUrl}?offset=${index}`);
+        console.log(response.data);
         setFeed([...feed, ...response.data.data.posts]);
     }
 

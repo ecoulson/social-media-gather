@@ -11,9 +11,10 @@ class TwitchStreamRepository
         super(dataStore);
     }
 
-    async getAllLiveBroadcasts(): Promise<ITwitchStream[]> {
+    async findAllLiveBroadcastsForUser(userId: string): Promise<ITwitchStream[]> {
         return await this.dataStore.find({
             where: {
+                userId,
                 "twitchStream.live": true
             }
         });

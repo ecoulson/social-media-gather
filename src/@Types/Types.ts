@@ -6,12 +6,14 @@ export default {
     UserRepository: Symbol.for("UserRepository"),
     WebhookRepository: Symbol.for("WebhookRepository"),
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
+    PostRepository: Symbol.for("PostRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     PasswordManager: Symbol.for("PasswordManager"),
     TokenFactory: Symbol.for("TokenFactory"),
+    TwitchAPIClient: Symbol.for("TwitchAPIClient"),
     UserService: Symbol.for("UserService"),
     SearchService: Symbol.for("SearchService"),
+    TwitchWebhookCallbackService: Symbol.for("TwitchWebhookCallbackService"),
     FeedService: Symbol.for("FeedService"),
-    AuthenticationService: Symbol.for("AuthenticationService"),
-    PostRepository: Symbol.for("PostRepository")
+    AuthenticationService: Symbol.for("AuthenticationService")
 };

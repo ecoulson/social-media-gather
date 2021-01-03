@@ -1,7 +1,4 @@
-import { config } from "dotenv";
 import Loaders from "./Loaders";
-
-config();
 
 async function startServer(): Promise<void> {
     const server = await Loaders({});

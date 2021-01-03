@@ -11,8 +11,9 @@ const InstagramPostDocumentTransform: Transformer<IInstagramPost, UpdateQuery<IP
     post
 ) => {
     return {
-        _id: post.id(),
+        type: "INSTAGRAM",
         userId: post.userId(),
+        timeCreated: post.takenAt(),
         instagram: {
             takenAt: post.takenAt(),
             thumbnail: transformMediaEntity(post.thumbnail()),

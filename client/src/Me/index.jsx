@@ -32,7 +32,7 @@ export default function Me() {
                     authorization: `Bearer ${Cookie.getCookie("token")}`
                 }
             })
-            setUser(response.data);
+            setUser(response.data.data.users[0]);
         }
 
         checkAuthenticated();

@@ -7,7 +7,9 @@ const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, UpdateQuery<IPos
     post
 ) => {
     return {
+        type: "YOUTUBE_VIDEO",
         userId: post.userId(),
+        timeCreated: post.publishedAt(),
         youtubeVideo: {
             publishedAt: post.publishedAt(),
             videoId: post.videoId(),

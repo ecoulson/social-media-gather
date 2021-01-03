@@ -74,13 +74,13 @@ async function registerWebhooks(accessToken: string, twitchId: string, userId: s
             expirationDate: now.setSeconds(now.getSeconds() + leaseTime),
             platform: "twitch",
             topicURL: `https://api.twitch.tv/helix/streams?user_id=${twitchId}`,
-            callbackURL: `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
+            callbackURL: `${process.env.BASE_URL}/api/webhook/twitch/callback?user_id=${userId}`,
             userId: userId
         });
         await Axios.post(
             "https://api.twitch.tv/helix/webhooks/hub",
             {
-                "hub.callback": `${process.env.BASE_URL}/api/feed/twitch/callback?user_id=${userId}`,
+                "hub.callback": `${process.env.BASE_URL}/api/webhook/twitch/callback?user_id=${userId}`,
                 "hub.mode": "subscribe",
                 "hub.lease_seconds": leaseTime,
                 "hub.topic": `https://api.twitch.tv/helix/streams?user_id=${twitchId}`

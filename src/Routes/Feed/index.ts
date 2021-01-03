@@ -1,75 +1,9 @@
 import { Router } from "express";
 import Post from "../../Schemas/Mongo/Post/PostModel";
-import Axios from "axios";
 import XmlParser from "express-xml-bodyparser";
 import { google, youtube_v3 } from "googleapis";
 
 const router = Router();
-
-router.get("/twitch/callback", (req, res) => {
-    res.type("text/plain").status(200).send(req.query["hub.challenge"]);
-});
-
-router.post("/twitch/callback", async (req, res) => {
-    res.send("Ok").status(200);
-    const userLiveStreams = req.body.data;
-    if (userLiveStreams.length === 1) {
-        const tokePayload = await getTwitchAccessToken();
-        if (await Post.findOne({ "twitchStream.streamId": userLiveStreams[0].id })) {
-            return;
-        }
-        const twitchLiveStreamPost = new Post({
-            type: "TWITCH_STREAM",
-            timeCreated: new Date(userLiveStreams[0].started_at),
-            userId: req.query.user_id,
-            twitchStream: {
-                streamId: userLiveStreams[0].id,
-                url: `https://www.twitch.tv/${userLiveStreams[0].user_name}`,
-                live: true,
-                gameName: await getGameName(tokePayload.access_token, userLiveStreams[0].game_id),
-                userName: userLiveStreams[0].user_name,
-                startedAt: new Date(userLiveStreams[0].started_at),
-                title: userLiveStreams[0].title,
-                thumbnailUrl: userLiveStreams[0].thumbnail_url
-            }
-        });
-        await twitchLiveStreamPost.save();
-    } else {
-        await Post.findOneAndUpdate(
-            {
-                userId: req.query.user_id as string,
-                "twitchStream.live": true
-            },
-            {
-                $set: {
-                    "twitchStream.live": false,
-                    "twitchStream.endedAt": new Date()
-                }
-            }
-        );
-    }
-    res.status(200).send();
-});
-
-async function getTwitchAccessToken() {
-    const response = await Axios.post(
-        `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`
-    );
-    return response.data;
-}
-
-async function getGameName(accessToken: string, gameId: string) {
-    const response = await Axios.get(`https://api.twitch.tv/helix/games?id=${gameId}`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Client-Id": process.env.TWITCH_CLIENT_ID
-        }
-    });
-    if (response.data.data.length === 0) {
-        return "";
-    }
-    return response.data.data[0].name;
-}
 
 router.get("/youtube/callback", (req, res) => {
     res.type("text/plain").status(200).send(req.query["hub.challenge"]);

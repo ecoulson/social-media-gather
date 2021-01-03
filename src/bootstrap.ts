@@ -10,6 +10,7 @@ import TwitchVideoMongoDataStore from "./DataStore/Mongo/TwitchVideo/TwitchVideo
 import UserMongoDataStore from "./DataStore/Mongo/User/UserMongoDataStore";
 import WebhookMongoDataStore from "./DataStore/Mongo/Webhook/WebhookMongoDataStore";
 import YouTubeVideoMongoDataStore from "./DataStore/Mongo/YouTubeVideo/YouTubeVideoMongoDataStore";
+import TwitchAPIClient from "./Library/Twitch/TwitchAPIClient";
 import requiresAuth from "./Middleware/RequiresAuth";
 import InstagramPostRepository from "./Repositories/InstagramPost/InstagramPostRepository";
 import PostRepository from "./Repositories/Post/PostRepository";
@@ -28,10 +29,16 @@ import FeedService from "./Services/FeedService";
 import IAuthenticationService from "./Services/IAuthenticationService";
 import IFeedService from "./Services/IFeedService";
 import ISearchService from "./Services/ISearchService";
+import ITwitchWebhookCallbackData from "./Services/ITwitchWebhookCallbackData";
 import IUserService from "./Services/IUserService";
 import IUserTokenPayload from "./Services/IUserTokenPayload";
+import IWebhookCallbackService from "./Services/IWebhookCallbackService";
 import SearchService from "./Services/SearchService";
+import TwitchWebhookCallbackService from "./Services/TwitchWebhookCallbackService";
 import UserService from "./Services/UserService";
+import { config as configureEnvironment } from "dotenv";
+
+configureEnvironment();
 
 const container = new Container();
 
@@ -93,10 +100,18 @@ container
     .bind<ITokenFactory<IUserTokenPayload>>(Types.TokenFactory)
     .to(TokenFactory)
     .whenInjectedInto(AuthenticationService);
+container
+    .bind<TwitchAPIClient>(Types.TwitchAPIClient)
+    .toConstantValue(
+        new TwitchAPIClient(process.env.TWITCH_CLIENT_ID, process.env.TWITCH_CLIENT_SECRET)
+    );
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
 container.bind<ISearchService>(Types.SearchService).to(SearchService);
 container.bind<IFeedService>(Types.FeedService).to(FeedService);
+container
+    .bind<IWebhookCallbackService<ITwitchWebhookCallbackData>>(Types.TwitchWebhookCallbackService)
+    .to(TwitchWebhookCallbackService);
 
 export default container;

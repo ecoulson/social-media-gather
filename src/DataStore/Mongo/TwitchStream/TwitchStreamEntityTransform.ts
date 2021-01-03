@@ -13,10 +13,10 @@ const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (
         post.twitchStream.url,
         post.twitchStream.title,
         post.userId,
-        post._id,
+        post.twitchStream.userName,
+        post.id,
         post.twitchStream.gameName,
         post.twitchStream.streamId,
-        post.twitchStream.username,
         post.twitchStream.endedAt
     );
 };

@@ -55,7 +55,6 @@ export default class AuthenticationService implements IAuthenticationService {
                 .build()
         );
         user.addFollower(user);
-        await this.userService.updateUser(user);
-        return user;
+        return await this.userService.updateUser(user);
     }
 }

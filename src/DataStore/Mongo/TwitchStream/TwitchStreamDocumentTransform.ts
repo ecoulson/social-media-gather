@@ -7,7 +7,9 @@ const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPos
     stream
 ) => {
     return {
+        type: "TWITCH_STREAM",
         userId: stream.userId(),
+        timeCreated: stream.startedAt(),
         twitchStream: {
             endedAt: stream.endedAt(),
             startedAt: stream.startedAt(),
@@ -17,7 +19,7 @@ const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPos
             thumbnailUrl: stream.thumbnail().url(),
             title: stream.title(),
             url: stream.url(),
-            username: stream.screenName()
+            userName: stream.screenName()
         }
     };
 };

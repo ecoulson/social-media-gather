@@ -4,7 +4,7 @@ export default interface ITwitchStreamDocument {
     gameName: string;
     startedAt: Date;
     endedAt: Date;
-    username: string;
+    userName: string;
     thumbnailUrl: string;
     title: string;
     streamId: string;
