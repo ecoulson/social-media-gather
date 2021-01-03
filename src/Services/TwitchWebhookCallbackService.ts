@@ -35,24 +35,20 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
     }
 
     private async startBroadcast(userId: string, stream: ITwitchStreamSchema) {
-        try {
-            const game = await this.getBroadcastedGame(stream);
-            const newBroadcast = new TwitchStreamBuilder()
-                .setGameName(game.name)
-                .setScreenName(stream.user_name)
-                .setStartedAt(stream.started_at)
-                .setStatus(true)
-                .setStreamId(stream.id)
-                .setThumbnail(stream.thumbnail_url)
-                .setTitle(stream.title)
-                .setUrl(`https://www.twitch.tv/${stream.user_name}`)
-                .setUserId(userId)
-                .setViewers(stream.viewer_count)
-                .build();
-            await this.twitchStreamRepository.add(newBroadcast);
-        } catch (error) {
-            console.log(error);
-        }
+        const game = await this.getBroadcastedGame(stream);
+        const newBroadcast = new TwitchStreamBuilder()
+            .setGameName(game.name)
+            .setScreenName(stream.user_name)
+            .setStartedAt(stream.started_at)
+            .setStatus(true)
+            .setStreamId(stream.id)
+            .setThumbnail(stream.thumbnail_url)
+            .setTitle(stream.title)
+            .setUrl(`https://www.twitch.tv/${stream.user_name}`)
+            .setUserId(userId)
+            .setViewers(stream.viewer_count)
+            .build();
+        await this.twitchStreamRepository.add(newBroadcast);
     }
 
     private async getBroadcastedGame(stream: ITwitchStreamSchema): Promise<ITwitchGameSchema> {
