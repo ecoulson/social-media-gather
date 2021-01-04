@@ -1,5 +1,5 @@
-import IUpdateUserBody from "../Controllers/RequestBodies/IUpdateUserBody";
-import IUser from "../Entities/User/IUser";
+import IUpdateUserBody from "../../Controllers/RequestBodies/IUpdateUserBody";
+import IUser from "../../Entities/User/IUser";
 
 export default interface IUserService {
     deleteUser(user: IUser): Promise<IUser>;

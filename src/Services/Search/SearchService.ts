@@ -1,8 +1,8 @@
 import { inject, injectable, tagged } from "inversify";
-import Tags from "../@Types/Tags";
-import Types from "../@Types/Types";
-import IUser from "../Entities/User/IUser";
-import UserRepository from "../Repositories/User/UserRepository";
+import Tags from "../../@Types/Tags";
+import Types from "../../@Types/Types";
+import IUser from "../../Entities/User/IUser";
+import UserRepository from "../../Repositories/User/UserRepository";
 import ISearchService from "./ISearchService";
 
 @injectable()

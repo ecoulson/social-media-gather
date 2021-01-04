@@ -3,7 +3,7 @@ import { controller, httpGet, queryParam } from "inversify-express-utils";
 import Types from "../@Types/Types";
 import IMessageStructure from "../Messages/IMessageStructure";
 import UsersMessage from "../Messages/UsersMessage";
-import ISearchService from "../Services/ISearchService";
+import ISearchService from "../Services/Search/ISearchService";
 
 @controller("/api/search")
 export default class SearchController {

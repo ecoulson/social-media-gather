@@ -4,8 +4,8 @@ import { controller, httpGet, httpPost, queryParam, requestBody } from "inversif
 import Types from "../@Types/Types";
 import IMessageStructure from "../Messages/IMessageStructure";
 import SuccessMessage from "../Messages/SuccessMessage";
-import IWebhookCallbackService from "../Services/IWebhookCallbackService";
-import IYouTubeWebhookCallbackData from "../Services/IYouTubeWebhookCallbackData";
+import IWebhookCallbackService from "../Services/WebhookCallbacks/IWebhookCallbackService";
+import IYouTubeWebhookCallbackData from "../Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import IYouTubeCallbackBody from "./RequestBodies/IYouTubeCallbackBody";
 
 @controller("/api/webhook/youtube/callback")

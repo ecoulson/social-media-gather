@@ -7,7 +7,7 @@ import DeletedUserMessage from "../Messages/DeletedUserMessage";
 import IMessageStructure from "../Messages/IMessageStructure";
 import IsFollowingMessage from "../Messages/IsFollowingMessage";
 import UsersMessage from "../Messages/UsersMessage";
-import IUserService from "../Services/IUserService";
+import IUserService from "../Services/User/IUserService";
 import IUpdateUserBody from "./RequestBodies/IUpdateUserBody";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);

@@ -1,17 +1,17 @@
 import { inject, injectable } from "inversify";
-import Types from "../@Types/Types";
-import IUser from "../Entities/User/IUser";
-import UserBuilder from "../Entities/User/UserBuilder";
-import IllegalLoginException from "../Exceptions/IllegalLoginException";
-import UserExistsException from "../Exceptions/UserExistsExceptions";
-import IPasswordManager from "../Security/PasswordManagers/IPasswordManager";
-import IToken from "../Security/Tokens/IToken";
-import ITokenFactory from "../Security/Tokens/ITokenFactory";
-import TokenType from "../Security/Tokens/TokenType";
+import Types from "../../@Types/Types";
+import IUser from "../../Entities/User/IUser";
+import UserBuilder from "../../Entities/User/UserBuilder";
+import IllegalLoginException from "../../Exceptions/IllegalLoginException";
+import UserExistsException from "../../Exceptions/UserExistsExceptions";
+import IPasswordManager from "../../Security/PasswordManagers/IPasswordManager";
+import IToken from "../../Security/Tokens/IToken";
+import ITokenFactory from "../../Security/Tokens/ITokenFactory";
+import TokenType from "../../Security/Tokens/TokenType";
 import IAuthenticationService from "./IAuthenticationService";
-import IUserService from "./IUserService";
-import IUserTokenPayload from "./IUserTokenPayload";
-import UserTokenPayload from "./UserTokenPayload";
+import IUserService from "../User/IUserService";
+import IUserTokenPayload from "../User/IUserTokenPayload";
+import UserTokenPayload from "../User/UserTokenPayload";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {

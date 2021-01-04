@@ -5,7 +5,7 @@ import Types from "../@Types/Types";
 import container from "../bootstrap";
 import FeedMessage from "../Messages/FeedMessage";
 import IMessageStructure from "../Messages/IMessageStructure";
-import IFeedService from "../Services/IFeedService";
+import IFeedService from "../Services/Feed/IFeedService";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);
 

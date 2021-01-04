@@ -1,11 +1,11 @@
 import { inject, injectable, tagged } from "inversify";
-import Tags from "../@Types/Tags";
-import Types from "../@Types/Types";
-import TwitchStreamBuilder from "../Entities/TwitchStream/TwitchStreamBuilder";
-import ITwitchGameSchema from "../Library/Twitch/Schemas/ITwitchGameSchema";
-import ITwitchStreamSchema from "../Library/Twitch/Schemas/ITwitchStreamSchema";
-import TwitchAPIClient from "../Library/Twitch/TwitchAPIClient";
-import TwitchStreamRepository from "../Repositories/TwitchStream/TwitchStreamRepository";
+import Tags from "../../@Types/Tags";
+import Types from "../../@Types/Types";
+import TwitchStreamBuilder from "../../Entities/TwitchStream/TwitchStreamBuilder";
+import ITwitchGameSchema from "../../Library/Twitch/Schemas/ITwitchGameSchema";
+import ITwitchStreamSchema from "../../Library/Twitch/Schemas/ITwitchStreamSchema";
+import TwitchAPIClient from "../../Library/Twitch/TwitchAPIClient";
+import TwitchStreamRepository from "../../Repositories/TwitchStream/TwitchStreamRepository";
 import ITwitchWebhookCallbackData from "./ITwitchWebhookCallbackData";
 import WebhookCallbackService from "./WebhookCallbackService";
 

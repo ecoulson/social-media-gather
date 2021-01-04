@@ -3,8 +3,8 @@ import { controller, httpGet, httpPost, queryParam, requestBody } from "inversif
 import Types from "../@Types/Types";
 import IMessageStructure from "../Messages/IMessageStructure";
 import SuccessMessage from "../Messages/SuccessMessage";
-import ITwitchWebhookCallbackData from "../Services/ITwitchWebhookCallbackData";
-import IWebhookCallbackService from "../Services/IWebhookCallbackService";
+import ITwitchWebhookCallbackData from "../Services/WebhookCallbacks/ITwitchWebhookCallbackData";
+import IWebhookCallbackService from "../Services/WebhookCallbacks/IWebhookCallbackService";
 import ITwitchCallbackBody from "./RequestBodies/ITwitchCallbackBody";
 
 @controller("/api/webhook/twitch/callback")

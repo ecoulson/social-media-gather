@@ -1,4 +1,4 @@
-import IUser from "../Entities/User/IUser";
+import IUser from "../../Entities/User/IUser";
 import IUserTokenPayload from "./IUserTokenPayload";
 
 export default class UserTokenPayload implements IUserTokenPayload {

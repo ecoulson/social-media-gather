@@ -1,10 +1,10 @@
 import { inject, injectable, tagged } from "inversify";
-import Tags from "../@Types/Tags";
-import Types from "../@Types/Types";
-import YouTubeVideoBuilder from "../Entities/YouTubeVideo/YouTubeVideoBuilder";
-import IVideoThumbnails from "../Library/YouTube/Videos/IVideoThumbnails";
-import YouTubeAPIClient from "../Library/YouTube/YouTubeAPIClient";
-import YouTubeRepository from "../Repositories/YouTubeVideo/YouTubeRepository";
+import Tags from "../../@Types/Tags";
+import Types from "../../@Types/Types";
+import YouTubeVideoBuilder from "../../Entities/YouTubeVideo/YouTubeVideoBuilder";
+import IVideoThumbnails from "../../Library/YouTube/Videos/IVideoThumbnails";
+import YouTubeAPIClient from "../../Library/YouTube/YouTubeAPIClient";
+import YouTubeRepository from "../../Repositories/YouTubeVideo/YouTubeRepository";
 import IYouTubeWebhookCallbackData from "./IYouTubeWebhookCallbackData";
 import WebhookCallbackService from "./WebhookCallbackService";
 

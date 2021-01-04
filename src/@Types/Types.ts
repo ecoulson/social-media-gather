@@ -12,6 +12,7 @@ export default {
     TokenFactory: Symbol.for("TokenFactory"),
     TwitchAPIClient: Symbol.for("TwitchAPIClient"),
     YouTubeAPIClient: Symbol.for("YouTubeAPIClient"),
+    InstagramAPIClient: Symbol.for("InstagramAPIClient"),
     UserService: Symbol.for("UserService"),
     SearchService: Symbol.for("SearchService"),
     TwitchWebhookCallbackService: Symbol.for("TwitchWebhookCallbackService"),
