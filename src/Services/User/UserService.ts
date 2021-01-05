@@ -32,19 +32,23 @@ export default class UserService implements IUserService {
 
     async getUserByUsername(username: string): Promise<IUser> {
         const user = await this.userRepository.findByUsername(username);
-        if (!this.hasFoundUsers(user)) {
+        if (!this.userExists(user)) {
             throw new UserDoesNotExistsException(username);
         }
         return user;
     }
 
-    private hasFoundUsers(user: IUser) {
+    private userExists(user: IUser) {
         return user !== null;
     }
 
     async doesUserExist(email: string, username: string): Promise<boolean> {
-        const user = await this.userRepository.findByUsernameOrEmail(username, email);
-        return this.hasFoundUsers(user);
+        const users = await this.userRepository.findByUsernameOrEmail(username, email);
+        return this.hasFoundUsers(users);
+    }
+
+    private hasFoundUsers(users: IUser[]) {
+        return users.length > 0;
     }
 
     async verifyUser(user: IUser): Promise<IUser> {

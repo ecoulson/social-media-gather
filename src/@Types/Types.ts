@@ -18,5 +18,6 @@ export default {
     TwitchWebhookCallbackService: Symbol.for("TwitchWebhookCallbackService"),
     YouTubeWebhookCallbackService: Symbol.for("YouTubeWebhookCallbackService"),
     FeedService: Symbol.for("FeedService"),
-    AuthenticationService: Symbol.for("AuthenticationService")
+    AuthenticationService: Symbol.for("AuthenticationService"),
+    InstagramChannelService: Symbol.for("InstagramChannelService")
 };

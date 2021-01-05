@@ -2,71 +2,75 @@ import IUser from "./IUser";
 
 export default class User implements IUser {
     constructor(
-        private id_: string,
-        private twitterId_: string,
-        private youTubeId_: string,
-        private twitchId_: string,
-        private instagramId_: string,
-        private email_: string,
-        private username_: string,
-        private password_: string,
-        private verified_: boolean,
-        private followingIds_: string[]
+        private _id: string,
+        private _twitterId: string,
+        private _youTubeId: string,
+        private _twitchId: string,
+        private _instagramId: string,
+        private _email: string,
+        private _username: string,
+        private _password: string,
+        private _verified: boolean,
+        private _followingIds: string[]
     ) {}
 
     id(): string {
-        return this.id_;
+        return this._id;
     }
 
     twitterId(): string {
-        return this.twitterId_;
+        return this._twitterId;
     }
 
     youTubeId(): string {
-        return this.youTubeId_;
+        return this._youTubeId;
     }
 
     twitchId(): string {
-        return this.twitchId_;
+        return this._twitchId;
     }
 
     instagramId(): string {
-        return this.instagramId_;
+        return this._instagramId;
+    }
+
+    setInstagramId(instagramId: string): void {
+        this._instagramId = instagramId;
     }
 
     email(): string {
-        return this.email_;
+        return this._email;
     }
 
     setEmail(newEmail: string): void {
-        this.email_ = newEmail;
+        this._email = newEmail;
     }
 
     username(): string {
-        return this.username_;
+        return this._username;
     }
 
     verified(): boolean {
-        return this.verified_;
+        return this._verified;
     }
 
     following(): string[] {
-        return this.followingIds_;
+        return this._followingIds;
     }
 
     verify(): void {
-        this.verified_ = true;
+        this._verified = true;
     }
 
     password(): string {
-        return this.password_;
+        return this._password;
     }
 
     addFollower(user: IUser): void {
-        this.followingIds_.push(user.id());
+        this._followingIds.push(user.id());
     }
 
     removeFollower(user: IUser): void {
-        this.followingIds_ = this.followingIds_.filter((id) => user.id() !== id);
+        this._followingIds = this._followingIds.filter((id) => user.id() !== id);
     }
 }

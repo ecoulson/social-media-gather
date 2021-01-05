@@ -40,6 +40,8 @@ import { config as configureEnvironment } from "dotenv";
 import IYouTubeWebhookCallbackData from "./Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import YouTubeWebhookCallbackService from "./Services/WebhookCallbacks/YouTubeWebhookCallbackService";
 import YouTubeAPIClient from "./Library/YouTube/YouTubeAPIClient";
+import IMediaPlatformChannelService from "./Services/MediaChannel/IMediaChannelService";
+import InstagramChannelService from "./Services/MediaChannel/InstagramChannelService";
 
 configureEnvironment();
 
@@ -122,5 +124,8 @@ container
 container
     .bind<IWebhookCallbackService<IYouTubeWebhookCallbackData>>(Types.YouTubeWebhookCallbackService)
     .to(YouTubeWebhookCallbackService);
+container
+    .bind<IMediaPlatformChannelService>(Types.InstagramChannelService)
+    .to(InstagramChannelService);
 
 export default container;

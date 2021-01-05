@@ -9,7 +9,8 @@ enum MessageType {
     Authenticated = "Authenticated",
     DeletedUserMessage = "UserDeleted",
     IsFollowingMessage = "IsFollowing",
-    FeedMessage = "Feed"
+    FeedMessage = "Feed",
+    ChannelSearchResultMessage = "ChannelSearchResult"
 }
 
 export default MessageType;
