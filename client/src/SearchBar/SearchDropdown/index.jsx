@@ -13,8 +13,8 @@ export default function SearchDropdown(props) {
     useEffect(() => {
         async function getUsers() {
             if (props.username.length !== 0) {
-                const response = await Axios.get(`/api/users/search/${props.username}`);
-                setUsers(response.data.slice(0, 9));
+                const response = await Axios.get(`/api/search?query=${props.username}`);
+                setUsers(response.data.data.users.slice(0, 9));
             } else {
                 hide();
             }
@@ -48,7 +48,7 @@ export default function SearchDropdown(props) {
     function follow(user) {
         return async (event) => {
             event.stopPropagation();
-            await Axios.post(`/api/users/follow/${user.username}`);
+            await Axios.put(`/api/users/follow/${user.id}`);
             updateFollowedUser(user, true);
         }
     }
@@ -69,7 +69,7 @@ export default function SearchDropdown(props) {
     function unfollow(user) {
         return async (event) => {
             event.stopPropagation();
-            await Axios.post(`/api/users/unfollow/${user.username}`);
+            await Axios.put(`/api/users/unfollow/${user.id}`);
             updateFollowedUser(user, false);
         }
     }

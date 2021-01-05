@@ -14,7 +14,7 @@ export default function FollowedCreators() {
         async function getFollowedUsers() {
             const me = await GetMe();
             const followedUsers = await GetFollowedUsers(me.following);
-            setUsers(followedUsers.filter(user => user._id !== me._id));
+            setUsers(followedUsers.filter(user => user.id !== me.id));
         }
 
         getFollowedUsers();
@@ -22,7 +22,7 @@ export default function FollowedCreators() {
 
     return (
         <FollowedCreatorsContainer>
-            {users.map((user) => <Creator user={user} />)}
+            {users.map((user, i) => <Creator key={i} user={user} />)}
         </FollowedCreatorsContainer>
     )
 }

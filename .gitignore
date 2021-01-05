@@ -104,8 +104,7 @@ dist
 # TernJS port file
 .tern-port
 
-
-# Client Buid;
+# Client Build
 client/build
 
 #puppeteer

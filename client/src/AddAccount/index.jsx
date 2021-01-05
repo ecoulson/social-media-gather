@@ -31,7 +31,6 @@ export default function AddAccount() {
             }))
         })
         await Promise.all(registerRequests);
-        console.log("done");
     }
 
     return (

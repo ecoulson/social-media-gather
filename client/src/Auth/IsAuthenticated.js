@@ -7,7 +7,7 @@ async function isAuthenticated() {
             "Authorization": `Bearer ${Cookie.getCookie("token")}`
         }
     })
-    return response.data.isAuthenticated;
+    return response.data.data.isAuthenticated;
 }
 
 export default isAuthenticated;

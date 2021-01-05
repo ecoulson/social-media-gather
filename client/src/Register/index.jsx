@@ -13,10 +13,9 @@ export default function Register(props) {
     const history = useHistory();
 
     async function onRegister() {
-        const response = await Axios.post("/api/auth/register", {
+        await Axios.post("/api/auth/register", {
             username, email, password
         })
-        console.log(response.data);
         history.push("/login")
     }
 

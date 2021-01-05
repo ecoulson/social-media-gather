@@ -23,8 +23,8 @@ export default function SearchPage() {
     useEffect(() => {
         async function getUsers() {
             const parameters = new URLSearchParams(window.location.search);
-            const response = await Axios.get(`/api/users/search/${parameters.get("query")}`);
-            setUsers(response.data);
+            const response = await Axios.get(`/api/search?query=${parameters.get("query")}`);
+            setUsers(response.data.data.users);
         }
 
         getUsers();

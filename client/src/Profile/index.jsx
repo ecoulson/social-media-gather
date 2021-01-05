@@ -1,13 +1,14 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import isAuthenticated from "../Auth/IsAuthenticated";
 import Button from "../Button";
 import FeedFetcher from "../FeedFetcher";
 import { ReactComponent as Check } from "../Assets/check.svg";
+import Cookie from "../Library/Cookie";
 import "./index.css";
 import { useRef } from "react";
 import Panel from "../Panel";
+import Feed from "../Home/Feed";
 
 export default function Profile(props) {
     const history = useHistory();
@@ -20,14 +21,18 @@ export default function Profile(props) {
             // if (!await isAuthenticated()) {
                 // history.push('/')
             // } else {
-            const response = await Axios.get(`/api/users/get-by-username/${props.match.params.username}`);
-            setUser(response.data);
+            const response = await Axios.get(`/api/users/username/${props.match.params.username}`);
+            setUser(response.data.data.users[0]);
             // }
         }
-
+        
         async function isFollowing() {
-            const response = await Axios.get(`/api/users/is-following/${props.match.params.username}`);
-            setFollowing(response.data.isFollowing);
+            const response = await Axios.get(`/api/users/is-following/${props.match.params.username}`, {
+                headers: {
+                    authorization: `Bearer ${Cookie.getCookie("token")}`
+                }
+            });
+            setFollowing(response.data.data.isFollowing);
         }
 
         checkAuthenticated();
@@ -35,13 +40,13 @@ export default function Profile(props) {
     }, [props.match.params.username, history])
 
     async function follow() {
-        await Axios.post(`/api/users/follow/${props.match.params.username}`);
+        await Axios.put(`/api/users/follow/${user.id}`);
         setFollowing(true);
         followButton.current.blur();
     }
 
     async function unfollow() {
-        await Axios.post(`/api/users/unfollow/${user.username}`);
+        await Axios.put(`/api/users/unfollow/${user.id}`);
         setFollowing(false);
         followButton.current.blur();
     }
@@ -56,14 +61,13 @@ export default function Profile(props) {
         }
         return <Button innerRef={followButton} id="follow-button" onClick={follow}>Follow</Button>;
     }
-    console.log(user.username)
     return (
         <>
             <Panel className="profile-splash-container">
                 <h1 className="profile-username">{user.username}</h1>
                 {renderFollowButton()}
             </Panel>
-            <FeedFetcher feedUrl={`/api/users/get-user-posts/${user.username}`} />
+            <FeedFetcher Component={Feed} feedUrl={`/api/feed/${user.id}`} />
         </>
     )
 }

@@ -43,7 +43,6 @@ function onRegister(platformIdMap) {
             }))
         })
         const registerResponse = await Promise.all(registerRequests);
-        console.log(registerResponse.forEach((response) => {console.log(response.data)}));
     }
 }
 

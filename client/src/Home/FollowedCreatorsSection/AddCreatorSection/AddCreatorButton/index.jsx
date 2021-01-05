@@ -2,6 +2,7 @@ import { Button, Icon, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { FaPlus } from 'react-icons/fa';
+import { useHistory } from "react-router-dom";
 
 const AddCreatorButton = styled(Button)`
 width: 100%;
@@ -20,8 +21,10 @@ left: 25px;
 `
 
 export default () => {
+    const history = useHistory();
+
     return (
-        <AddCreatorButton>
+        <AddCreatorButton onClick={() => { history.push("/add-account") }}>
             <PlusIcon as={FaPlus} />
             <Text>Add your favorite creator!</Text>
         </AddCreatorButton>

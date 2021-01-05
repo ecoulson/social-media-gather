@@ -2,6 +2,8 @@
     display: flex;
     min-width: 200px;
     position: relative;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-image-avatar-placeholder {
