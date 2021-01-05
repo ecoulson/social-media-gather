@@ -41,7 +41,9 @@ import IYouTubeWebhookCallbackData from "./Services/WebhookCallbacks/IYouTubeWeb
 import YouTubeWebhookCallbackService from "./Services/WebhookCallbacks/YouTubeWebhookCallbackService";
 import YouTubeAPIClient from "./Library/YouTube/YouTubeAPIClient";
 import IMediaPlatformChannelService from "./Services/MediaChannel/IMediaChannelService";
-import InstagramChannelService from "./Services/MediaChannel/InstagramChannelService";
+import InstagramChannelService from "./Services/MediaChannel/Instagram/InstagramChannelService";
+import TwitterChannelService from "./Services/MediaChannel/Twitter/TwitterChannelService";
+import TwitterAPIClient from "./Library/Twitter/TwitterAPIClient";
 
 configureEnvironment();
 
@@ -113,6 +115,9 @@ container
 container
     .bind<YouTubeAPIClient>(Types.YouTubeAPIClient)
     .toConstantValue(new YouTubeAPIClient(process.env.YOUTUBE_API_KEY));
+container
+    .bind<TwitterAPIClient>(Types.TwitterAPIClient)
+    .toConstantValue(new TwitterAPIClient(process.env.TWITTER_BEARER_TOKEN));
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
@@ -127,5 +132,6 @@ container
 container
     .bind<IMediaPlatformChannelService>(Types.InstagramChannelService)
     .to(InstagramChannelService);
+container.bind<IMediaPlatformChannelService>(Types.TwitterChannelService).to(TwitterChannelService);
 
 export default container;

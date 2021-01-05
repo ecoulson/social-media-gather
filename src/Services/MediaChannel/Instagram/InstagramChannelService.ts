@@ -1,15 +1,15 @@
 import { IgApiClient } from "instagram-private-api";
 import { inject, injectable, tagged } from "inversify";
-import Tags from "../../@Types/Tags";
-import Types from "../../@Types/Types";
-import InstagramPost from "../../Entities/InstagramPost/InstagramPost";
-import Image from "../../Entities/Media/Image";
-import Video from "../../Entities/Media/Video";
-import IUser from "../../Entities/User/IUser";
-import PostRepository from "../../Repositories/Post/PostRepository";
-import UserRepository from "../../Repositories/User/UserRepository";
-import IMediaPlatformChannelService from "./IMediaChannelService";
-import IMediaPlatformChannelSearchResult from "./IMediaPlatformChannelSearchResult";
+import Tags from "../../../@Types/Tags";
+import Types from "../../../@Types/Types";
+import InstagramPost from "../../../Entities/InstagramPost/InstagramPost";
+import Image from "../../../Entities/Media/Image";
+import Video from "../../../Entities/Media/Video";
+import IUser from "../../../Entities/User/IUser";
+import InstagramPostRepository from "../../../Repositories/InstagramPost/InstagramPostRepository";
+import UserRepository from "../../../Repositories/User/UserRepository";
+import IMediaPlatformChannelService from "../IMediaChannelService";
+import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
 
 @injectable()
 export default class InstagramChannelService implements IMediaPlatformChannelService {
@@ -18,9 +18,9 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
         @inject(Types.UserRepository)
         @tagged(Tags.MONGO, true)
         private userRepository: InstanceType<typeof UserRepository>,
-        @inject(Types.PostRepository)
+        @inject(Types.InstagramPostRepository)
         @tagged(Tags.MONGO, true)
-        private postRepository: InstanceType<typeof PostRepository>
+        private instagramPostRepository: InstanceType<typeof InstagramPostRepository>
     ) {}
 
     async searchPlatformForChannel(username: string): Promise<IMediaPlatformChannelSearchResult> {
@@ -36,7 +36,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
         };
     }
 
-    async registerChannelForUser(userId: string, instagramAccountId: string): Promise<void> {
+    async registerChannelForUserId(userId: string, instagramAccountId: string): Promise<void> {
         const user = await this.userRepository.findById(userId);
         this.registerChannel(user, instagramAccountId);
     }
@@ -79,7 +79,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                                 postItem.carousel_media[0].image_versions2.candidates[0].height
                             )
                         );
-                        return this.postRepository.add(post);
+                        return this.instagramPostRepository.add(post);
                     } else if (postItem.media_type === 2) {
                         const post = new InstagramPost(
                             "",
@@ -109,7 +109,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                                 postItem.image_versions2.candidates[0].height
                             )
                         );
-                        return this.postRepository.add(post);
+                        return this.instagramPostRepository.add(post);
                     } else {
                         const post = new InstagramPost(
                             "",
@@ -133,7 +133,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                                 postItem.image_versions2.candidates[0].height
                             )
                         );
-                        return this.postRepository.add(post);
+                        return this.instagramPostRepository.add(post);
                     }
                 })
             );

@@ -22,6 +22,10 @@ export default class User implements IUser {
         return this._twitterId;
     }
 
+    setTwitterId(twitterId: string): void {
+        this._twitterId = twitterId;
+    }
+
     youTubeId(): string {
         return this._youTubeId;
     }
