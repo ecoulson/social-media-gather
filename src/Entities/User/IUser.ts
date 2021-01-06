@@ -5,6 +5,7 @@ export default interface IUser extends IEntity {
     setTwitterId(twitterId: string): void;
     youTubeId(): string;
     twitchId(): string;
+    setTwitchId(twitchId: string): void;
     instagramId(): string;
     setInstagramId(instagramId: string): void;
     email(): string;

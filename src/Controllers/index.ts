@@ -4,9 +4,11 @@ import AuthenticationController from "./AuthenticationController";
 import FeedController from "./FeedController";
 import InstagramChannelController from "./InstagramChannelController";
 import SearchController from "./SearchController";
+import TwitchChannelController from "./TwitchChannelController";
 import TwitchWebhookCallbackController from "./TwitchWebhookCallbackController";
 import TwitterChannelController from "./TwitterChannelController";
 import UserController from "./UsersController";
+import YouTubeChannelController from "./YouTubeChannelController";
 import YouTubeWebhookCallbackController from "./YouTubeWebhookCallbackController";
 
 export default function ControllerFactory(container: Container): unknown[] {
@@ -18,6 +20,8 @@ export default function ControllerFactory(container: Container): unknown[] {
         TwitchWebhookCallbackController,
         YouTubeWebhookCallbackController,
         InstagramChannelController,
-        TwitterChannelController
+        TwitterChannelController,
+        TwitchChannelController,
+        YouTubeChannelController
     ];
 }

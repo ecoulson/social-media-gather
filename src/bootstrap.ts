@@ -44,6 +44,8 @@ import IMediaPlatformChannelService from "./Services/MediaChannel/IMediaChannelS
 import InstagramChannelService from "./Services/MediaChannel/Instagram/InstagramChannelService";
 import TwitterChannelService from "./Services/MediaChannel/Twitter/TwitterChannelService";
 import TwitterAPIClient from "./Library/Twitter/TwitterAPIClient";
+import TwitchChannelService from "./Services/MediaChannel/Twitch/TwitchChannelService";
+import YouTubeChannelService from "./Services/MediaChannel/YouTube/YouTubeChannelService";
 
 configureEnvironment();
 
@@ -110,7 +112,11 @@ container
 container
     .bind<TwitchAPIClient>(Types.TwitchAPIClient)
     .toConstantValue(
-        new TwitchAPIClient(process.env.TWITCH_CLIENT_ID, process.env.TWITCH_CLIENT_SECRET)
+        new TwitchAPIClient(
+            process.env.TWITCH_CLIENT_ID,
+            process.env.TWITCH_CLIENT_SECRET,
+            process.env.BASE_URL
+        )
     );
 container
     .bind<YouTubeAPIClient>(Types.YouTubeAPIClient)
@@ -133,5 +139,7 @@ container
     .bind<IMediaPlatformChannelService>(Types.InstagramChannelService)
     .to(InstagramChannelService);
 container.bind<IMediaPlatformChannelService>(Types.TwitterChannelService).to(TwitterChannelService);
+container.bind<IMediaPlatformChannelService>(Types.TwitchChannelService).to(TwitchChannelService);
+container.bind<IMediaPlatformChannelService>(Types.YouTubeChannelService).to(YouTubeChannelService);
 
 export default container;

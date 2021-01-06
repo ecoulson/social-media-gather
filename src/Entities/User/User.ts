@@ -34,6 +34,10 @@ export default class User implements IUser {
         return this._twitchId;
     }
 
+    setTwitchId(twitchId: string): void {
+        this._twitchId = twitchId;
+    }
+
     instagramId(): string {
         return this._instagramId;
     }

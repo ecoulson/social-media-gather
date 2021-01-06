@@ -21,5 +21,7 @@ export default {
     FeedService: Symbol.for("FeedService"),
     AuthenticationService: Symbol.for("AuthenticationService"),
     InstagramChannelService: Symbol.for("InstagramChannelService"),
-    TwitterChannelService: Symbol.for("TwitterChannelService")
+    TwitterChannelService: Symbol.for("TwitterChannelService"),
+    TwitchChannelService: Symbol.for("TwitchChannelService"),
+    YouTubeChannelService: Symbol.for("YouTubeChannelService")
 };

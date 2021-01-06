@@ -1,4 +1,4 @@
-import { google, youtube_v3 } from "googleapis";
+import { youtube_v3 } from "googleapis";
 import IYouTubeVideoSchema from "../Schema/IYouTubeVideoSchema";
 import YouTubeAPIClient from "../YouTubeAPIClient";
 import IVideoListOptions from "./IVideoListOptions";
@@ -9,8 +9,7 @@ export default class VideoClient {
     list(options: IVideoListOptions): Promise<IYouTubeVideoSchema[]> {
         return new Promise(
             (resolve: (videos: IYouTubeVideoSchema[]) => void, reject: (error: Error) => void) => {
-                const youtube = google.youtube("v3");
-                youtube.videos.list(
+                this.youtubeClient.service().videos.list(
                     {
                         part: options.parts,
                         id: options.ids,

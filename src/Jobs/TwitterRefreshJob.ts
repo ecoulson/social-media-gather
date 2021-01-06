@@ -1,7 +1,7 @@
 import Post from "../Schemas/Mongo/Post/PostModel";
 import User from "../Schemas/Mongo/User/UserModel";
 import axios from "axios";
-import { ITweetResponse } from "../Routes/Register/ITweetResponse";
+import ITweetSchema from "../Library/Twitter/Schema/ITweetSchema";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {
@@ -25,7 +25,7 @@ async function createTwitterPostsForUser(twitterId: string, userId: string) {
     );
 }
 
-async function getTwitterPosts(twitterId: string): Promise<ITweetResponse[]> {
+async function getTwitterPosts(twitterId: string): Promise<ITweetSchema[]> {
     const response = await axios.get(
         `${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&count=200&tweet_mode=extended`,
         {
@@ -37,7 +37,7 @@ async function getTwitterPosts(twitterId: string): Promise<ITweetResponse[]> {
     return response.data;
 }
 
-async function createPostFromTweet(tweet: ITweetResponse, userId: string) {
+async function createPostFromTweet(tweet: ITweetSchema, userId: string) {
     const post = new Post({
         type: "TWEET",
         timeCreated: new Date(tweet.created_at),
@@ -56,7 +56,7 @@ async function createPostFromTweet(tweet: ITweetResponse, userId: string) {
     return post.save();
 }
 
-function getUrls(tweet: ITweetResponse) {
+function getUrls(tweet: ITweetSchema) {
     if (!tweet.entities.urls) {
         return [];
     }
@@ -69,7 +69,7 @@ function getUrls(tweet: ITweetResponse) {
     });
 }
 
-function getUserMentions(tweet: ITweetResponse) {
+function getUserMentions(tweet: ITweetSchema) {
     if (!tweet.entities.user_mentions) {
         return [];
     }
@@ -81,7 +81,7 @@ function getUserMentions(tweet: ITweetResponse) {
     });
 }
 
-function getMedia(tweet: ITweetResponse) {
+function getMedia(tweet: ITweetSchema) {
     if (tweet.extended_entities && tweet.extended_entities.media) {
         return tweet.extended_entities.media.map((media) => {
             let mediaUrl = media.media_url;
