@@ -63,7 +63,7 @@ router.post("/add", async (req, res) => {
 async function registerAccount(user: IUserDocument, channelId: string) {
     user.youtubeId = channelId[0];
     createYoutubePosts(channelId, user.id);
-    registerWebhook(channelId, user.id);
+    (channelId, user.id);
     return await user.save();
 }
 
