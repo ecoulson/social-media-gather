@@ -36,7 +36,7 @@ function onRegister(platformIdMap) {
     return async () => {
         const registerRequests = [];
         platformIdMap.forEach((id, platform) => {
-            registerRequests.push(Axios.post(`/api/register/${platform}/`, { id }, {
+            registerRequests.push(Axios.put(`/api/channel/${platform}/link/${id}`, {}, {
                 headers: {
                     "Authorization": `Bearer ${Cookie.getCookie("token")}`
                 }

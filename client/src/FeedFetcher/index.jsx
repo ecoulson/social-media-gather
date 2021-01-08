@@ -16,9 +16,12 @@ export default function FeedFetcher({ feedUrl, Component }) {
         const height = getContainerHeight(scrollRef.current);
         if (scrollRef.current.scrollTop + scrollRef.current.clientHeight + originalHeight > height - 500) {
             setIndex(index => index + 20);
-            getFeed();
         }            
     }, 250)
+
+    useEffect(() => {
+        getFeed();
+    }, [index]);
 
     useEffect(() => {
         scrollRef.current.addEventListener("scroll", onScroll)
@@ -33,6 +36,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
     }
 
     useEffect(() => {
+        console.log("here", index);
         getFeed();
         setHeight(getContainerHeight(scrollRef.current));
     }, [])
@@ -45,6 +49,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
     useEffect(() => {
         if (feed === []) {
+            console.log("here", index);
             getFeed();
         }
     }, [feed])

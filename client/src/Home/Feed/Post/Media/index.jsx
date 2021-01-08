@@ -27,7 +27,7 @@ const renderMedia = (type) => {
             return renderVideo;
         case "TWEET":
             return renderTweet;
-        case "INSTAGRAM":
+        case "INSTAGRAM_POST":
             return renderInstagramPost;
     }
 }

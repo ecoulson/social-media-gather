@@ -10,7 +10,7 @@ const transformPost = post => {
             return transformTwitchStream(post);
         case "TWEET":
             return transformTweet(post);
-        case "INSTAGRAM":
+        case "INSTAGRAM_POST":
             return transformInstagramPost(post);
         default:
             return {};
