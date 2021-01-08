@@ -54,7 +54,6 @@ export default class AuthenticationService implements IAuthenticationService {
                 .setPassword(hashedPassword)
                 .build()
         );
-        console.log(user);
         user.addFollower(user);
         return await this.userService.updateUser(user);
     }

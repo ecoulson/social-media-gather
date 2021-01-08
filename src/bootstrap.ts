@@ -120,7 +120,7 @@ container
     );
 container
     .bind<YouTubeAPIClient>(Types.YouTubeAPIClient)
-    .toConstantValue(new YouTubeAPIClient(process.env.YOUTUBE_API_KEY));
+    .toConstantValue(new YouTubeAPIClient(process.env.YOUTUBE_API_KEY, process.env.BASE_URL));
 container
     .bind<TwitterAPIClient>(Types.TwitterAPIClient)
     .toConstantValue(new TwitterAPIClient(process.env.TWITTER_BEARER_TOKEN));

@@ -18,13 +18,13 @@
     "Create interface with file name": {
         "scope": "javascript,typescript",
         "prefix": "interface",
-        "body": ["export default interface ${TM_FILENAME_BASE} {", "\t", "}", ""],
+        "body": ["export default interface ${TM_FILENAME_BASE} {", "", "}", ""],
         "description": "Create an interface with filename"
     },
     "Create class with file name": {
         "scope": "javascript,typescript",
         "prefix": "class",
-        "body": ["export default class ${TM_FILENAME_BASE} {", "\t", "}", ""],
+        "body": ["export default class ${TM_FILENAME_BASE} {", "", "}", ""],
         "description": "Create a class with filename"
     }
 }

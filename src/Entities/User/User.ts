@@ -30,6 +30,10 @@ export default class User implements IUser {
         return this._youTubeId;
     }
 
+    setYouTubeId(youTubeId: string): void {
+        this._youTubeId = youTubeId;
+    }
+
     twitchId(): string {
         return this._twitchId;
     }

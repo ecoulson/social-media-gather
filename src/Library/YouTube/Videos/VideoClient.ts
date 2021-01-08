@@ -40,27 +40,37 @@ export default class VideoClient {
             thumbnails: {
                 default: video.snippet.thumbnails.default
                     ? {
-                          url: video.snippet.thumbnails.default.url
+                          url: video.snippet.thumbnails.default.url,
+                          width: video.snippet.thumbnails.default.width,
+                          height: video.snippet.thumbnails.default.height
                       }
                     : undefined,
                 standard: video.snippet.thumbnails.standard
                     ? {
-                          url: video.snippet.thumbnails.standard.url
+                          url: video.snippet.thumbnails.standard.url,
+                          width: video.snippet.thumbnails.standard.width,
+                          height: video.snippet.thumbnails.standard.height
                       }
                     : undefined,
                 maxres: video.snippet.thumbnails.maxres
                     ? {
-                          url: video.snippet.thumbnails.maxres.url
+                          url: video.snippet.thumbnails.maxres.url,
+                          width: video.snippet.thumbnails.maxres.width,
+                          height: video.snippet.thumbnails.maxres.height
                       }
                     : undefined,
                 medium: video.snippet.thumbnails.medium
                     ? {
-                          url: video.snippet.thumbnails.medium.url
+                          url: video.snippet.thumbnails.medium.url,
+                          width: video.snippet.thumbnails.medium.width,
+                          height: video.snippet.thumbnails.medium.height
                       }
                     : undefined,
                 high: video.snippet.thumbnails.high
                     ? {
-                          url: video.snippet.thumbnails.high.url
+                          url: video.snippet.thumbnails.high.url,
+                          width: video.snippet.thumbnails.high.width,
+                          height: video.snippet.thumbnails.high.height
                       }
                     : undefined
             }

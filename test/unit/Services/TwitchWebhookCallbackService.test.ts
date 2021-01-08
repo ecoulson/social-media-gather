@@ -4,9 +4,9 @@ import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
-import IWebhookCallbackService from "../../../src/Services/IWebhookCallbackService";
-import ITwitchWebhookCallbackData from "../../../src/Services/ITwitchWebhookCallbackData";
-import TwitchWebhookCallbackService from "../../../src/Services/TwitchWebhookCallbackService";
+import IWebhookCallbackService from "../../../src/Services/WebhookCallbacks/IWebhookCallbackService";
+import ITwitchWebhookCallbackData from "../../../src/Services/WebhookCallbacks/ITwitchWebhookCallbackData";
+import TwitchWebhookCallbackService from "../../../src/Services/WebhookCallbacks/TwitchWebhookCallbackService";
 import TwitchAPIClient from "../../../src/Library/Twitch/TwitchAPIClient";
 import TwitchStreamRepository from "../../../src/Repositories/TwitchStream/TwitchStreamRepository";
 

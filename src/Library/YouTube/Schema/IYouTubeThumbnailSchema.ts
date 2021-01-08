@@ -1,6 +1,9 @@
+import IYouTubeImageSchema from "./IYouTubeImageSchema";
+
 export default interface IYouTubeThumbnailSchema {
-    type: "standard" | "medium" | "high" | "maxres" | "default";
-    url: string;
-    width: number;
-    height: number;
+    maxres?: IYouTubeImageSchema;
+    high?: IYouTubeImageSchema;
+    medium?: IYouTubeImageSchema;
+    standard?: IYouTubeImageSchema;
+    default?: IYouTubeImageSchema;
 }

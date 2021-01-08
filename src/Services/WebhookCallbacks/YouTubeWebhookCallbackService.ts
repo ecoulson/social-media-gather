@@ -2,7 +2,7 @@ import { inject, injectable, tagged } from "inversify";
 import Tags from "../../@Types/Tags";
 import Types from "../../@Types/Types";
 import YouTubeVideoBuilder from "../../Entities/YouTubeVideo/YouTubeVideoBuilder";
-import IVideoThumbnails from "../../Library/YouTube/Videos/IVideoThumbnails";
+import IYouTubeThumbnailSchema from "../../Library/YouTube/Schema/IYouTubeThumbnailSchema";
 import YouTubeAPIClient from "../../Library/YouTube/YouTubeAPIClient";
 import YouTubeRepository from "../../Repositories/YouTubeVideo/YouTubeRepository";
 import IYouTubeWebhookCallbackData from "./IYouTubeWebhookCallbackData";
@@ -47,7 +47,7 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
         return storedVideos.length === 0;
     }
 
-    private getThumbnailUrl(thumbnails: IVideoThumbnails): string {
+    private getThumbnailUrl(thumbnails: IYouTubeThumbnailSchema): string {
         if (thumbnails.standard) {
             return thumbnails.standard.url;
         }

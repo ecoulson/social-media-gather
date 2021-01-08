@@ -4,11 +4,11 @@ import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
-import IWebhookCallbackService from "../../../src/Services/IWebhookCallbackService";
-import IYouTubeWebhookCallbackData from "../../../src/Services/IYouTubeWebhookCallbackData";
+import IWebhookCallbackService from "../../../src/Services/WebhookCallbacks/IWebhookCallbackService";
+import IYouTubeWebhookCallbackData from "../../../src/Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import YouTubeRepository from "../../../src/Repositories/YouTubeVideo/YouTubeRepository";
 import YouTubeAPIClient from "../../../src/Library/YouTube/YouTubeAPIClient";
-import YouTubeWebhookCallbackService from "../../../src/Services/YouTubeWebhookCallbackService";
+import YouTubeWebhookCallbackService from "../../../src/Services/WebhookCallbacks/YouTubeWebhookCallbackService";
 import VideoClient from "../../../src/Library/YouTube/Videos/VideoClient";
 
 describe("Authentication Controller Suite", () => {

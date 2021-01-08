@@ -103,7 +103,7 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
         let videoPage = await this.twitchApiClient.videos.get({
             user_id: [twitchChannelId]
         });
-        while (videoPage.hasNext()) {
+        do {
             if (videoPage.rateLimitRemaining() <= 20) {
                 const waitTime = Math.abs(
                     videoPage.rateLimitResetDateTime().getTime() - new Date().getTime()
@@ -112,7 +112,7 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
             }
             this.createVideosFromPage(user, videoPage.results());
             videoPage = await videoPage.nextPage();
-        }
+        } while (videoPage.hasNext());
     }
 
     async wait(milliseconds: number): Promise<void> {

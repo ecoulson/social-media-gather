@@ -1,8 +1,8 @@
-import IVideoThumbnails from "../Videos/IVideoThumbnails";
+import IYouTubeThumbnailSchema from "./IYouTubeThumbnailSchema";
 
 export default interface IYouTubeVideoSchema {
     id: string;
     publishedAt: Date;
-    thumbnails: IVideoThumbnails;
+    thumbnails: IYouTubeThumbnailSchema;
     title: string;
 }

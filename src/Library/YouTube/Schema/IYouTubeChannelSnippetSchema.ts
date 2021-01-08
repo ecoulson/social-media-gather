@@ -1,13 +1,13 @@
-import IYouTubeLocalizedSchema from "./IYouTubeLocalizedSchema";
+import IYouTubeLocalizationSchema from "./IYouTubeLocalizationSchema";
 import IYouTubeThumbnailSchema from "./IYouTubeThumbnailSchema";
 
 export default interface IYouTubeChannelSnippetSchema {
     title: string;
     description: string;
     customUrl: string;
-    publishedAt: Date;
-    thumbnails: IYouTubeThumbnailSchema[];
+    publishedAt: string;
+    thumbnails: IYouTubeThumbnailSchema;
     defaultLanguage: string;
-    localized: IYouTubeLocalizedSchema;
+    localized: IYouTubeLocalizationSchema;
     country: string;
 }

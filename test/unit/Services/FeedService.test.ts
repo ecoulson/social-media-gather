@@ -4,10 +4,10 @@ import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
-import IFeedService from "../../../src/Services/IFeedService";
+import IFeedService from "../../../src/Services/Feed/IFeedService";
 import UserRepository from "../../../src/Repositories/User/UserRepository";
 import PostRepository from "../../../src/Repositories/Post/PostRepository";
-import FeedService from "../../../src/Services/FeedService";
+import FeedService from "../../../src/Services/Feed/FeedService";
 
 describe("Authentication Controller Suite", () => {
     let mockUserRepository: Mock<InstanceType<typeof UserRepository>>;
