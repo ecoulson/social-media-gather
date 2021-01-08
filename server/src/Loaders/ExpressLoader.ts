@@ -5,7 +5,6 @@ import express, { Application } from "express";
 import { InversifyExpressServer } from "inversify-express-utils";
 import morgan from "morgan";
 import path from "path";
-import Routes from "../Routes";
 import "../Controllers";
 import { Container } from "inversify";
 
@@ -16,8 +15,6 @@ export default (container: Container): Application => {
         app.use(morgan("dev"));
         app.use(bodyParser.json());
         app.use(cookieParser());
-
-        app.use("/api", Routes);
 
         app.use("/", express.static(path.join(__dirname, "..", "..", "client", "build")));
 

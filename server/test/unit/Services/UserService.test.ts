@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import UserRepository from "../../../src/Repositories/User/UserRepository";
-import UserService from "../../../src/Services/UserService";
+import UserService from "../../../src/Services/User/UserService";
 import { Mock } from "moq.ts";
 import container from "../../../src/bootstrap";
 import Types from "../../../src/@Types/Types";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
-import IUserService from "../../../src/Services/IUserService";
+import IUserService from "../../../src/Services/User/IUserService";
 
 describe("User Service Suite", () => {
     let service: IUserService;
@@ -45,7 +45,7 @@ describe("User Service Suite", () => {
         test("User does exist", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsernameOrEmail)
-                .returns(() => Promise.resolve(user));
+                .returns(() => Promise.resolve([user]));
 
             const userExists = await service.doesUserExist(user.email(), user.username());
 
@@ -55,7 +55,7 @@ describe("User Service Suite", () => {
         test("User does not exist", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsernameOrEmail)
-                .returns(() => Promise.resolve(null));
+                .returns(() => Promise.resolve([]));
 
             const userExists = await service.doesUserExist(user.email(), user.username());
 

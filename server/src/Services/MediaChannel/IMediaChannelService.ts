@@ -3,6 +3,6 @@ import IMediaPlatformChannelSearchResult from "./IMediaPlatformChannelSearchResu
 
 export default interface IMediaPlatformChannelService {
     searchPlatformForChannel(username: string): Promise<IMediaPlatformChannelSearchResult>;
-    registerChannel(user: IUser, mediaChannelId: string): Promise<void>;
-    registerChannelForUserId(userId: string, mediaChannelId: string): Promise<void>;
+    linkChannel(user: IUser, mediaChannelId: string): Promise<void>;
+    linkChannelWithUserId(userId: string, mediaChannelId: string): Promise<void>;
 }

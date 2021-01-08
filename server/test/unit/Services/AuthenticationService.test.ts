@@ -4,14 +4,14 @@ import container from "../../../src/bootstrap";
 import Types from "../../../src/@Types/Types";
 import User from "../../../src/Entities/User/User";
 import IUser from "../../../src/Entities/User/IUser";
-import IUserService from "../../../src/Services/IUserService";
-import IAuthenticationService from "../../../src/Services/IAuthenticationService";
+import IUserService from "../../../src/Services/User/IUserService";
+import IAuthenticationService from "../../../src/Services/Authentication/IAuthenticationService";
 import UserExistsException from "../../../src/Exceptions/UserExistsExceptions";
 import IPasswordManager from "../../../src/Security/PasswordManagers/IPasswordManager";
 import ComparisonFailureException from "../../../src/Exceptions/ComparisonFailureException";
 import IllegalLoginException from "../../../src/Exceptions/IllegalLoginException";
 import ITokenFactory from "../../../src/Security/Tokens/ITokenFactory";
-import IUserTokenPayload from "../../../src/Services/IUserTokenPayload";
+import IUserTokenPayload from "../../../src/Services/User/IUserTokenPayload";
 import IToken from "../../../src/Security/Tokens/IToken";
 
 describe("Authentication Service Suite", () => {

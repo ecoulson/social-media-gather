@@ -5,8 +5,8 @@ import container from "../bootstrap";
 export default async (): Promise<IgApiClient> => {
     const ig = new IgApiClient();
 
-    // ig.state.generateDevice(process.env.INSTAGRAM_USER);
-    // await setupInstagram(ig);
+    ig.state.generateDevice(process.env.INSTAGRAM_USER);
+    await setupInstagram(ig);
 
     container.bind<IgApiClient>(Types.InstagramAPIClient).toConstantValue(ig);
     return ig;

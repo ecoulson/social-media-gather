@@ -47,7 +47,7 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
         };
     }
 
-    async registerChannel(user: IUser, twitterId: string): Promise<void> {
+    async linkChannel(user: IUser, twitterId: string): Promise<void> {
         user.setTwitterId(twitterId);
         this.createTwitterPostsForUser(twitterId, user.id());
         if (user.id() === "") {
@@ -147,8 +147,8 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
         return tweet.entities.media.map((media) => new Image(media.id_str, media.media_url, 0, 0));
     }
 
-    async registerChannelForUserId(userId: string, twitterId: string): Promise<void> {
+    async linkChannelWithUserId(userId: string, twitterId: string): Promise<void> {
         const user = await this.userRepository.findById(userId);
-        this.registerChannel(user, twitterId);
+        this.linkChannel(user, twitterId);
     }
 }

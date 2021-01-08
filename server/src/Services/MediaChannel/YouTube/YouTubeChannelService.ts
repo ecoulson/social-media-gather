@@ -46,15 +46,15 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         };
     }
 
-    async registerChannel(user: IUser, youTubeChannelId: string): Promise<void> {
+    async linkChannel(user: IUser, youTubeChannelId: string): Promise<void> {
         user.setYouTubeId(youTubeChannelId);
-        this.createYoutubePosts(user, youTubeChannelId);
-        this.registerWebhook(user, youTubeChannelId);
         if (user.id() === "") {
             this.userRepository.add(user);
         } else {
             this.userRepository.update(user);
         }
+        this.createYoutubePosts(user, youTubeChannelId);
+        this.registerWebhook(user, youTubeChannelId);
     }
 
     private async createYoutubePosts(user: IUser, youTubeChannelId: string) {
@@ -142,8 +142,8 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         this.webhookRepository.add(webhook);
     }
 
-    async registerChannelForUserId(userId: string, youTubeChannelId: string): Promise<void> {
+    async linkChannelWithUserId(userId: string, youTubeChannelId: string): Promise<void> {
         const user = await this.userRepository.findById(userId);
-        this.registerChannel(user, youTubeChannelId);
+        this.linkChannel(user, youTubeChannelId);
     }
 }

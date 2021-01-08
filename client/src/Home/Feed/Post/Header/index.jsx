@@ -26,7 +26,7 @@ const getIconType = type => {
             return MediaIconType.TWITCH;
         case "TWEET":
             return MediaIconType.TWITTER;
-        case "INSTAGRAM":
+        case "INSTAGRAM_POST":
             return MediaIconType.INSTAGRAM;
         default:
             return null;

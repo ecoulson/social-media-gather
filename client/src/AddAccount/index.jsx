@@ -14,21 +14,30 @@ export default function AddAccount() {
     const [platformIdMap, setPlatformIdMap] = useState(new Map());
     const [name, setName] = useState("");
 
+    function generatePassword(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+     }
+
     async function onRegister() {
-        const user = await Axios.post("/api/register", {
+        const userMessage = await Axios.post("/api/auth/register", {
             username: name,
-            email: `${name}@test.com`
+            email: `${name}@unclaimed.account`,
+            password: generatePassword(30)
         });
+        const user = userMessage.data.data.users[0];
         const registerRequests = [];
-        platformIdMap.forEach((id, platform) => {
-            registerRequests.push(Axios.post(`/api/register/${platform}/add`, { 
-                id,
-                userId: user.data._id
-            }, {
+        platformIdMap.forEach(async (id, platform) => {
+            await Axios.put(`/api/channel/${platform}/link/${id}/with/${user.id}`, {}, {
                 headers: {
                     "Authorization": `Bearer ${Cookie.getCookie("token")}`
                 }
-            }))
+            });
         })
         await Promise.all(registerRequests);
     }

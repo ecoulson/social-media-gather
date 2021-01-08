@@ -53,7 +53,7 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
         };
     }
 
-    async registerChannel(user: IUser, twitchChannelId: string): Promise<void> {
+    async linkChannel(user: IUser, twitchChannelId: string): Promise<void> {
         user.setTwitchId(twitchChannelId);
         if (user.id() === "") {
             this.userRepository.add(user);
@@ -149,9 +149,9 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
             "",
             expirationDate,
             new Date(),
+            "twitch",
             topicURL,
             callbackURL,
-            "twitch",
             twitchChannelId,
             user.id()
         );
@@ -164,8 +164,8 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
         });
     }
 
-    async registerChannelForUserId(userId: string, twitchChannelId: string): Promise<void> {
+    async linkChannelWithUserId(userId: string, twitchChannelId: string): Promise<void> {
         const user = await this.userRepository.findById(userId);
-        return this.registerChannel(user, twitchChannelId);
+        return this.linkChannel(user, twitchChannelId);
     }
 }

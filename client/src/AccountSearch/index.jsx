@@ -17,8 +17,8 @@ export default function AccountSearch(props) {
         async function getResults() {
             let formattedUsername = username.trim();
             if (formattedUsername !== "") {
-                const response = await Axios.get(`/api/register/${props.platform}?username=${formattedUsername}`);
-                setResults(response.data)
+                const response = await Axios.get(`/api/channel/${props.platform}/search?username=${formattedUsername}`);
+                setResults(response.data.data.results.channels)
             }
         }
         getResults()
