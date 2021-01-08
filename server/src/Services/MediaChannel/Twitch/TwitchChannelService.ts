@@ -6,10 +6,10 @@ import TwitchStreamBuilder from "../../../Entities/TwitchStream/TwitchStreamBuil
 import TwitchVideo from "../../../Entities/TwitchVideo/TwitchVideo";
 import IUser from "../../../Entities/User/IUser";
 import Webhook from "../../../Entities/Webhook/Webhook";
-import ITwitchPaginatedResult from "../../../Library/Twitch/ITwitchPaginatedResult";
-import ITwitchStreamSchema from "../../../Library/Twitch/Schemas/ITwitchStreamSchema";
-import ITwitchVideoSchema from "../../../Library/Twitch/Schemas/ITwitchVideoSchema";
-import TwitchAPIClient from "../../../Library/Twitch/TwitchAPIClient";
+import ITwitchPaginatedResult from "../../../Libraries/Twitch/ITwitchPaginatedResult";
+import ITwitchStreamSchema from "../../../Libraries/Twitch/Schemas/ITwitchStreamSchema";
+import ITwitchVideoSchema from "../../../Libraries/Twitch/Schemas/ITwitchVideoSchema";
+import TwitchAPIClient from "../../../Libraries/Twitch/TwitchAPIClient";
 import TwitchStreamRepository from "../../../Repositories/TwitchStream/TwitchStreamRepository";
 import TwitchVideoRepository from "../../../Repositories/TwitchVideo/TwitchVideoRepository";
 import UserRepository from "../../../Repositories/User/UserRepository";

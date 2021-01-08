@@ -1,4 +1,4 @@
-import UserSerializer from "../Serializer/UserJSONSerializer";
+import UserSerializer from "../Serializers/UserJSONSerializer";
 import IUser from "../Entities/User/IUser";
 import IMessage from "./IMessage";
 import IMessageStructure from "./IMessageStructure";

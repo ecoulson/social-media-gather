@@ -1,7 +1,7 @@
 import Post from "../Schemas/Mongo/Post/PostModel";
 import User from "../Schemas/Mongo/User/UserModel";
 import axios from "axios";
-import ITweetSchema from "../Library/Twitter/Schema/ITweetSchema";
+import ITweetSchema from "../Libraries/Twitter/Schema/ITweetSchema";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {

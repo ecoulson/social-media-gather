@@ -1,4 +1,4 @@
-import IDataStore from "../../DataStore/IDataStore";
+import IDataStore from "../../DataStores/IDataStore";
 import IWebhook from "../../Entities/Webhook/IWebhook";
 import CoreRepository from "../CoreRepository";
 import RepositoryMixin from "../RepositoryMixin";

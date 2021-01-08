@@ -6,8 +6,8 @@ import TweetRepository from "../../../Repositories/Tweet/TweetRepository";
 import UserRepository from "../../../Repositories/User/UserRepository";
 import IMediaPlatformChannelService from "../IMediaChannelService";
 import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
-import TwitterAPIClient from "../../../Library/Twitter/TwitterAPIClient";
-import ITweetSchema from "../../../Library/Twitter/Schema/ITweetSchema";
+import TwitterAPIClient from "../../../Libraries/Twitter/TwitterAPIClient";
+import ITweetSchema from "../../../Libraries/Twitter/Schema/ITweetSchema";
 import IPost from "../../../Entities/Post/IPost";
 import Tweet from "../../../Entities/Tweet/Tweet";
 import ITweet from "../../../Entities/Tweet/ITweet";
@@ -17,7 +17,7 @@ import ITweetMention from "../../../Entities/Tweet/ITweetMentions";
 import TweetMention from "../../../Entities/Tweet/TweetMention";
 import Video from "../../../Entities/Media/Video";
 import Image from "../../../Entities/Media/Image";
-import ITwitterVideoVariant from "../../../Library/Twitter/Schema/ITwitterVideoVariant";
+import ITwitterVideoVariant from "../../../Libraries/Twitter/Schema/ITwitterVideoVariant";
 
 @injectable()
 export default class TwitterChannelService implements IMediaPlatformChannelService {

@@ -1,4 +1,4 @@
-import IQuery from "../DataStore/IQuery";
+import IQuery from "../DataStores/IQuery";
 import IEntity from "../Entities/IEntity";
 
 export default interface IRepositoryMixin<Entity extends IEntity> {

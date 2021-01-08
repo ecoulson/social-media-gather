@@ -1,4 +1,4 @@
-import IDataStore from "../../DataStore/IDataStore";
+import IDataStore from "../../DataStores/IDataStore";
 import IUser from "../../Entities/User/IUser";
 import CoreRepository from "../CoreRepository";
 import CountMixin from "../CountMixin";

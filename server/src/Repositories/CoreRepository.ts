@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import IDataStore from "../DataStore/IDataStore";
+import IDataStore from "../DataStores/IDataStore";
 import IEntity from "../Entities/IEntity";
 
 @injectable()

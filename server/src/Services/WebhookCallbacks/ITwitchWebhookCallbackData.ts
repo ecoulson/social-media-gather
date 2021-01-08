@@ -1,4 +1,4 @@
-import ITwitchStreamSchema from "../../Library/Twitch/Schemas/ITwitchStreamSchema";
+import ITwitchStreamSchema from "../../Libraries/Twitch/Schemas/ITwitchStreamSchema";
 
 export default interface ITwitchWebhookCallbackData {
     userId: string;

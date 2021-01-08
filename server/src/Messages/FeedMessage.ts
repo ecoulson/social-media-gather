@@ -1,5 +1,5 @@
 import IPost from "../Entities/Post/IPost";
-import PostJSONSerializer from "../Serializer/PostJSONSerializer";
+import PostJSONSerializer from "../Serializers/PostJSONSerializer";
 import IMessage from "./IMessage";
 import IMessageStructure from "./IMessageStructure";
 import MessageType from "./MessageType";

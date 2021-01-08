@@ -1,5 +1,5 @@
 import { MixinConstructor } from "../@Types";
-import IQuery from "../DataStore/IQuery";
+import IQuery from "../DataStores/IQuery";
 import assert from "assert";
 import IEntity from "../Entities/IEntity";
 import CoreRepository from "./CoreRepository";

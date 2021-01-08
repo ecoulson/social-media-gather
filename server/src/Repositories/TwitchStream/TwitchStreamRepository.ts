@@ -1,4 +1,4 @@
-import IDataStore from "../../DataStore/IDataStore";
+import IDataStore from "../../DataStores/IDataStore";
 import ITwitchStream from "../../Entities/TwitchStream/ITwitchStream";
 import ITwitchStreamRepository from "./ITwitchStreamRepository";
 import CoreRepository from "../CoreRepository";
