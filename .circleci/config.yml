@@ -11,7 +11,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - app-
       - run: 
-          name: Installing Dependencies
+          name: Installing dependencies
           command: |
             cd client
             npm install
@@ -19,7 +19,11 @@ jobs:
           paths:
             - node_modules
           key: app-{{ checksum "client/package.json" }}
-      - run: npm run test # Run your tests
+      - run: 
+          name: Run tests
+          command: |
+            cd client
+            npm run test # Run your tests
 
   deploy-frontend:
     docker:
