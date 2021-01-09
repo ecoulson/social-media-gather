@@ -6,7 +6,6 @@ jobs:
     working_directory: ~/client
     steps:
       - checkout
-      - run: ls
       - restore_cache:
           keys:
           - app-{{ checksum "package.json" }}
@@ -14,7 +13,9 @@ jobs:
           - app-
       - run: 
           name: Installing Dependencies
-          command: npm install
+          command: |
+            ls
+            npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
           paths:
             - node_modules
