@@ -1,6 +1,6 @@
 version: 2
   jobs:
-    "testing-frontend":
+    testing-frontend:
       docker:
         - image: circleci/node:10-stretch
       working_directory: ~/repo
@@ -20,7 +20,7 @@ version: 2
             key: app-{{ checksum "package.json" }}
         - run: npm run test # Run your tests
 
-    "deploy-frontend":
+    deploy-frontend:
       docker:
         - image: circleci/node:10-stretch
       working_directory: ~/repo
