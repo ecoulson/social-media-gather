@@ -7,7 +7,6 @@ import FeedFetcher from "../FeedFetcher";
 import Feed from "./Feed";
 import FollowedCreatorsSection from "./FollowedCreatorsSection";
 import HomeLayout from "./HomeLayout";
-import "./index.css";
 
 export default function Home() {
     const history = useHistory();
