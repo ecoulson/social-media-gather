@@ -2,7 +2,7 @@ import { Flex, Icon, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { AiFillEye, AiFillLike, AiOutlineRetweet } from "react-icons/ai";
-import { FaComment, FaRetweet } from "react-icons/fa";
+import { FaComment } from "react-icons/fa";
 import ConvertNumberToPlaces from "../../../../../Library/ConvertNumberToPlaces";
 
 const Layout = styled(Flex)`

@@ -20,7 +20,7 @@ export default function Home() {
         }
 
         checkAuthenticated();
-    }, [])
+    }, [history])
 
     return (
         <HomeLayout>

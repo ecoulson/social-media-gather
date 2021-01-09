@@ -36,7 +36,7 @@ export default function Me() {
         }
 
         checkAuthenticated();
-    }, [])
+    }, [history])
 
     if (!user) {
         return <Panel><Loader /></Panel>

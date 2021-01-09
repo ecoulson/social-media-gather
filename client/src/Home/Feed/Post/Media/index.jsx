@@ -1,4 +1,4 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import Instagram from "./Instagram";
@@ -29,6 +29,8 @@ const renderMedia = (type) => {
             return renderTweet;
         case "INSTAGRAM_POST":
             return renderInstagramPost;
+        default:
+            console.log("Unknown media type")
     }
 }
 

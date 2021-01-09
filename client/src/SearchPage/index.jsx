@@ -19,6 +19,7 @@ function useQuery() {
 export default function SearchPage() {
     const [users, setUsers] = useState([]);
     let query = useQuery();
+    const queryString = query.get("query");
 
     useEffect(() => {
         async function getUsers() {
@@ -28,7 +29,7 @@ export default function SearchPage() {
         }
 
         getUsers();
-    }, [query.get("query")])
+    }, [queryString])
 
     function renderPlatforms(user) {
         const logos = [];

@@ -42,7 +42,7 @@ function onRegister(platformIdMap) {
                 }
             }))
         })
-        const registerResponse = await Promise.all(registerRequests);
+        await Promise.all(registerRequests);
     }
 }
 

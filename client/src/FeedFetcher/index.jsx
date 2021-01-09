@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import Axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -10,7 +10,10 @@ export default function FeedFetcher({ feedUrl, Component }) {
     const [feed, setFeed] = useState([]);
     const [originalHeight, setHeight] = useState(0);
     const [index, setIndex] = useState(0);
-    
+    const getFeed = useCallback(async () => {
+        const response = await Axios.get(`${feedUrl}?offset=${index}`);
+        setFeed([...feed, ...response.data.data.posts]);
+    }, [index, feedUrl, feed])
     
     const onScroll = debounce(() => {
         const height = getContainerHeight(scrollRef.current);
@@ -21,25 +24,20 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
     useEffect(() => {
         getFeed();
-    }, [index]);
+    }, [index, getFeed]);
 
     useEffect(() => {
-        scrollRef.current.addEventListener("scroll", onScroll)
+        const scrollContainer = scrollRef.current;
+        scrollContainer.addEventListener("scroll", onScroll)
         return function cleanup() {
-            scrollRef.current.removeEventListener("scroll", onScroll)
+            scrollContainer.removeEventListener("scroll", onScroll)
         }
     }, [onScroll])
 
-    async function getFeed() {
-        const response = await Axios.get(`${feedUrl}?offset=${index}`);
-        setFeed([...feed, ...response.data.data.posts]);
-    }
-
     useEffect(() => {
-        console.log("here", index);
         getFeed();
         setHeight(getContainerHeight(scrollRef.current));
-    }, [])
+    }, [getFeed])
     
     useEffect(() => {
         setIndex(0);
@@ -49,10 +47,10 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
     useEffect(() => {
         if (feed === []) {
-            console.log("here", index);
+            console.log("here");
             getFeed();
         }
-    }, [feed])
+    }, [feed, getFeed])
     
     return <Component scrollRef={scrollRef} posts={transformFeed(feed)}/>
 }

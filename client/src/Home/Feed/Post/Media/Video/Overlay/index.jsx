@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Icon, Image } from "@chakra-ui/react";
+import { Badge, Box, Flex, Icon } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
