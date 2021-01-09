@@ -57,6 +57,7 @@ jobs:
               # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_STAGING --paths /\*
               echo "Have not created staging environment"
             elif [ "${CIRCLE_BRANCH}" == "dev"]
+            then
               # aws s3 sync ~/repo/dist s3://dev.yoursite.com --delete
               # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_DEV --paths /\*
               echo "Have not created dev environment"
@@ -73,6 +74,6 @@ workflows:
           filters:
             branches:
               only:     # Only deploy for production, staging, and master branches
-                - production
+                - dev
                 - staging
                 - master
