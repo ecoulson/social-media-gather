@@ -60,7 +60,9 @@ describe("Authentication Controller Suite", () => {
                             title: "",
                             thumbnails: {
                                 default: {
-                                    url: ""
+                                    url: "",
+                                    width: 0,
+                                    height: 0
                                 }
                             },
                             publishedAt: new Date()
