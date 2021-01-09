@@ -42,9 +42,9 @@ jobs:
             cd build       # My angular app generate a Dist folder
             zip ../build.zip -r * .[^.]* # Just zip your files
             echo "Sucessfully building"
-      - aws-cli/install
       - aws-cli/setup:
           profile-name: circleci
+          configure-default-region: false
       - run:
           name: Deploying Client to S3 and Cloudfront
           command: |
