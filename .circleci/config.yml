@@ -56,7 +56,7 @@ jobs:
               # aws s3 sync ~/repo/dist s3://staging.yoursite.com --delete
               # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_STAGING --paths /\*
               echo "Have not created staging environment"
-            elif [ "${CIRCLE_BRANCH}" == "dev"]
+            elif [ "${CIRCLE_BRANCH}" == "dev" ]
             then
               # aws s3 sync ~/repo/dist s3://dev.yoursite.com --delete
               # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_DEV --paths /\*
