@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import UserController from "../../../src/Controllers/UsersController";
 import container from "../../../src/bootstrap";
-import IUserService from "../../../src/Services/UserService";
+import IUserService from "../../../src/Services/User/UserService";
 import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";

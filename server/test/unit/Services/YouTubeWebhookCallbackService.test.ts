@@ -7,9 +7,9 @@ import Types from "../../../src/@Types/Types";
 import IWebhookCallbackService from "../../../src/Services/WebhookCallbacks/IWebhookCallbackService";
 import IYouTubeWebhookCallbackData from "../../../src/Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import YouTubeRepository from "../../../src/Repositories/YouTubeVideo/YouTubeRepository";
-import YouTubeAPIClient from "../../../src/Library/YouTube/YouTubeAPIClient";
 import YouTubeWebhookCallbackService from "../../../src/Services/WebhookCallbacks/YouTubeWebhookCallbackService";
-import VideoClient from "../../../src/Library/YouTube/Videos/VideoClient";
+import VideoClient from "../../../src/Libraries/YouTube/Videos/VideoClient";
+import YouTubeAPIClient from "../../../src/Libraries/YouTube/YouTubeAPIClient";
 
 describe("Authentication Controller Suite", () => {
     let mockYouTubeVideoRepository: Mock<InstanceType<typeof YouTubeRepository>>;

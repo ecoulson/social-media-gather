@@ -4,7 +4,7 @@ import Types from "../../../src/@Types/Types";
 import container from "../../../src/bootstrap";
 import SearchController from "../../../src/Controllers/SearchController";
 import User from "../../../src/Entities/User/User";
-import ISearchService from "../../../src/Services/ISearchService";
+import ISearchService from "../../../src/Services/Search/ISearchService";
 import UsersMessage from "../../../src/Messages/UsersMessage";
 
 describe("Search Controller Suite", () => {

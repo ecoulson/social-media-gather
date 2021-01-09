@@ -5,7 +5,7 @@ import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
-import IFeedService from "../../../src/Services/IFeedService";
+import IFeedService from "../../../src/Services/Feed/IFeedService";
 import { Request } from "express";
 import FeedMessage from "../../../src/Messages/FeedMessage";
 

@@ -7,7 +7,7 @@ import Types from "../../../src/@Types/Types";
 import IWebhookCallbackService from "../../../src/Services/WebhookCallbacks/IWebhookCallbackService";
 import ITwitchWebhookCallbackData from "../../../src/Services/WebhookCallbacks/ITwitchWebhookCallbackData";
 import TwitchWebhookCallbackService from "../../../src/Services/WebhookCallbacks/TwitchWebhookCallbackService";
-import TwitchAPIClient from "../../../src/Library/Twitch/TwitchAPIClient";
+import TwitchAPIClient from "../../../src/Libraries/Twitch/TwitchAPIClient";
 import TwitchStreamRepository from "../../../src/Repositories/TwitchStream/TwitchStreamRepository";
 
 describe("Authentication Controller Suite", () => {
