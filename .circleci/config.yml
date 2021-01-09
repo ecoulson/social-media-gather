@@ -31,6 +31,7 @@ jobs:
   deploy-frontend:
     docker:
       - image: circleci/node:10-stretch
+    executor: aws-cli/default
     steps:
       - checkout
       - run:
@@ -42,6 +43,7 @@ jobs:
             cd build       # My angular app generate a Dist folder
             zip ../build.zip -r * .[^.]* # Just zip your files
             echo "Sucessfully building"
+      - aws-cli/install
       - run:
           name: Deploying Client to S3 and Cloudfront
           command: |
