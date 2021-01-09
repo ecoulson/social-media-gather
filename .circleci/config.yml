@@ -43,6 +43,10 @@ jobs:
             zip ../build.zip -r * .[^.]* # Just zip your files
             echo "Sucessfully building"
       - aws-cli/install
+      - aws-cli/setup:
+          profile-name: circleci
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
       - run:
           name: Deploying Client to S3 and Cloudfront
           command: |
@@ -50,7 +54,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
               aws s3 sync ./client/build s3://pipe-production --delete
-              aws cloudfront create-invalidation --distribution-id 	E32BHT2AHPCD0L --paths /\*
+              aws cloudfront create-invalidation --distribution-id $PRODUCTION_DISTRIBUTION_ID --paths /\*
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
               # aws s3 sync ./client/build s3://staging.yoursite.com --delete
