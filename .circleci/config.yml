@@ -31,7 +31,6 @@ jobs:
   deploy-frontend:
     docker:
       - image: circleci/node:10-stretch
-    executor: aws-cli/default
     steps:
       - checkout
       - run:
