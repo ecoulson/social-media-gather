@@ -45,8 +45,6 @@ jobs:
       - aws-cli/install
       - aws-cli/setup:
           profile-name: circleci
-          aws-access-key-id: $AWS_ACCESS_KEY_ID
-          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
       - run:
           name: Deploying Client to S3 and Cloudfront
           command: |
