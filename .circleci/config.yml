@@ -3,7 +3,7 @@ jobs:
   testing-frontend:
     docker:
       - image: circleci/node:10-stretch
-    working_directory: ~/repo
+    working_directory: ~/client
     steps:
       - checkout
       - restore_cache:
@@ -13,10 +13,7 @@ jobs:
           - app-
       - run: 
           name: Installing Dependencies
-          command: |
-            ls
-            cd client
-            npm install
+          command: npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
           paths:
             - node_modules
@@ -26,7 +23,7 @@ jobs:
   deploy-frontend:
     docker:
       - image: circleci/node:10-stretch
-    working_directory: ~/repo
+    working_directory: ~/client
     steps:
       - checkout
       - run:
