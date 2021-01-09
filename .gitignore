@@ -108,7 +108,7 @@ dist
 client/build
 
 #puppeteer
-tmp/
+server/tmp/
 
-credentials.json
-token.json
+server/credentials.json
+server/token.json
