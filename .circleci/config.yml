@@ -14,6 +14,7 @@ jobs:
       - run: 
           name: Installing Dependencies
           command: |
+            ls
             cd client
             npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
