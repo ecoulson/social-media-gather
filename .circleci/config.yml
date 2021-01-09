@@ -1,4 +1,7 @@
 version: 2
+orbs:
+  aws-cli: circleci/aws-cli@1.3.2
+
 jobs:
   testing-frontend:
     docker:
@@ -30,14 +33,6 @@ jobs:
       - image: circleci/node:10-stretch
     steps:
       - checkout
-      - run:
-          name: Installing AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
-            sudo pip install awsebcli --upgrade
       - run:
           name: Preparing Artifact
           command: |
