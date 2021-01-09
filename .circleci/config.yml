@@ -11,9 +11,11 @@ jobs:
           - app-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - app-
-      - run: |
-        cd client
-        npm install
+      - run: 
+          name: Installing Dependencies
+          command: |
+            cd client
+            npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
           paths:
             - node_modules
