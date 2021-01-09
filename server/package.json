@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --watch",
+    "test": "jest --runInBand",
+    "test:watch": "jest --runInBand --watchAll",
     "build": "tsc -p .",
     "client-build": "cd client && npm install && npm run build",
     "start": "node --unhandled-rejections=strict ./dist/index.js",
