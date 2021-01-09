@@ -3,6 +3,30 @@ orbs:
   aws-cli: circleci/aws-cli@1.3.2
 
 jobs:
+  testing-backend:
+    docker:
+      - image: circleci/node:10-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - server-{{ checksum "server/package.json" }}
+          - server-
+      - run:
+          name: Installing dependencies
+          command: |
+            cd server
+            npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: app-{{ checksum "server/package.json" }}
+      - run:
+          name: Run tests
+          command: |
+            cd server
+            npm run test
+
   testing-frontend:
     docker:
       - image: circleci/node:10-stretch
@@ -69,6 +93,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
+      - testing-backend
       - testing-frontend
       - deploy-frontend:
           requires:
