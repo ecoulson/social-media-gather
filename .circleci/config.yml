@@ -3,29 +3,27 @@ jobs:
   testing-frontend:
     docker:
       - image: circleci/node:10-stretch
-    working_directory: ~/client
     steps:
       - checkout
       - restore_cache:
           keys:
-          - app-{{ checksum "package.json" }}
+          - app-{{ checksum "client/package.json" }}
           # fallback to using the latest cache if no exact match is found
           - app-
       - run: 
           name: Installing Dependencies
           command: |
-            ls
+            cd client
             npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
           paths:
             - node_modules
-          key: app-{{ checksum "package.json" }}
+          key: app-{{ checksum "client/package.json" }}
       - run: npm run test # Run your tests
 
   deploy-frontend:
     docker:
       - image: circleci/node:10-stretch
-    working_directory: ~/client
     steps:
       - checkout
       - run:
