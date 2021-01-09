@@ -69,6 +69,7 @@ workflows:
     jobs:
       - testing-frontend
       - deploy-frontend:
+          context: aws
           requires:
             - testing-frontend   # Deploy require testing to be successful
           filters:
