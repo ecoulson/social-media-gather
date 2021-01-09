@@ -1,78 +1,78 @@
 version: 2
-  jobs:
-    testing-frontend:
-      docker:
-        - image: circleci/node:10-stretch
-      working_directory: ~/repo
-      steps:
-        - checkout
-        - restore_cache:
-            keys:
-            - app-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - app-
-        - run: |
-          cd client
-          npm install
-        - save_cache: # Save node_modules into cache with a checksum of the package.json
-            paths:
-              - node_modules
-            key: app-{{ checksum "package.json" }}
-        - run: npm run test # Run your tests
+jobs:
+  testing-frontend:
+    docker:
+      - image: circleci/node:10-stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - app-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - app-
+      - run: |
+        cd client
+        npm install
+      - save_cache: # Save node_modules into cache with a checksum of the package.json
+          paths:
+            - node_modules
+          key: app-{{ checksum "package.json" }}
+      - run: npm run test # Run your tests
 
-    deploy-frontend:
-      docker:
-        - image: circleci/node:10-stretch
-      working_directory: ~/repo
-      steps:
-        - checkout
-        - run:
-            name: Installing AWS CLI
-            working_directory: /
-            command: |
-              sudo apt-get -y -qq update
-              sudo apt-get install -y awscli
-              sudo apt-get install -y python-pip python-dev build-essential
-              sudo pip install awsebcli --upgrade
-        - run:
-            name: Preparing Artifact
-            command: |
-              cd client
-              npm install
-              npm run build # Here goes your build command.
-              cd build       # My angular app generate a Dist folder
-              zip ../build.zip -r * .[^.]* # Just zip your files
-              echo "Sucessfully building"
-        - run:
-            name: Deploying Client to S3 and Cloudfront
-            command: |
-              aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
-              if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
-              then
-                aws s3 sync ~/repo/dist s3://pipe-production.com --delete
-                aws cloudfront create-invalidation --distribution-id 	E32BHT2AHPCD0L --paths /\*
-              elif [ "${CIRCLE_BRANCH}" == "staging" ]
-              then
-                # aws s3 sync ~/repo/dist s3://staging.yoursite.com --delete
-                # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_STAGING --paths /\*
-                echo "Have not created staging environment"
-              elif [ "${CIRCLE_BRANCH}" == "dev"]
-                # aws s3 sync ~/repo/dist s3://dev.yoursite.com --delete
-                # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_DEV --paths /\*
-                echo "Have not created dev environment"
-              fi
+  deploy-frontend:
+    docker:
+      - image: circleci/node:10-stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Installing AWS CLI
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install -y awscli
+            sudo apt-get install -y python-pip python-dev build-essential
+            sudo pip install awsebcli --upgrade
+      - run:
+          name: Preparing Artifact
+          command: |
+            cd client
+            npm install
+            npm run build # Here goes your build command.
+            cd build       # My angular app generate a Dist folder
+            zip ../build.zip -r * .[^.]* # Just zip your files
+            echo "Sucessfully building"
+      - run:
+          name: Deploying Client to S3 and Cloudfront
+          command: |
+            aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
+            if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
+            then
+              aws s3 sync ~/repo/dist s3://pipe-production.com --delete
+              aws cloudfront create-invalidation --distribution-id 	E32BHT2AHPCD0L --paths /\*
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              # aws s3 sync ~/repo/dist s3://staging.yoursite.com --delete
+              # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_STAGING --paths /\*
+              echo "Have not created staging environment"
+            elif [ "${CIRCLE_BRANCH}" == "dev"]
+              # aws s3 sync ~/repo/dist s3://dev.yoursite.com --delete
+              # aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID_YOUR_SITE_DEV --paths /\*
+              echo "Have not created dev environment"
+            fi
 
-  workflows:
-    version: 2
-    build_and_deploy:
-      jobs:
-        - testing-frontend
-        - deploy-frontend:
-            requires:
-              - testing-frontend   # Deploy require testing to be successful
-            filters:
-              branches:
-                only:     # Only deploy for production, staging, and master branches
-                  - production
-                  - staging
-                  - master
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - testing-frontend
+      - deploy-frontend:
+          requires:
+            - testing-frontend   # Deploy require testing to be successful
+          filters:
+            branches:
+              only:     # Only deploy for production, staging, and master branches
+                - production
+                - staging
+                - master
