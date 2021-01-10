@@ -10,7 +10,7 @@
         "baseUrl": ".",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "types": ["reflect-metadata"],
+        "types": ["reflect-metadata", "jest"],
         "typeRoots": [
             "src/@Types",
             "node_modules/@types"
