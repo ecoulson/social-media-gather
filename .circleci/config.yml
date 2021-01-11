@@ -42,6 +42,7 @@ jobs:
       - image: circleci/node:10-stretch
     steps:
       - checkout
+      - setup_remote_docker
       - heroku/install
       - run:
           name: "Install dependencies"
@@ -53,9 +54,6 @@ jobs:
           command: |
             cd server
             npm run build
-      - run:
-          name: Install Docker client
-          command: apk add docker-cli
       - run:
           name: "Build and tag docker image"
           command: |
