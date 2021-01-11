@@ -38,7 +38,6 @@ jobs:
             npm run test
 
   deploy-backend:
-    machine: true
     docker:
       - image: circleci/node:10-stretch
     steps:
@@ -54,6 +53,9 @@ jobs:
           command: |
             cd server
             npm run build
+      - run:
+          name: Install Docker client
+          command: apk add docker-cli
       - run:
           name: "Build and tag docker image"
           command: |
