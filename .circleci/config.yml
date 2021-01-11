@@ -47,7 +47,7 @@ jobs:
           name: "Install dependencies"
           command: |
             cd server
-            npm install --production
+            npm install
       - run:
           name: "Build project"
           command: |
