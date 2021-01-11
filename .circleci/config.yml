@@ -61,7 +61,7 @@ jobs:
       - run:
           name: "Push docker image"
           command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
-      - run
+      - run:
           name: "Release image"
           command: heroku container:release web --app $HEROKU_APP_NAME
 
