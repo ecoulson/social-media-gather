@@ -15,7 +15,7 @@ export default class StreamClient {
         )}`;
         const response = await Axios.get(endpointUrl, {
             headers: {
-                Authorization: `Bearer ${token.accessToken}`,
+                Authorization: `Bearer ${await token.accessToken}`,
                 "Client-Id": this.client.clientId()
             }
         });

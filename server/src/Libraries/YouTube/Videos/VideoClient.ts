@@ -8,12 +8,15 @@ export default class VideoClient {
 
     list(options: IVideoListOptions): Promise<IYouTubeVideoSchema[]> {
         return new Promise(
-            (resolve: (videos: IYouTubeVideoSchema[]) => void, reject: (error: Error) => void) => {
-                this.youtubeClient.service().videos.list(
+            async (
+                resolve: (videos: IYouTubeVideoSchema[]) => void,
+                reject: (error: Error) => void
+            ) => {
+                this.youtubeClient.service.videos.list(
                     {
                         part: options.parts,
                         id: options.ids,
-                        auth: this.youtubeClient.apiKey()
+                        auth: await this.youtubeClient.apiKey()
                     },
                     (err, videoResults) => {
                         if (err) {

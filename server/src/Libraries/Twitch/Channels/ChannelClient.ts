@@ -16,7 +16,7 @@ export default class ChannelClient {
         const response = await Axios.get(endpointURL, {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this.twitchApiClient.clientId()
+                "Client-Id": await this.twitchApiClient.clientId()
             }
         });
         return new TwitchForwardPaginatedResult(

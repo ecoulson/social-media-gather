@@ -15,7 +15,7 @@ export default class VideosClient {
         const response = await Axios.get(url, {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this.twitchAPIClient.clientId()
+                "Client-Id": await this.twitchAPIClient.clientId()
             }
         });
         return new TwitchPaginatedResult(

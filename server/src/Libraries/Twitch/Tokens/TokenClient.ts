@@ -7,7 +7,7 @@ export default class TokensClient {
 
     async getAppAccessToken(): Promise<ITwitchTokenSchema> {
         const response = await Axios.post(
-            `https://id.twitch.tv/oauth2/token?client_id=${this.twitchClient.clientId()}&client_secret=${this.twitchClient.clientSecret()}&grant_type=client_credentials`
+            `https://id.twitch.tv/oauth2/token?client_id=${await this.twitchClient.clientId()}&client_secret=${await this.twitchClient.clientSecret()}&grant_type=client_credentials`
         );
         return {
             refreshToken: response.data.refresh_token,

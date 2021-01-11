@@ -7,10 +7,10 @@ export default class YouTubeChannelClient {
     constructor(private youTubeAPIClient: YouTubeAPIClient) {}
 
     searchChannels(query: string): Promise<IYouTubeSearchResultSchema[]> {
-        return new Promise((resolve, reject) => {
-            this.youTubeAPIClient.service().search.list(
+        return new Promise(async (resolve, reject) => {
+            this.youTubeAPIClient.service.search.list(
                 {
-                    auth: this.youTubeAPIClient.apiKey(),
+                    auth: await this.youTubeAPIClient.apiKey(),
                     part: ["snippet"],
                     q: query,
                     type: ["channel"],
@@ -27,10 +27,10 @@ export default class YouTubeChannelClient {
     }
 
     get(channelId: string): Promise<IYouTubeChannelSchema> {
-        return new Promise((resolve, reject) => {
-            this.youTubeAPIClient.service().channels.list(
+        return new Promise(async (resolve, reject) => {
+            this.youTubeAPIClient.service.channels.list(
                 {
-                    auth: process.env.YOUTUBE_API_KEY,
+                    auth: await this.youTubeAPIClient.apiKey(),
                     part: ["snippet", "contentDetails", "statistics"],
                     id: [channelId]
                 },

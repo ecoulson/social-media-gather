@@ -18,7 +18,7 @@ export default class WebhookClient {
             {
                 headers: {
                     Authorization: `Bearer ${token.accessToken}`,
-                    "Client-Id": this.twitchAPIClient.clientId()
+                    "Client-Id": await this.twitchAPIClient.clientId()
                 }
             }
         );

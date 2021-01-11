@@ -26,7 +26,7 @@ export default class TwitchPaginatedResult<T>
         const response = await Axios.get(this._baseUrl.toString(), {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this._client.clientId()
+                "Client-Id": await this._client.clientId()
             }
         });
         this._rateLimitRemaining = parseInt(response.headers["ratelimit-remaining"]);
@@ -60,7 +60,7 @@ export default class TwitchPaginatedResult<T>
         const response = await Axios.get(this._baseUrl.toString(), {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this._client.clientId()
+                "Client-Id": await this._client.clientId()
             }
         });
         this._rateLimitRemaining = parseInt(response.headers["ratelimit-remaining"]);

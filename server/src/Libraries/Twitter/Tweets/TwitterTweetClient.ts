@@ -2,7 +2,6 @@ import Axios from "axios";
 import ITweetSchema from "../Schema/ITweetSchema";
 import TwitterAPIClient from "../TwitterAPIClient";
 import ITwitterUsersLookUpOptions from "../Users/ITwitterLookUpOptions";
-import bigInt from "big-integer";
 
 export default class TwitterTweetClient {
     private static TwitterTweetTimelineEndpoint =
@@ -18,7 +17,7 @@ export default class TwitterTweetClient {
                 )}&count=200&tweet_mode=extended&exclude_replies=true`,
                 {
                     headers: {
-                        Authorization: `Bearer ${this.twitterClient.getAccessToken()}`
+                        Authorization: `Bearer ${await this.twitterClient.getAccessToken()}`
                     }
                 }
             );

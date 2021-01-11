@@ -1,4 +1,5 @@
 import { google, youtube_v3 } from "googleapis";
+import IConfig from "../../Config/IConfig";
 import YouTubeChannelClient from "./Channels/YouTubeChannelClient";
 import PlaylistClient from "./Playlist/PlaylistClient";
 import VideoClient from "./Videos/VideoClient";
@@ -11,7 +12,7 @@ export default class YouTubeAPIClient {
     private webhookClient: WebhookClient;
     private youtubeAPIService: youtube_v3.Youtube;
 
-    constructor(private _apiKey: string, private _baseUrl: string) {
+    constructor(private config: IConfig) {
         this.videoClient = new VideoClient(this);
         this.channelClient = new YouTubeChannelClient(this);
         this.playlistClient = new PlaylistClient(this);
@@ -19,15 +20,15 @@ export default class YouTubeAPIClient {
         this.youtubeAPIService = google.youtube("v3");
     }
 
-    apiKey(): string {
-        return this._apiKey;
+    apiKey(): Promise<string> {
+        return this.config.getValue("YOUTUBE_API_KEY");
     }
 
-    baseUrl(): string {
-        return this._baseUrl;
+    baseUrl(): Promise<string> {
+        return this.config.getValue("BASE_URL");
     }
 
-    service(): youtube_v3.Youtube {
+    get service(): youtube_v3.Youtube {
         return this.youtubeAPIService;
     }
 

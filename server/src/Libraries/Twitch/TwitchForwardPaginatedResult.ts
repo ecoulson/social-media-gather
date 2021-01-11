@@ -24,7 +24,7 @@ export default class TwitchForwardPaginatedResult<T> implements ITwitchPaginated
         const response = await Axios.get(this._baseUrl.toString(), {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this._client.clientId()
+                "Client-Id": await this._client.clientId()
             }
         });
         this._rateLimitRemaining = parseInt(response.headers["ratelimit-remaining"]);

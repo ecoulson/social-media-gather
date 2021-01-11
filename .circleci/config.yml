@@ -1,7 +1,16 @@
 version: 2.1
+
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - ~/docker
+
 orbs:
   aws-cli: circleci/aws-cli@1.3.2
-  heroku: circleci/heroku@0.0.10
+  heroku: circleci/heroku@1.2.4
 
 jobs:
   testing-backend:
@@ -27,7 +36,26 @@ jobs:
           command: |
             cd server
             npm run test
-      
+
+  deploy-backend:
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          name: "Install dependencies"
+          command: |
+            cd server
+            npm install --production
+      - run:
+          name: "Build project"
+          command: |
+            cd server
+            npm run build
+      - run:
+          name: "Build and tag docker image"
+          command: docker build -t registry.heroku.com/adapt-collate/web --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --build-arg NODE_ENV=production
+      - heroku/push-docker-image:
+      - heroku/release-docker-image:
 
   testing-frontend:
     docker:
@@ -96,7 +124,7 @@ workflows:
   build_and_deploy:
     jobs:
       - testing-backend
-      - heroku/deploy-via-git:
+      - deploy-backend:
           requires:
             - testing-backend   # Deploy require testing to be successful
           filters:

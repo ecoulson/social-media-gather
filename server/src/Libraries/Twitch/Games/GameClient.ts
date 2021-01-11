@@ -12,7 +12,7 @@ export default class GameClient {
         const response = await Axios.get(`https://api.twitch.tv/helix/games?id=${options.id}`, {
             headers: {
                 Authorization: `Bearer ${token.accessToken}`,
-                "Client-Id": this.twitchClient.clientId()
+                "Client-Id": await this.twitchClient.clientId()
             }
         });
         return new GameResults(response.data as ITwitchGameResponseSchema);

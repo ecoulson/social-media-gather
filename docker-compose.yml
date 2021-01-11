@@ -2,7 +2,11 @@ version: "3.7"
 
 services:
   pipe-server:
-    build: .
+    build:
+      context: .
+      args:
+        NODE_ENV: local_docker
+        
     depends_on:
       - mongo
     ports:

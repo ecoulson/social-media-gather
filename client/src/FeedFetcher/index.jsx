@@ -13,7 +13,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
     const getFeed = useCallback(async () => {
         const response = await Axios.get(`${feedUrl}?offset=${index}`);
         setFeed([...feed, ...response.data.data.posts]);
-    }, [index, feedUrl, feed])
+    }, [index, feedUrl])
     
     const onScroll = debounce(() => {
         const height = getContainerHeight(scrollRef.current);

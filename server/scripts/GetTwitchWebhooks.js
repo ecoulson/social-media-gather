@@ -5,7 +5,9 @@ require("dotenv").config({
 const Axios = require("axios").default;
 
 async function getTwitchAccessToken() {
-    const response = await Axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`)
+    const response = await Axios.post(
+        `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`
+    );
     return response.data;
 }
 
@@ -19,6 +21,7 @@ async function getWebhooks() {
                 authorization: `Bearer ${payload.access_token}`
             }
         });
+        console.log(response.data);
     } catch (error) {
         console.log(error);
     }
@@ -26,4 +29,4 @@ async function getWebhooks() {
 
 (async function () {
     getWebhooks();
-})()
+})();

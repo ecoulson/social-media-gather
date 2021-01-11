@@ -1,3 +1,4 @@
+import IConfig from "../../Config/IConfig";
 import ChannelClient from "./Channels/ChannelClient";
 import GameClient from "./Games/GameClient";
 import StreamClient from "./Streams/StreamClient";
@@ -13,11 +14,7 @@ export default class TwitchAPIClient {
     private videosClient: VideosClient;
     private webhookClient: WebhookClient;
 
-    constructor(
-        private _clientId: string,
-        private _clientSecret: string,
-        private _webhookBaseURL: string
-    ) {
+    constructor(private config: IConfig) {
         this.gameClient = new GameClient(this);
         this.tokenClient = new TokenClient(this);
         this.channelClient = new ChannelClient(this);
@@ -26,16 +23,16 @@ export default class TwitchAPIClient {
         this.webhookClient = new WebhookClient(this);
     }
 
-    public clientId(): string {
-        return this._clientId;
+    public clientId(): Promise<string> {
+        return this.config.getValue("TWITCH_CLIENT_ID");
     }
 
-    public clientSecret(): string {
-        return this._clientSecret;
+    public clientSecret(): Promise<string> {
+        return this.config.getValue("TWITCH_CLIENT_SECRET");
     }
 
-    public baseURL(): string {
-        return this._webhookBaseURL;
+    public baseURL(): Promise<string> {
+        return this.config.getValue("BASE_URL");
     }
 
     get games(): GameClient {

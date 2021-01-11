@@ -1,4 +1,6 @@
 import { Application } from "express";
+import Types from "../@Types/Types";
+import IConfig from "../Config/IConfig";
 import ControllerLoader from "./ControllerLoader";
 import DILoader from "./DILoader";
 import ExpressLoader from "./ExpressLoader";
@@ -9,15 +11,16 @@ import WebhookJobLoader from "./WebhookJobLoader";
 
 export default async (configuration: Record<string, unknown>): Promise<Application> => {
     console.log("Configured with:", JSON.stringify(configuration, null, 4));
-    await InstagramLoader();
-    console.log("Instantiated instagram api...");
     const container = DILoader();
     console.log("Dependencies injected...");
+    const config = container.get<IConfig>(Types.Config);
+    await InstagramLoader(config);
+    console.log("Instantiated instagram api...");
     ControllerLoader(container);
     console.log("Controllers loaded...");
     const server = ExpressLoader(container);
     console.log("Express initialized...");
-    await MongooseLoader();
+    await MongooseLoader(config);
     console.log("MongoDB initialized...");
     TwitterJobLoader();
     console.log("Started twitter job...");

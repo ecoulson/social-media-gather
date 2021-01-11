@@ -46,6 +46,11 @@ import TwitterChannelService from "./Services/MediaChannel/Twitter/TwitterChanne
 import TwitterAPIClient from "./Libraries/Twitter/TwitterAPIClient";
 import TwitchChannelService from "./Services/MediaChannel/Twitch/TwitchChannelService";
 import YouTubeChannelService from "./Services/MediaChannel/YouTube/YouTubeChannelService";
+import Config from "./Config/Config";
+import AWSConfig from "./Config/AWSConfig";
+import Environment from "./Environment";
+import ProcessConfig from "./Config/ProcessConfig";
+import IConfig from "./Config/IConfig";
 
 configureEnvironment();
 
@@ -59,6 +64,9 @@ const mongoUserRepository = new UserRepository(new UserMongoDataStore());
 const mongoWebhookRepository = new WebhookRepository(new WebhookMongoDataStore());
 const mongoYouTubeRepository = new YouTubeRepository(new YouTubeVideoMongoDataStore());
 const mongoPostRepository = new PostRepository(new PostMongoDataStore());
+
+const config = new Config(new AWSConfig(Environment.getType()), new ProcessConfig());
+container.bind<IConfig>(Types.Config).toConstantValue(config);
 
 container
     .bind<InstanceType<typeof UserRepository>>(Types.UserRepository)
@@ -109,21 +117,13 @@ container
     .bind<ITokenFactory<IUserTokenPayload>>(Types.TokenFactory)
     .to(TokenFactory)
     .whenInjectedInto(AuthenticationService);
-container
-    .bind<TwitchAPIClient>(Types.TwitchAPIClient)
-    .toConstantValue(
-        new TwitchAPIClient(
-            process.env.TWITCH_CLIENT_ID,
-            process.env.TWITCH_CLIENT_SECRET,
-            process.env.BASE_URL
-        )
-    );
+container.bind<TwitchAPIClient>(Types.TwitchAPIClient).toConstantValue(new TwitchAPIClient(config));
 container
     .bind<YouTubeAPIClient>(Types.YouTubeAPIClient)
-    .toConstantValue(new YouTubeAPIClient(process.env.YOUTUBE_API_KEY, process.env.BASE_URL));
+    .toConstantValue(new YouTubeAPIClient(config));
 container
     .bind<TwitterAPIClient>(Types.TwitterAPIClient)
-    .toConstantValue(new TwitterAPIClient(process.env.TWITTER_BEARER_TOKEN));
+    .toConstantValue(new TwitterAPIClient(config));
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);

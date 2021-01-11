@@ -2,6 +2,9 @@ import Post from "../Schemas/Mongo/Post/PostModel";
 import User from "../Schemas/Mongo/User/UserModel";
 import axios from "axios";
 import ITweetSchema from "../Libraries/Twitter/Schema/ITweetSchema";
+import container from "../bootstrap";
+import IConfig from "../Config/IConfig";
+import Types from "../@Types/Types";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {
@@ -26,11 +29,12 @@ async function createTwitterPostsForUser(twitterId: string, userId: string) {
 }
 
 async function getTwitterPosts(twitterId: string): Promise<ITweetSchema[]> {
+    const config = container.get<IConfig>(Types.Config);
     const response = await axios.get(
         `${TwitterTweetTimelineEndpoint}?user_id=${twitterId}&count=200&tweet_mode=extended`,
         {
             headers: {
-                Authorization: `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+                Authorization: `Bearer ${await config.getValue("TWITTER_BEARER_TOKEN")}`
             }
         }
     );

@@ -13,7 +13,7 @@ export default class TwitterUsersClient {
             `${TwitterUsersClient.TwitterLookupEndpoint}?${this.getLookupQuery(options)}`,
             {
                 headers: {
-                    Authorization: `Bearer ${this.client.getAccessToken()}`
+                    Authorization: `Bearer ${await this.client.getAccessToken()}`
                 }
             }
         );

@@ -1,6 +1,9 @@
 .git/
 node_modules
 server/node_modules/
+server/.env
+server/src
+server/test
 npm-debug
 sever/npm-debug
 docker-compose*.yml

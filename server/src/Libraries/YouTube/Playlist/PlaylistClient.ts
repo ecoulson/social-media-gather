@@ -11,12 +11,12 @@ export default class PlaylistClient {
     list(
         options: IListPlaylistOptions
     ): Promise<IYouTubePaginatedResult<IYouTubePlaylistSchema[]>> {
-        return new Promise((resolve, reject) => {
-            this.youTubeAPIClient.service().playlistItems.list(
+        return new Promise(async (resolve, reject) => {
+            this.youTubeAPIClient.service.playlistItems.list(
                 {
                     part: options.part,
                     pageToken: options.pageToken,
-                    auth: this.youTubeAPIClient.apiKey(),
+                    auth: await this.youTubeAPIClient.apiKey(),
                     playlistId: options.playlistId,
                     maxResults: options.maxResults
                 },

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require("fs");
-const { google, Auth, gmail_v1 } = require("googleapis");
+const { google } = require("googleapis");
 const dotenv = require("dotenv");
 const readline = require("readline");
 dotenv.config();
