@@ -73,7 +73,7 @@ describe("Authentication Service Suite", () => {
             const expectedToken = new Mock<IToken<IUserTokenPayload>>().object();
             mockTokenFactory
                 .setup((tokenFactor) => tokenFactor.create)
-                .returns(() => expectedToken);
+                .returns(() => Promise.resolve(expectedToken));
             mockUserService
                 .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(user));
