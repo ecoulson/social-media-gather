@@ -58,8 +58,12 @@ jobs:
           name: "Build and tag docker image"
           command: |
             docker build -t registry.heroku.com/adapt-collate/web --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --build-arg NODE_ENV=production .
-      - heroku/push-docker-image
-      - heroku/release-docker-image
+      - run:
+          name: "Push docker image"
+          command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
+      - run
+          name: "Release image"
+          command: heroku container:release web --app $HEROKU_APP_NAME
 
   testing-frontend:
     docker:

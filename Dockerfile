@@ -14,7 +14,7 @@ WORKDIR /usr/server
 
 COPY server/package*.json ./
 # need to configure aws creds
-RUN npm install
+RUN npm install --production
 
 COPY server/ .
 
