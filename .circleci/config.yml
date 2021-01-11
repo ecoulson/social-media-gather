@@ -20,8 +20,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - server-{{ checksum "server/package.json" }}
-          - server-
+            - server-{{ checksum "server/package.json" }}
+            - server-
       - run:
           name: Installing dependencies
           command: |
@@ -38,6 +38,7 @@ jobs:
             npm run test
 
   deploy-backend:
+    machine: true
     docker:
       - image: circleci/node:10-stretch
     steps:
@@ -67,10 +68,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - app-{{ checksum "client/package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - app-
-      - run: 
+            - app-{{ checksum "client/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - app-
+      - run:
           name: Installing dependencies
           command: |
             cd client
@@ -79,7 +80,7 @@ jobs:
           paths:
             - node_modules
           key: app-{{ checksum "client/package.json" }}
-      - run: 
+      - run:
           name: Run tests
           command: |
             cd client
@@ -129,20 +130,20 @@ workflows:
       - testing-backend
       - deploy-backend:
           requires:
-            - testing-backend   # Deploy require testing to be successful
+            - testing-backend # Deploy require testing to be successful
           filters:
             branches:
-              only:     # Only deploy for production, staging, and master branches
+              only: # Only deploy for production, staging, and master branches
                 - dev
                 - staging
                 - master
       - testing-frontend
       - deploy-frontend:
           requires:
-            - testing-frontend   # Deploy require testing to be successful
+            - testing-frontend # Deploy require testing to be successful
           filters:
             branches:
-              only:     # Only deploy for production, staging, and master branches
+              only: # Only deploy for production, staging, and master branches
                 - dev
                 - staging
                 - master
