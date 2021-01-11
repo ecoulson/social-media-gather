@@ -38,6 +38,8 @@ jobs:
             npm run test
 
   deploy-backend:
+    docker:
+      - image: circleci/node:10-stretch
     steps:
       - checkout
       - heroku/install
