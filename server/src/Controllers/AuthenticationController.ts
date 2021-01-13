@@ -87,4 +87,9 @@ export default class AuthenticationController {
             request.userEntity !== undefined && request.userEntity() !== null
         ).create();
     }
+
+    @httpGet("/lauren")
+    hiLauren(): string {
+        return "Hi boo bear!";
+    }
 }

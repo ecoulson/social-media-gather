@@ -6,55 +6,60 @@ import debounce from "../Library/debounce";
 import transformFeed from "./FeedTransformer";
 
 export default function FeedFetcher({ feedUrl, Component }) {
-    const scrollRef = useRef(null);
-    const [feed, setFeed] = useState([]);
-    const [originalHeight, setHeight] = useState(0);
-    const [index, setIndex] = useState(0);
-    const getFeed = useCallback(async () => {
-        const response = await Axios.get(`${feedUrl}?offset=${index}`);
-        setFeed([...feed, ...response.data.data.posts]);
-    }, [index, feedUrl])
-    
-    const onScroll = debounce(() => {
-        const height = getContainerHeight(scrollRef.current);
-        if (scrollRef.current.scrollTop + scrollRef.current.clientHeight + originalHeight > height - 500) {
-            setIndex(index => index + 20);
-        }            
-    }, 250)
+  const scrollRef = useRef(null);
+  const [feed, setFeed] = useState([]);
+  const [originalHeight, setHeight] = useState(0);
+  const [index, setIndex] = useState(0);
+  const getFeed = useCallback(async () => {
+    const response = await Axios.get(`${feedUrl}?offset=${index}`);
+    setFeed((feed) => [...feed, ...response.data.data.posts]);
+  }, [index, feedUrl]);
 
-    useEffect(() => {
-        getFeed();
-    }, [index, getFeed]);
+  const onScroll = debounce(() => {
+    const height = getContainerHeight(scrollRef.current);
+    if (
+      scrollRef.current.scrollTop +
+        scrollRef.current.clientHeight +
+        originalHeight >
+      height - 500
+    ) {
+      setIndex((index) => index + 20);
+    }
+  }, 250);
 
-    useEffect(() => {
-        const scrollContainer = scrollRef.current;
-        scrollContainer.addEventListener("scroll", onScroll)
-        return function cleanup() {
-            scrollContainer.removeEventListener("scroll", onScroll)
-        }
-    }, [onScroll])
+  useEffect(() => {
+    getFeed();
+  }, [index, getFeed]);
 
-    useEffect(() => {
-        getFeed();
-        setHeight(getContainerHeight(scrollRef.current));
-    }, [getFeed])
-    
-    useEffect(() => {
-        setIndex(0);
-        setFeed([]);
-        setHeight(getContainerHeight(scrollRef.current));
-    }, [feedUrl])
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    scrollContainer.addEventListener("scroll", onScroll);
+    return function cleanup() {
+      scrollContainer.removeEventListener("scroll", onScroll);
+    };
+  }, [onScroll]);
 
-    useEffect(() => {
-        if (feed === []) {
-            console.log("here");
-            getFeed();
-        }
-    }, [feed, getFeed])
-    
-    return <Component scrollRef={scrollRef} posts={transformFeed(feed)}/>
+  useEffect(() => {
+    getFeed();
+    setHeight(getContainerHeight(scrollRef.current));
+  }, [getFeed]);
+
+  useEffect(() => {
+    setIndex(0);
+    setFeed([]);
+    setHeight(getContainerHeight(scrollRef.current));
+  }, [feedUrl]);
+
+  useEffect(() => {
+    if (feed === []) {
+      console.log("here");
+      getFeed();
+    }
+  }, [feed, getFeed]);
+
+  return <Component scrollRef={scrollRef} posts={transformFeed(feed)} />;
 }
 
 function getContainerHeight(element) {
-    return Math.max(element.scrollHeight, element.offsetHeight)
+  return Math.max(element.scrollHeight, element.offsetHeight);
 }
