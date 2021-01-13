@@ -45,6 +45,9 @@ jobs:
       - setup_remote_docker
       - heroku/install
       - run:
+          name: "Login to heroku container"
+          command: heroku container:login
+      - run:
           name: "Login to docker"
           command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run:
