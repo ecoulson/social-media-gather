@@ -5,7 +5,6 @@ import styled from "@emotion/styled";
 const GridLayout = styled(Grid)`
   max-height: 100%;
   grid-template-columns: 25% 50% 25%;
-  background-color: purple;
   grid-template-areas: "followed feed post";
 `;
 
