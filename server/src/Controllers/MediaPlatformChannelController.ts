@@ -20,21 +20,18 @@ export default abstract class MediaPlatformChannelController {
         return new ChannelSearchResultMessage(results).create();
     }
 
-    @httpPut("/link/:instagramAccountId", AuthenticationMiddleware)
+    @httpPut("/link/:mediaChannelPlatformId", AuthenticationMiddleware)
     async linkAccountWithAuthenticatedUser(request: Request): Promise<IMessageStructure> {
-        this.mediaPlatformService.linkChannel(
-            request.userEntity(),
-            request.params.instagramAccountId
-        );
+        this.mediaPlatformService.linkChannel(request.userEntity(), request.params.mediaPlatformId);
         return new SuccessMessage().create();
     }
 
-    @httpPut("/link/:instagramAccountId/with/:userId", AuthenticationMiddleware)
+    @httpPut("/link/:mediaChannelPlatformId/with/:userId", AuthenticationMiddleware)
     async linksAccountWithUserId(
-        @requestParam("instagramAccountId") instagramAccountId: string,
+        @requestParam("mediaChannelPlatformId") mediaChannelPlatformId: string,
         @requestParam("userId") userId: string
     ): Promise<IMessageStructure> {
-        this.mediaPlatformService.linkChannelWithUserId(userId, instagramAccountId);
+        this.mediaPlatformService.linkChannelWithUserId(userId, mediaChannelPlatformId);
         return new SuccessMessage().create();
     }
 }
