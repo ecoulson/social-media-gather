@@ -17,11 +17,11 @@ export default abstract class MongoDataStore<
     ) {}
 
     async count(): Promise<number> {
-        return this.model.estimatedDocumentCount();
+        return this.model.countDocuments();
     }
 
     async estimatedCount(): Promise<number> {
-        return this.model.countDocuments();
+        return this.model.estimatedDocumentCount();
     }
 
     async find(query: IQuery): Promise<Entity[]> {
