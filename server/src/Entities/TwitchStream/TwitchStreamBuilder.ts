@@ -48,62 +48,62 @@ export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
         );
     }
 
-    setViewers(viewers: number): ITwitchStreamBuilder {
+    setViewers(viewers: number): TwitchStreamBuilder {
         this.viewers = viewers;
         return this;
     }
 
-    setStatus(isLive: boolean): ITwitchStreamBuilder {
+    setStatus(isLive: boolean): TwitchStreamBuilder {
         this.isLive = isLive;
         return this;
     }
 
-    setThumbnail(url: string): ITwitchStreamBuilder {
-        this.thumbnail = new Image("", url, 0, 0);
+    setThumbnail(thumbnail: Image): TwitchStreamBuilder {
+        this.thumbnail = thumbnail;
         return this;
     }
 
-    setStartedAt(startedAt: Date): ITwitchStreamBuilder {
+    setStartedAt(startedAt: Date): TwitchStreamBuilder {
         this.startedAt = startedAt;
         return this;
     }
 
-    setEndedAt(endedAt: Date): ITwitchStreamBuilder {
+    setEndedAt(endedAt: Date): TwitchStreamBuilder {
         this.endedAt = endedAt;
         return this;
     }
 
-    setUrl(url: string): ITwitchStreamBuilder {
+    setUrl(url: string): TwitchStreamBuilder {
         this.url = url;
         return this;
     }
 
-    setTitle(title: string): ITwitchStreamBuilder {
+    setTitle(title: string): TwitchStreamBuilder {
         this.title = title;
         return this;
     }
 
-    setUserId(userId: string): ITwitchStreamBuilder {
+    setUserId(userId: string): TwitchStreamBuilder {
         this.userId = userId;
         return this;
     }
 
-    setScreenName(screenName: string): ITwitchStreamBuilder {
+    setScreenName(screenName: string): TwitchStreamBuilder {
         this.screenName = screenName;
         return this;
     }
 
-    setGameName(gameName: string): ITwitchStreamBuilder {
+    setGameName(gameName: string): TwitchStreamBuilder {
         this.gameName = gameName;
         return this;
     }
 
-    setStreamId(streamId: string): ITwitchStreamBuilder {
+    setStreamId(streamId: string): TwitchStreamBuilder {
         this.streamId = streamId;
         return this;
     }
 
-    setId(id: string): ITwitchStreamBuilder {
+    setId(id: string): TwitchStreamBuilder {
         this.id = id;
         return this;
     }

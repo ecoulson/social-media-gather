@@ -14,7 +14,11 @@ const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, UpdateQuery<IPos
             publishedAt: post.publishedAt(),
             videoId: post.videoId(),
             thumbnailUrl: post.thumbnailUrl(),
-            title: post.title()
+            title: post.title(),
+            commentCount: post.commentCount(),
+            likes: post.likes(),
+            dislikes: post.dislikes(),
+            views: post.views()
         }
     };
 };

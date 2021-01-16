@@ -13,4 +13,7 @@ export default interface ITweet extends IPost {
     media(): IMedia[];
     tweetId(): string;
     userId(): string;
+    favorites(): number;
+    retweets(): number;
+    commentCount(): number;
 }

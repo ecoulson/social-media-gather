@@ -1,24 +1,26 @@
+import TwitchStreamBuilder from "../../../Entities/TwitchStream/TwitchStreamBuilder";
 import { Transformer } from "../../../@Types";
 import Image from "../../../Entities/Media/Image";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
-import TwitchStream from "../../../Entities/TwitchStream/TwitchStream";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (post) => {
-    return new TwitchStream(
-        0,
-        post.twitchStream.live,
-        new Image("", post.twitchStream.thumbnailUrl, 0, 0),
-        post.twitchStream.startedAt,
-        post.twitchStream.url,
-        post.twitchStream.title,
-        post.userId,
-        post.twitchStream.userName,
-        post.id,
-        post.twitchStream.gameName,
-        post.twitchStream.streamId,
-        post.twitchStream.endedAt
-    );
+    const twitchStreamBuilder = new TwitchStreamBuilder();
+    twitchStreamBuilder
+        .setId(post.id)
+        .setViewers(post.twitchStream.viewers)
+        .setStatus(post.twitchStream.live)
+        .setThumbnail(new Image("", post.twitchStream.thumbnailUrl, 0, 0))
+        .setScreenName(post.twitchStream.userName)
+        .setStartedAt(post.twitchStream.startedAt)
+        .setUrl(post.twitchStream.url)
+        .setTitle(post.twitchStream.title)
+        .setUserId(post.userId)
+        .setGameName(post.twitchStream.gameName)
+        .setStreamId(post.twitchStream.streamId)
+        .setEndedAt(post.twitchStream.endedAt);
+
+    return twitchStreamBuilder.build();
 };
 
 export default TwitchStreamEntityTransform;

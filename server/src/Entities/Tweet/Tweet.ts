@@ -16,7 +16,10 @@ export default class Tweet extends Post implements ITweet {
         private _mentions: ITweetMention[],
         private _media: IMedia[],
         private _tweetId: string,
-        private _userId: string
+        private _userId: string,
+        private _favorites: number,
+        private _retweetCount: number,
+        private _commentCount: number
     ) {
         super(PostType.TWEET, _id);
     }
@@ -55,5 +58,17 @@ export default class Tweet extends Post implements ITweet {
 
     tweetId(): string {
         return this._tweetId;
+    }
+
+    favorites(): number {
+        return this._favorites;
+    }
+
+    retweets(): number {
+        return this._retweetCount;
+    }
+
+    commentCount(): number {
+        return this._commentCount;
     }
 }

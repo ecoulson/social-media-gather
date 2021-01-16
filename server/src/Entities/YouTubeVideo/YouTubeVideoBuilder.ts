@@ -9,6 +9,10 @@ export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
     private videoId: string;
     private userId: string;
     private id: string;
+    private likes: number;
+    private dislikes: number;
+    private views: number;
+    private commentCount: number;
 
     constructor() {
         this.publishedAt = new Date();
@@ -17,35 +21,59 @@ export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
         this.videoId = "";
         this.userId = "";
         this.id = "";
+        this.likes = 0;
+        this.dislikes = 0;
+        this.views = 0;
+        this.commentCount = 0;
     }
 
-    setId(id: string): IYouTubeVideoBuilder {
+    setId(id: string): YouTubeVideoBuilder {
         this.id = id;
         return this;
     }
 
-    setPublishedAt(publishedAt: Date): IYouTubeVideoBuilder {
+    setPublishedAt(publishedAt: Date): YouTubeVideoBuilder {
         this.publishedAt = publishedAt;
         return this;
     }
 
-    setThumbnailUrl(url: string): IYouTubeVideoBuilder {
+    setThumbnailUrl(url: string): YouTubeVideoBuilder {
         this.thumbnailUrl = url;
         return this;
     }
 
-    setTitle(title: string): IYouTubeVideoBuilder {
+    setTitle(title: string): YouTubeVideoBuilder {
         this.title = title;
         return this;
     }
 
-    setVideoId(videoId: string): IYouTubeVideoBuilder {
+    setVideoId(videoId: string): YouTubeVideoBuilder {
         this.videoId = videoId;
         return this;
     }
 
-    setUserId(userId: string): IYouTubeVideoBuilder {
+    setUserId(userId: string): YouTubeVideoBuilder {
         this.userId = userId;
+        return this;
+    }
+
+    setLikes(likes: number): YouTubeVideoBuilder {
+        this.likes = likes;
+        return this;
+    }
+
+    setDislikes(dislikes: number): YouTubeVideoBuilder {
+        this.dislikes = dislikes;
+        return this;
+    }
+
+    setViews(views: number): YouTubeVideoBuilder {
+        this.views = views;
+        return this;
+    }
+
+    setCommentCount(commentCount: number): YouTubeVideoBuilder {
+        this.commentCount = commentCount;
         return this;
     }
 
@@ -56,7 +84,11 @@ export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
             this.publishedAt,
             this.thumbnailUrl,
             this.title,
-            this.videoId
+            this.videoId,
+            this.likes,
+            this.dislikes,
+            this.views,
+            this.commentCount
         );
     }
 }

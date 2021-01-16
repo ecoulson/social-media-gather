@@ -27,52 +27,52 @@ export default class UserBuilder implements IUserBuilder {
         this._followers = [];
     }
 
-    setId(id: string): IUserBuilder {
+    setId(id: string): UserBuilder {
         this._id = id;
         return this;
     }
 
-    setTwitterId(twitterId: string): IUserBuilder {
+    setTwitterId(twitterId: string): UserBuilder {
         this._twitterId = twitterId;
         return this;
     }
 
-    setYouTubeId(youTubeId: string): IUserBuilder {
+    setYouTubeId(youTubeId: string): UserBuilder {
         this._youTubeId = youTubeId;
         return this;
     }
 
-    setTwitchId(twitchId: string): IUserBuilder {
+    setTwitchId(twitchId: string): UserBuilder {
         this._twitchId = twitchId;
         return this;
     }
 
-    setInstagramId(instagramId: string): IUserBuilder {
+    setInstagramId(instagramId: string): UserBuilder {
         this._instagramId = instagramId;
         return this;
     }
 
-    setEmail(email: string): IUserBuilder {
+    setEmail(email: string): UserBuilder {
         this._email = email;
         return this;
     }
 
-    setUsername(username: string): IUserBuilder {
+    setUsername(username: string): UserBuilder {
         this._username = username;
         return this;
     }
 
-    setPassword(password: string): IUserBuilder {
+    setPassword(password: string): UserBuilder {
         this._password = password;
         return this;
     }
 
-    setVerified(): IUserBuilder {
-        this._verified = true;
+    setVerified(verified: boolean): UserBuilder {
+        this._verified = verified;
         return this;
     }
 
-    setFollowers(followers: string[]): IUserBuilder {
+    setFollowers(followers: string[]): UserBuilder {
         this._followers = followers;
         return this;
     }

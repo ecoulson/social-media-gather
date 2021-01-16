@@ -43,7 +43,8 @@ const schema = new Schema({
         userName: String,
         thumbnailUrl: String,
         title: String,
-        streamId: String
+        streamId: String,
+        viewers: Number
     },
     twitchVideo: {
         url: String,
@@ -52,19 +53,27 @@ const schema = new Schema({
         title: String,
         description: String,
         thumbnailUrl: String,
-        userName: String
+        userName: String,
+        views: Number
     },
     youtubeVideo: {
         publishedAt: Date,
         thumbnailUrl: String,
         title: String,
-        videoId: String
+        videoId: String,
+        likes: Number,
+        dislikes: Number,
+        views: Number,
+        commentCount: Number
     },
     tweet: {
         id: String,
         text: String,
         publishedAt: Date,
         screenName: String,
+        favorites: Number,
+        commentCount: Number,
+        retweetCount: Number,
         hashtags: [String],
         urls: [TwitterUrls],
         userMentions: [TwitterUserMentions],
@@ -74,6 +83,7 @@ const schema = new Schema({
         takenAt: Date,
         id: String,
         likes: String,
+        commentCount: Number,
         caption: String,
         media: [InstagramMedia],
         thumbnail: InstagramMedia

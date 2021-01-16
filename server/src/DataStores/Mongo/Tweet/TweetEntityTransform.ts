@@ -5,29 +5,34 @@ import Video from "../../../Entities/Media/Video";
 import ITweet from "../../../Entities/Tweet/ITweet";
 import ITweetMention from "../../../Entities/Tweet/ITweetMentions";
 import ITweetUrl from "../../../Entities/Tweet/ITweetUrl";
-import Tweet from "../../../Entities/Tweet/Tweet";
 import TweetMention from "../../../Entities/Tweet/TweetMention";
 import TweetUrl from "../../../Entities/Tweet/TweetUrl";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 import ITweetMediaDocument from "../../../Schemas/Mongo/Post/ITweetMediaDocument";
 import ITweetUrlDocument from "../../../Schemas/Mongo/Post/ITweetUrlDocument";
 import ITweetMentionDocument from "../../../Schemas/Mongo/Post/ITweetMentionDocument";
+import TweetBuilder from "../../../Entities/Tweet/TweetBuilder";
 
 const IMAGE_TYPE = "photo";
 
-const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) =>
-    new Tweet(
-        post.id,
-        post.tweet.text,
-        post.tweet.publishedAt,
-        post.tweet.screenName,
-        post.tweet.hashtags,
-        post.tweet.urls.map((url) => transformTweetUrls(url)),
-        post.tweet.userMentions.map((mention) => transformMentions(mention)),
-        post.tweet.media.map((mediaItem) => transformMedia(mediaItem)),
-        post.tweet.id,
-        post.userId
-    );
+const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
+    const tweetBuilder = new TweetBuilder();
+    tweetBuilder
+        .setId(post.id)
+        .setText(post.tweet.text)
+        .setPublishedAt(post.tweet.publishedAt)
+        .setScreenName(post.tweet.screenName)
+        .setHashtags(post.tweet.hashtags)
+        .setUrls(post.tweet.urls.map((url) => transformTweetUrls(url)))
+        .setMentions(post.tweet.userMentions.map((mention) => transformMentions(mention)))
+        .setMedia(post.tweet.media.map((mediaItem) => transformMedia(mediaItem)))
+        .setTweetId(post.tweet.id)
+        .setUserId(post.userId)
+        .setRetweets(post.tweet.retweets)
+        .setFavorites(post.tweet.favorites)
+        .setCommentCount(post.tweet.commentCount);
+    return tweetBuilder.build();
+};
 
 const transformTweetUrls: Transformer<ITweetUrlDocument, ITweetUrl> = (url) =>
     new TweetUrl(url.url, url.displayUrl, url.expandedUrl);

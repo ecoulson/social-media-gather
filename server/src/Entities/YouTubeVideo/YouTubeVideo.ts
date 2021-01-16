@@ -9,7 +9,11 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
         private _publishedAt: Date,
         private _thumbnailUrl: string,
         private _title: string,
-        private _videoId: string
+        private _videoId: string,
+        private _likes: number,
+        private _dislikes: number,
+        private _views: number,
+        private _commentCount: number
     ) {
         super(PostType.YOUTUBE_VIDEO, _id);
     }
@@ -32,5 +36,21 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
 
     videoId(): string {
         return this._videoId;
+    }
+
+    likes(): number {
+        return this._likes;
+    }
+
+    dislikes(): number {
+        return this._dislikes;
+    }
+
+    commentCount(): number {
+        return this._commentCount;
+    }
+
+    views(): number {
+        return this._views;
     }
 }

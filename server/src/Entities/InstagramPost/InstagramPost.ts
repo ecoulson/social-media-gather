@@ -13,7 +13,8 @@ export default class InstagramPost extends Post implements IInstagramPost {
         private _takenAt: Date,
         private _caption: string,
         private _media: IMedia[],
-        private _thumbnail: IImage
+        private _thumbnail: IImage,
+        private _commentCount: number
     ) {
         super(PostType.INSTAGRAM_POST, _id);
     }
@@ -44,5 +45,9 @@ export default class InstagramPost extends Post implements IInstagramPost {
 
     thumbnail(): IImage {
         return this._thumbnail;
+    }
+
+    commentCount(): number {
+        return this._commentCount;
     }
 }

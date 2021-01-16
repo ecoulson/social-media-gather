@@ -20,7 +20,8 @@ const InstagramPostDocumentTransform: Transformer<IInstagramPost, UpdateQuery<IP
             media: post.media().map((mediaItem) => transformMediaEntity(mediaItem)),
             caption: post.caption(),
             likes: post.likes().toString(),
-            id: post.postId()
+            id: post.postId(),
+            commentCount: post.commentCount()
         }
     };
 };

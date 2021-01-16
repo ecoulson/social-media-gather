@@ -25,7 +25,10 @@ const TweetDocumentTransform: Transformer<ITweet, UpdateQuery<IPostDocument>> = 
             id: tweet.tweetId(),
             media: tweet.media().map((mediaItem) => transformMedia(mediaItem)),
             userMentions: tweet.mentions().map((mention) => transformMention(mention)),
-            urls: tweet.urls().map((url) => transformUrl(url))
+            urls: tweet.urls().map((url) => transformUrl(url)),
+            favorites: tweet.favorites(),
+            retweets: tweet.retweets(),
+            commentCount: tweet.commentCount()
         }
     };
 };

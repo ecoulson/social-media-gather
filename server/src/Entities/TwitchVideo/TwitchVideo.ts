@@ -13,7 +13,8 @@ export default class TwitchVideo extends Post implements ITwitchVideo {
         private _description: string,
         private _thumbnail: IImage,
         private _screenName: string,
-        private _userId: string
+        private _userId: string,
+        private _views: number
     ) {
         super(PostType.TWITCH_VIDEO, _id);
     }
@@ -48,5 +49,9 @@ export default class TwitchVideo extends Post implements ITwitchVideo {
 
     userId(): string {
         return this._userId;
+    }
+
+    views(): number {
+        return this._views;
     }
 }

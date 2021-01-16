@@ -19,7 +19,8 @@ const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPos
             thumbnailUrl: stream.thumbnail().url(),
             title: stream.title(),
             url: stream.url(),
-            userName: stream.screenName()
+            userName: stream.screenName(),
+            viewers: stream.viewers()
         }
     };
 };

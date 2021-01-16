@@ -17,7 +17,8 @@ const TwitchVideoDocumentTransform: Transformer<ITwitchVideo, UpdateQuery<IPostD
             url: video.url(),
             title: video.title(),
             thumbnailUrl: video.thumbnail().url(),
-            userName: video.screenName()
+            userName: video.screenName(),
+            views: video.views()
         }
     };
 };

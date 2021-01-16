@@ -8,4 +8,5 @@ export default interface ITwitchStreamDocument {
     thumbnailUrl: string;
     title: string;
     streamId: string;
+    viewers: number;
 }
