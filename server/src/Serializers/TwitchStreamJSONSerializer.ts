@@ -15,7 +15,8 @@ const TwitchStreamJSONSerializer: Transformer<ITwitchStream, ITwitchStreamJSONSc
         startedAt: twitchStream.startedAt(),
         endedAt: twitchStream.endedAt(),
         username: twitchStream.screenName(),
-        streamId: twitchStream.streamId()
+        streamId: twitchStream.streamId(),
+        viewers: twitchStream.viewers()
     };
 };
 

@@ -10,7 +10,7 @@ export default interface ITweetDocument {
     hashtags: string[];
     favorites: number;
     commentCount: number;
-    retweets: number;
+    retweetCount: number;
     urls: ITweetUrlDocument[];
     userMentions: ITweetMentionDocument[];
     media: ITweetMediaDocument[];

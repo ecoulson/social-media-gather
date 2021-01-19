@@ -1,9 +1,9 @@
 import { inject, injectable, tagged } from "inversify";
+import YouTubeVideoBuilder from "../../../Entities/YouTubeVideo/YouTubeVideoBuilder";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
 import IUser from "../../../Entities/User/IUser";
 import Webhook from "../../../Entities/Webhook/Webhook";
-import YouTubeVideo from "../../../Entities/YouTubeVideo/YouTubeVideo";
 import IYouTubePaginatedResult from "../../../Libraries/YouTube/IYouTubePaginatedResult";
 import IYouTubeChannelSchema from "../../../Libraries/YouTube/Schema/IYouTubeChannelSchema";
 import IYouTubePlaylistSchema from "../../../Libraries/YouTube/Schema/IYouTubePlaylistSchema";
@@ -53,8 +53,12 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         } else {
             this.userRepository.update(user);
         }
-        this.createYoutubePosts(user, youTubeChannelId);
-        this.registerWebhook(user, youTubeChannelId);
+        try {
+            this.createYoutubePosts(user, youTubeChannelId);
+            this.registerWebhook(user, youTubeChannelId);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     private async createYoutubePosts(user: IUser, youTubeChannelId: string) {
@@ -88,18 +92,27 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
     }
 
     private async createYouTubeVideoPosts(user: IUser, videos: IYouTubeVideoSchema[]) {
-        const videoPosts = videos.map(
-            (video) =>
-                new YouTubeVideo(
-                    "",
-                    user.id(),
-                    video.publishedAt,
-                    this.getThumbnail(video.thumbnails),
-                    video.title,
-                    video.id
-                )
+        const youTubeVideoBuilder = new YouTubeVideoBuilder();
+        const videoPosts = videos.map((video) =>
+            youTubeVideoBuilder
+                .setId("")
+                .setPublishedAt(new Date(video.snippet.publishedAt))
+                .setThumbnailUrl(this.getThumbnail(video.snippet.thumbnails))
+                .setTitle(video.snippet.title)
+                .setVideoId(video.id)
+                .setUserId(user.id())
+                .setLikes(this.parseStatistic(video.statistics.likeCount))
+                .setDislikes(this.parseStatistic(video.statistics.dislikeCount))
+                .setCommentCount(this.parseStatistic(video.statistics.commentCount))
+                .setViews(this.parseStatistic(video.statistics.viewCount))
+                .build()
         );
         videoPosts.forEach((videoPost) => this.youTubeVideoRepository.add(videoPost));
+    }
+
+    private parseStatistic(statistic: string): number {
+        const value = parseInt(statistic);
+        return isNaN(value) ? 0 : value;
     }
 
     private getThumbnail(thumbnails: IYouTubeThumbnailSchema) {
@@ -129,7 +142,7 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
             new Date(),
             "youtube",
             `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${user.id()}`,
-            `${this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?userId=${user.id()}`,
+            `${await this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?userId=${user.id()}`,
             youTubeChannelId,
             user.id()
         );

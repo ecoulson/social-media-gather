@@ -10,6 +10,7 @@ export default interface ITweetSchema {
     id: number;
     id_str: string;
     text: string;
+    display_text_range: [number, number];
     full_text: string;
     source: string;
     truncated: boolean;

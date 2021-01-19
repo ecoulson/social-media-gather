@@ -9,7 +9,11 @@ const YouTubeVideoJSONSerializer: Transformer<IYouTubeVideo, IYouTubeVideoJSONSc
         publishedAt: youTubeVideo.publishedAt(),
         thumbnailUrl: youTubeVideo.thumbnailUrl(),
         title: youTubeVideo.title(),
-        videoId: youTubeVideo.videoId()
+        videoId: youTubeVideo.videoId(),
+        likes: youTubeVideo.likes(),
+        dislikes: youTubeVideo.dislikes(),
+        commentCount: youTubeVideo.commentCount(),
+        views: youTubeVideo.views()
     };
 };
 

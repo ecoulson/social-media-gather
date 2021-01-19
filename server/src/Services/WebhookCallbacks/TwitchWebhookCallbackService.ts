@@ -1,4 +1,5 @@
 import { inject, injectable, tagged } from "inversify";
+import Image from "../../Entities/Media/Image";
 import Tags from "../../@Types/Tags";
 import Types from "../../@Types/Types";
 import TwitchStreamBuilder from "../../Entities/TwitchStream/TwitchStreamBuilder";
@@ -42,7 +43,7 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
             .setStartedAt(stream.started_at)
             .setStatus(true)
             .setStreamId(stream.id)
-            .setThumbnail(stream.thumbnail_url)
+            .setThumbnail(new Image("", stream.thumbnail_url, 0, 0))
             .setTitle(stream.title)
             .setUrl(`https://www.twitch.tv/${stream.user_name}`)
             .setUserId(userId)

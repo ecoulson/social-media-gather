@@ -28,11 +28,15 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
             });
             const newVideoData = youTubeVideos[0];
             const newVideo = new YouTubeVideoBuilder()
-                .setPublishedAt(newVideoData.publishedAt)
-                .setThumbnailUrl(this.getThumbnailUrl(newVideoData.thumbnails))
-                .setTitle(newVideoData.title)
+                .setPublishedAt(new Date(newVideoData.snippet.publishedAt))
+                .setThumbnailUrl(this.getThumbnailUrl(newVideoData.snippet.thumbnails))
+                .setTitle(newVideoData.snippet.title)
                 .setUserId(userId)
                 .setVideoId(newVideoData.id)
+                .setLikes(parseInt(newVideoData.statistics.likeCount))
+                .setDislikes(parseInt(newVideoData.statistics.dislikeCount))
+                .setCommentCount(parseInt(newVideoData.statistics.commentCount))
+                .setViews(parseInt(newVideoData.statistics.viewCount))
                 .build();
             await this.youTubeVideoRepository.add(newVideo);
         }

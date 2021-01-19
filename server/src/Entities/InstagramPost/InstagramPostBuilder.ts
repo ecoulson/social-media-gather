@@ -1,10 +1,10 @@
+import Builder from "../../Libraries/Builder/Builder";
 import IImage from "../Media/IImage";
 import IMedia from "../Media/IMedia";
-import IInstagramPostBuilder from "./IInstagramPostBuilder";
 import IInstagramPost from "./IInstagramPost";
 import InstagramPost from "./InstagramPost";
 
-export default class InstagramPostBuilder implements IInstagramPostBuilder {
+export default class InstagramPostBuilder extends Builder<IInstagramPost> {
     private _id: string;
     private _takenAt: Date;
     private _likes: number;
@@ -14,6 +14,32 @@ export default class InstagramPostBuilder implements IInstagramPostBuilder {
     private _media: IMedia[];
     private _thumbnail: IImage;
     private _postId: string;
+
+    reset() {
+        this._id = null;
+        this._takenAt = null;
+        this._likes = null;
+        this._commentCount = null;
+        this._caption = null;
+        this._userId = null;
+        this._media = null;
+        this._thumbnail = null;
+        this._postId = null;
+    }
+
+    construct(): IInstagramPost {
+        return new InstagramPost(
+            this._id,
+            this._userId,
+            this._postId,
+            this._likes,
+            this._takenAt,
+            this._caption,
+            this._media,
+            this._thumbnail,
+            this._commentCount
+        );
+    }
 
     setId(id: string): InstagramPostBuilder {
         this._id = id;
@@ -58,19 +84,5 @@ export default class InstagramPostBuilder implements IInstagramPostBuilder {
     setPostId(postId: string): InstagramPostBuilder {
         this._postId = postId;
         return this;
-    }
-
-    build(): IInstagramPost {
-        return new InstagramPost(
-            this._id,
-            this._userId,
-            this._postId,
-            this._likes,
-            this._takenAt,
-            this._caption,
-            this._media,
-            this._thumbnail,
-            this._commentCount
-        );
     }
 }

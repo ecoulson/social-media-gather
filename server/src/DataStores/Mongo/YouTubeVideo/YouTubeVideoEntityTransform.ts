@@ -1,7 +1,6 @@
 import YouTubeVideoBuilder from "../../../Entities/YouTubeVideo/YouTubeVideoBuilder";
 import { Transformer } from "../../../@Types";
 import IYouTubeVideo from "../../../Entities/YouTubeVideo/IYouTubeVideo";
-import YouTubeVideo from "../../../Entities/YouTubeVideo/YouTubeVideo";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
 const YouTubeVideoEntityTransform: Transformer<IPostDocument, IYouTubeVideo> = (post) => {

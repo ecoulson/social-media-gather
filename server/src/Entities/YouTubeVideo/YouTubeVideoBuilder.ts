@@ -1,8 +1,8 @@
+import Builder from "../../Libraries/Builder/Builder";
 import IYouTubeVideo from "./IYouTubeVideo";
-import IYouTubeVideoBuilder from "./IYouTubeVideoBuilder";
 import YouTubeVideo from "./YouTubeVideo";
 
-export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
+export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
     private publishedAt: Date;
     private thumbnailUrl: string;
     private title: string;
@@ -14,17 +14,32 @@ export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
     private views: number;
     private commentCount: number;
 
-    constructor() {
-        this.publishedAt = new Date();
-        this.thumbnailUrl = "";
-        this.title = "";
-        this.videoId = "";
-        this.userId = "";
-        this.id = "";
-        this.likes = 0;
-        this.dislikes = 0;
-        this.views = 0;
-        this.commentCount = 0;
+    reset() {
+        this.publishedAt = null;
+        this.thumbnailUrl = null;
+        this.title = null;
+        this.videoId = null;
+        this.userId = null;
+        this.id = null;
+        this.likes = null;
+        this.dislikes = null;
+        this.views = null;
+        this.commentCount = null;
+    }
+
+    construct(): IYouTubeVideo {
+        return new YouTubeVideo(
+            this.id,
+            this.userId,
+            this.publishedAt,
+            this.thumbnailUrl,
+            this.title,
+            this.videoId,
+            this.likes,
+            this.dislikes,
+            this.views,
+            this.commentCount
+        );
     }
 
     setId(id: string): YouTubeVideoBuilder {
@@ -75,20 +90,5 @@ export default class YouTubeVideoBuilder implements IYouTubeVideoBuilder {
     setCommentCount(commentCount: number): YouTubeVideoBuilder {
         this.commentCount = commentCount;
         return this;
-    }
-
-    build(): IYouTubeVideo {
-        return new YouTubeVideo(
-            this.id,
-            this.userId,
-            this.publishedAt,
-            this.thumbnailUrl,
-            this.title,
-            this.videoId,
-            this.likes,
-            this.dislikes,
-            this.views,
-            this.commentCount
-        );
     }
 }

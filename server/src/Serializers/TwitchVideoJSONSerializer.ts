@@ -13,7 +13,8 @@ const TwitchVideoJSONSerializer: Transformer<ITwitchVideo, ITwitchVideoJSONSchem
         title: twitchVideo.title(),
         description: twitchVideo.description(),
         thumbnailUrl: twitchVideo.thumbnail().url(),
-        userName: twitchVideo.screenName()
+        userName: twitchVideo.screenName(),
+        views: twitchVideo.views()
     };
 };
 

@@ -27,7 +27,7 @@ const TweetDocumentTransform: Transformer<ITweet, UpdateQuery<IPostDocument>> = 
             userMentions: tweet.mentions().map((mention) => transformMention(mention)),
             urls: tweet.urls().map((url) => transformUrl(url)),
             favorites: tweet.favorites(),
-            retweets: tweet.retweets(),
+            retweetCount: tweet.retweetCount(),
             commentCount: tweet.commentCount()
         }
     };

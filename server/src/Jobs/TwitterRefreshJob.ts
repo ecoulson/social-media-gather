@@ -5,6 +5,7 @@ import ITweetSchema from "../Libraries/Twitter/Schema/ITweetSchema";
 import container from "../bootstrap";
 import IConfig from "../Config/IConfig";
 import Types from "../@Types/Types";
+import IMedia from "../Entities/Media/IMedia";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {
@@ -20,7 +21,11 @@ async function createTwitterPostsForUser(twitterId: string, userId: string) {
     const tweets = await getTwitterPosts(twitterId);
     await Promise.all(
         tweets.map(async (tweet) => {
-            if (await Post.findOne({ "tweet.id": tweet.id_str })) {
+            const post = await Post.findOne({ "tweet.id": tweet.id_str });
+            if (post !== null) {
+                post.tweet.favorites = tweet.favorite_count;
+                post.tweet.retweetCount = tweet.retweet_count;
+                await post.save();
                 return Promise.resolve();
             }
             return createPostFromTweet(tweet, userId);
@@ -54,7 +59,9 @@ async function createPostFromTweet(tweet: ITweetSchema, userId: string) {
             hashtags: tweet.entities.hashtags.map((hashtag) => hashtag.text),
             urls: getUrls(tweet),
             userMentions: getUserMentions(tweet),
-            media: getMedia(tweet)
+            media: getMedia(tweet),
+            favorites: tweet.favorite_count,
+            retweetCount: tweet.retweet_count
         }
     });
     return post.save();
@@ -86,36 +93,29 @@ function getUserMentions(tweet: ITweetSchema) {
 }
 
 function getMedia(tweet: ITweetSchema) {
-    if (tweet.extended_entities && tweet.extended_entities.media) {
-        return tweet.extended_entities.media.map((media) => {
-            let mediaUrl = media.media_url;
-            if (media.video_info) {
-                const sortedVariants = media.video_info.variants
-                    .filter((variant) => variant.bitrate)
-                    .sort((a, b) => a.bitrate - b.bitrate);
-                if (sortedVariants[sortedVariants.length - 1]) {
-                    mediaUrl = sortedVariants[sortedVariants.length - 1].url;
-                }
-            }
-            return {
-                id: media.id_str,
-                thumbnailUrl: media.media_url,
-                url: mediaUrl,
-                type: media.type
-            };
-        });
-    } else if (tweet.entities && tweet.entities.media) {
-        return tweet.entities.media.map((media) => {
-            return {
-                id: media.id_str,
-                thumbnailUrl: media.media_url,
-                url: media.media_url,
-                type: media.type
-            };
-        });
-    } else {
-        return [];
+    let media: IMedia[] = [];
+    if (hasMedia(tweet)) {
+        media = media.concat(
+            tweet.extended_entities.media
+                .filter(
+                    (mediaItem) => mediaItem.type === "photo" || mediaItem.type === "animated_gif"
+                )
+                .map((mediaItem) => this.createImageFromMediaItem(mediaItem))
+        );
     }
+    if (hasMedia(tweet)) {
+        media = media.concat(
+            tweet.extended_entities.media
+                .filter((mediaItem) => mediaItem.type === "video")
+                .map((mediaItem) => this.createVideoFromMediaItem(mediaItem))
+                .filter((mediaItem) => mediaItem !== null)
+        );
+    }
+    return media;
+}
+
+function hasMedia(tweet: ITweetSchema): boolean {
+    return tweet.extended_entities !== undefined && tweet.extended_entities.media !== undefined;
 }
 
 export default TwitterRefreshJob;

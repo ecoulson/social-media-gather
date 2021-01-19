@@ -1,11 +1,11 @@
+import Builder from "../../Libraries/Builder/Builder";
 import IMedia from "../Media/IMedia";
 import ITweet from "./ITweet";
-import ITweetBuilder from "./ITweetBuilder";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
 import Tweet from "./Tweet";
 
-export default class TweetBuilder implements ITweetBuilder {
+export default class TweetBuilder extends Builder<ITweet> {
     _id: string;
     _text: string;
     _publishedAt: Date;
@@ -19,6 +19,42 @@ export default class TweetBuilder implements ITweetBuilder {
     _favorites: number;
     _retweets: number;
     _commentCount: number;
+
+    reset(): void {
+        this._id = null;
+        this._text = null;
+        this._publishedAt = null;
+        this._screenName = null;
+        this._hashtags = [];
+        this._urls = [];
+        this._mentions = [];
+        this._media = [];
+        this._tweetId = null;
+        this._userId = null;
+        this._favorites = null;
+        this._retweets = null;
+        this._commentCount = null;
+    }
+
+    construct(): ITweet {
+        const tweet = new Tweet(
+            this._id,
+            this._text,
+            this._publishedAt,
+            this._screenName,
+            this._hashtags,
+            this._urls,
+            this._mentions,
+            this._media,
+            this._tweetId,
+            this._userId,
+            this._favorites,
+            this._retweets,
+            this._commentCount
+        );
+        this.reset();
+        return tweet;
+    }
 
     setId(id: string): TweetBuilder {
         this._id = id;
@@ -82,23 +118,5 @@ export default class TweetBuilder implements ITweetBuilder {
     setCommentCount(commentCount: number): TweetBuilder {
         this._commentCount = commentCount;
         return this;
-    }
-
-    build(): ITweet {
-        return new Tweet(
-            this._id,
-            this._text,
-            this._publishedAt,
-            this._screenName,
-            this._hashtags,
-            this._urls,
-            this._mentions,
-            this._media,
-            this._tweetId,
-            this._userId,
-            this._favorites,
-            this._retweets,
-            this._commentCount
-        );
     }
 }

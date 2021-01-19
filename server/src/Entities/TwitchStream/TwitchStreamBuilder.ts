@@ -1,9 +1,9 @@
+import Builder from "../../Libraries/Builder/Builder";
 import Image from "../Media/Image";
 import ITwitchStream from "./ITwitchStream";
-import ITwitchStreamBuilder from "./ITwitchStreamBuilder";
 import TwitchStream from "./TwitchStream";
 
-export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
+export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
     private viewers: number;
     private isLive: boolean;
     private thumbnail: Image;
@@ -17,21 +17,21 @@ export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
     private streamId: string;
     private id: string;
 
-    constructor() {
-        this.viewers = 0;
-        this.isLive = false;
+    reset() {
+        this.viewers = null;
+        this.isLive = null;
         this.thumbnail = null;
-        this.startedAt = new Date();
-        this.url = "";
-        this.title = "";
-        this.userId = "";
-        this.screenName = "";
-        this.gameName = "";
-        this.streamId = "";
-        this.id = "";
+        this.startedAt = null;
+        this.url = null;
+        this.title = null;
+        this.userId = null;
+        this.screenName = null;
+        this.gameName = null;
+        this.streamId = null;
+        this.id = null;
     }
 
-    build(): ITwitchStream {
+    construct(): ITwitchStream {
         return new TwitchStream(
             this.viewers,
             this.isLive,

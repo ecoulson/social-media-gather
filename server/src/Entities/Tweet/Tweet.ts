@@ -64,7 +64,7 @@ export default class Tweet extends Post implements ITweet {
         return this._favorites;
     }
 
-    retweets(): number {
+    retweetCount(): number {
         return this._retweetCount;
     }
 

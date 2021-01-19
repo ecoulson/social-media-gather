@@ -14,19 +14,6 @@ box-sizing: border-box;
 padding-top: 4px;
 `;
 
-// const getDateMapping = (posts) => {
-//     const map = new Map();
-//     posts.forEach(post => {
-//         const key = moment(post.publishedAt).format("D/M/YYYY");
-//         if (!map.has(key)) {
-//             map.set(key, [post])
-//         } else {
-//             map.get(key).push(post);
-//         }
-//     });
-//     return map;
-// }
-
 const renderFeed = (posts) => {
     let currentDate = "";
     return posts.map((post, i) => {

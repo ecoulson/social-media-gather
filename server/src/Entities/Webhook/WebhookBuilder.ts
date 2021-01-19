@@ -1,8 +1,8 @@
+import Builder from "../../Libraries/Builder/Builder";
 import IWebhook from "./IWebhook";
-import IWebhookBuilder from "./IWebhookBuilder";
 import Webhook from "./Webhook";
 
-export default class WebhookBuilder implements IWebhookBuilder {
+export default class WebhookBuilder extends Builder<IWebhook> {
     private _id: string;
     private _expirationDate: Date;
     private _dateCreated: Date;
@@ -11,6 +11,30 @@ export default class WebhookBuilder implements IWebhookBuilder {
     private _callbackUrl: string;
     private _channelId: string;
     private _userId: string;
+
+    reset(): void {
+        this._id = null;
+        this._expirationDate = null;
+        this._dateCreated = null;
+        this._platform = null;
+        this._topicUrl = null;
+        this._callbackUrl = null;
+        this._channelId = null;
+        this._userId = null;
+    }
+
+    construct(): IWebhook {
+        return new Webhook(
+            this._id,
+            this._expirationDate,
+            this._dateCreated,
+            this._platform,
+            this._topicUrl,
+            this._callbackUrl,
+            this._channelId,
+            this._userId
+        );
+    }
 
     setId(id: string): WebhookBuilder {
         this._id = id;
@@ -50,18 +74,5 @@ export default class WebhookBuilder implements IWebhookBuilder {
     setUserId(userId: string): WebhookBuilder {
         this._userId = userId;
         return this;
-    }
-
-    build(): IWebhook {
-        return new Webhook(
-            this._id,
-            this._expirationDate,
-            this._dateCreated,
-            this._platform,
-            this._topicUrl,
-            this._callbackUrl,
-            this._channelId,
-            this._userId
-        );
     }
 }

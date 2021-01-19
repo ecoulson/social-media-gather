@@ -1,8 +1,12 @@
-import { IgApiClient } from "instagram-private-api";
+import {
+    IgApiClient,
+    UserFeedResponseCarouselMediaItem,
+    UserFeedResponseItemsItem
+} from "instagram-private-api";
 import { inject, injectable, tagged } from "inversify";
+import InstagramPostBuilder from "../../../Entities/InstagramPost/InstagramPostBuilder";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
-import InstagramPost from "../../../Entities/InstagramPost/InstagramPost";
 import Image from "../../../Entities/Media/Image";
 import Video from "../../../Entities/Media/Video";
 import IUser from "../../../Entities/User/IUser";
@@ -53,6 +57,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
         let count = 0;
         let page = await userFeed.items();
         const instagramIds = new Set();
+        const builder = new InstagramPostBuilder();
         while (count < igUser.media_count) {
             count += page.length;
             await Promise.all(
@@ -63,83 +68,43 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                         }
                         instagramIds.add(postItem.id);
                         if (postItem.media_type === 8) {
-                            const post = new InstagramPost(
-                                "",
-                                user.id(),
-                                postItem.id,
-                                postItem.like_count,
-                                new Date(postItem.taken_at * 1000),
-                                this.getCaption(postItem),
-                                postItem.carousel_media.map((slide) => {
-                                    return new Image(
-                                        slide.id,
-                                        slide.image_versions2.candidates[0].url,
-                                        slide.image_versions2.candidates[0].width,
-                                        slide.image_versions2.candidates[0].height
-                                    );
-                                }),
-                                new Image(
-                                    postItem.carousel_media[0].id,
-                                    postItem.carousel_media[0].image_versions2.candidates[0].url,
-                                    postItem.carousel_media[0].image_versions2.candidates[0].width,
-                                    postItem.carousel_media[0].image_versions2.candidates[0].height
+                            builder
+                                .setId("")
+                                .setUserId(user.id())
+                                .setPostId(postItem.id)
+                                .setLikes(postItem.like_count)
+                                .setTakenAt(new Date(postItem.taken_at * 1000))
+                                .setCaption(this.getCaption(postItem))
+                                .setMedia(
+                                    postItem.carousel_media.map((slide) => this.createImage(slide))
                                 )
-                            );
-                            return this.instagramPostRepository.add(post);
+                                .setThumbnail(this.createImage(postItem.carousel_media[0]))
+                                .setCommentCount(postItem.comment_count);
+                            return this.instagramPostRepository.add(builder.build());
                         } else if (postItem.media_type === 2) {
-                            const post = new InstagramPost(
-                                "",
-                                user.id(),
-                                postItem.id,
-                                postItem.like_count,
-                                new Date(postItem.taken_at * 1000),
-                                this.getCaption(postItem),
-                                [
-                                    new Video(
-                                        postItem.video_versions[0].id,
-                                        postItem.video_versions[0].url,
-                                        postItem.video_versions[0].height,
-                                        postItem.video_versions[0].width,
-                                        new Image(
-                                            postItem.id,
-                                            postItem.image_versions2.candidates[0].url,
-                                            postItem.image_versions2.candidates[0].width,
-                                            postItem.image_versions2.candidates[0].height
-                                        )
-                                    )
-                                ],
-                                new Image(
-                                    postItem.id,
-                                    postItem.image_versions2.candidates[0].url,
-                                    postItem.image_versions2.candidates[0].width,
-                                    postItem.image_versions2.candidates[0].height
-                                )
-                            );
-                            return this.instagramPostRepository.add(post);
+                            builder
+                                .setId("")
+                                .setUserId(user.id())
+                                .setPostId(postItem.id)
+                                .setLikes(postItem.like_count)
+                                .setTakenAt(new Date(postItem.taken_at * 1000))
+                                .setCaption(this.getCaption(postItem))
+                                .setMedia([this.createVideo(postItem)])
+                                .setThumbnail(this.createImage(postItem))
+                                .setCommentCount(postItem.comment_count);
+                            return this.instagramPostRepository.add(builder.build());
                         } else {
-                            const post = new InstagramPost(
-                                "",
-                                user.id(),
-                                postItem.id,
-                                postItem.like_count,
-                                new Date(postItem.taken_at * 1000),
-                                this.getCaption(postItem),
-                                [
-                                    new Image(
-                                        postItem.id,
-                                        postItem.image_versions2.candidates[0].url,
-                                        postItem.image_versions2.candidates[0].width,
-                                        postItem.image_versions2.candidates[0].height
-                                    )
-                                ],
-                                new Image(
-                                    postItem.id,
-                                    postItem.image_versions2.candidates[0].url,
-                                    postItem.image_versions2.candidates[0].width,
-                                    postItem.image_versions2.candidates[0].height
-                                )
-                            );
-                            return this.instagramPostRepository.add(post);
+                            builder
+                                .setId("")
+                                .setUserId(user.id())
+                                .setPostId(postItem.id)
+                                .setLikes(postItem.like_count)
+                                .setTakenAt(new Date(postItem.taken_at * 1000))
+                                .setCaption(this.getCaption(postItem))
+                                .setMedia([this.createImage(postItem)])
+                                .setThumbnail(this.createImage(postItem))
+                                .setCommentCount(postItem.comment_count);
+                            return this.instagramPostRepository.add(builder.build());
                         }
                     })
                     .filter((postItem) => postItem !== null)
@@ -147,6 +112,27 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
             page = await userFeed.items();
             await this.wait(5000 + Math.random() * 500);
         }
+    }
+
+    private createImage(
+        mediaItem: UserFeedResponseCarouselMediaItem | UserFeedResponseItemsItem
+    ): Image {
+        return new Image(
+            mediaItem.id,
+            mediaItem.image_versions2.candidates[0].url,
+            mediaItem.image_versions2.candidates[0].width,
+            mediaItem.image_versions2.candidates[0].height
+        );
+    }
+
+    private createVideo(post: UserFeedResponseItemsItem): Video {
+        return new Video(
+            post.video_versions[0].id,
+            post.video_versions[0].url,
+            post.video_versions[0].height,
+            post.video_versions[0].width,
+            this.createImage(post)
+        );
     }
 
     private getCaption(post: {

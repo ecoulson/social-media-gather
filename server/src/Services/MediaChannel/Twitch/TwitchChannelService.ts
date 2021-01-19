@@ -1,4 +1,5 @@
 import { inject, injectable, tagged } from "inversify";
+import TwitchVideoBuilder from "../../../Entities/TwitchVideo/TwitchVideoBuilder";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
 import Image from "../../../Entities/Media/Image";
@@ -91,7 +92,7 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
             .setStartedAt(stream.started_at)
             .setStatus(true)
             .setStreamId(stream.id)
-            .setThumbnail(stream.thumbnail_url)
+            .setThumbnail(new Image("", stream.thumbnail_url, 0, 0))
             .setTitle(stream.title)
             .setUrl("")
             .setUserId(user.id())
@@ -122,18 +123,20 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
     }
 
     async createVideosFromPage(user: IUser, videosSchemas: ITwitchVideoSchema[]): Promise<void> {
+        const twitchVideoBuilder = new TwitchVideoBuilder();
         const videos = videosSchemas.map((videoSchema) => {
-            return new TwitchVideo(
-                "",
-                videoSchema.url,
-                "",
-                new Date(videoSchema.published_at),
-                videoSchema.title,
-                videoSchema.description,
-                new Image("", videoSchema.thumbnail_url, 0, 0),
-                videoSchema.user_name,
-                user.id()
-            );
+            twitchVideoBuilder
+                .setId("")
+                .setUrl(videoSchema.url)
+                .setGameName("")
+                .setPublishedAt(new Date(videoSchema.published_at))
+                .setTitle(videoSchema.title)
+                .setDescription(videoSchema.description)
+                .setThumbnail(new Image("", videoSchema.thumbnail_url, 0, 0))
+                .setScreenName(videoSchema.user_name)
+                .setUserId(user.id())
+                .setViews(videoSchema.view_count);
+            return twitchVideoBuilder.build();
         });
         videos.forEach((video) => {
             this.twitchVideoRepository.add(video);
@@ -143,7 +146,7 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
     async registerWebhooks(user: IUser, twitchChannelId: string): Promise<void> {
         const expirationDate = new Date();
         expirationDate.setSeconds(expirationDate.getSeconds() + TwitchChannelService.LEASE_TIME);
-        const callbackURL = `${this.twitchApiClient.baseURL()}/api/webhook/twitch/callback?user_id=${user.id()}`;
+        const callbackURL = `${await this.twitchApiClient.baseURL()}/api/webhook/twitch/callback?user_id=${user.id()}`;
         const topicURL = `https://api.twitch.tv/helix/streams?user_id=${twitchChannelId}`;
         const webhook = new Webhook(
             "",

@@ -14,6 +14,6 @@ export default interface ITweet extends IPost {
     tweetId(): string;
     userId(): string;
     favorites(): number;
-    retweets(): number;
+    retweetCount(): number;
     commentCount(): number;
 }

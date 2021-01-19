@@ -16,7 +16,8 @@ const InstagramJSONSerializer: Transformer<IInstagramPost, IInstagramJSONSchema>
         likes: instagramPost.likes(),
         caption: instagramPost.caption(),
         media: instagramPost.media().map((media) => InstagramMediaJSONSerializer(media)),
-        thumbnail: InstagramMediaJSONSerializer(instagramPost.thumbnail())
+        thumbnail: InstagramMediaJSONSerializer(instagramPost.thumbnail()),
+        commentCount: instagramPost.commentCount()
     };
 };
 

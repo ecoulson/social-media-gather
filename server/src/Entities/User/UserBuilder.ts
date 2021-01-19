@@ -1,8 +1,8 @@
+import Builder from "../../Libraries/Builder/Builder";
 import IUser from "./IUser";
-import IUserBuilder from "./IUserBuilder";
 import User from "./User";
 
-export default class UserBuilder implements IUserBuilder {
+export default class UserBuilder extends Builder<IUser> {
     private _id: string;
     private _twitterId: string;
     private _youTubeId: string;
@@ -14,17 +14,32 @@ export default class UserBuilder implements IUserBuilder {
     private _verified: boolean;
     private _followers: string[];
 
-    constructor() {
-        this._id = "";
-        this._twitchId = "";
-        this._youTubeId = "";
-        this._twitterId = "";
-        this._instagramId = "";
-        this._email = "";
-        this._username = "";
-        this._password = "";
+    reset() {
+        this._id = null;
+        this._twitchId = null;
+        this._youTubeId = null;
+        this._twitterId = null;
+        this._instagramId = null;
+        this._email = null;
+        this._username = null;
+        this._password = null;
         this._verified = false;
         this._followers = [];
+    }
+
+    construct(): IUser {
+        return new User(
+            this._id,
+            this._twitterId,
+            this._youTubeId,
+            this._twitchId,
+            this._instagramId,
+            this._email,
+            this._username,
+            this._password,
+            this._verified,
+            this._followers
+        );
     }
 
     setId(id: string): UserBuilder {
@@ -75,20 +90,5 @@ export default class UserBuilder implements IUserBuilder {
     setFollowers(followers: string[]): UserBuilder {
         this._followers = followers;
         return this;
-    }
-
-    build(): IUser {
-        return new User(
-            this._id,
-            this._twitterId,
-            this._youTubeId,
-            this._twitchId,
-            this._instagramId,
-            this._email,
-            this._username,
-            this._password,
-            this._verified,
-            this._followers
-        );
     }
 }

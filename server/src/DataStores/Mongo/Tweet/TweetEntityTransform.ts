@@ -13,7 +13,7 @@ import ITweetUrlDocument from "../../../Schemas/Mongo/Post/ITweetUrlDocument";
 import ITweetMentionDocument from "../../../Schemas/Mongo/Post/ITweetMentionDocument";
 import TweetBuilder from "../../../Entities/Tweet/TweetBuilder";
 
-const IMAGE_TYPE = "photo";
+const IMAGE_TYPE = "IMAGE";
 
 const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
     const tweetBuilder = new TweetBuilder();
@@ -28,7 +28,7 @@ const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
         .setMedia(post.tweet.media.map((mediaItem) => transformMedia(mediaItem)))
         .setTweetId(post.tweet.id)
         .setUserId(post.userId)
-        .setRetweets(post.tweet.retweets)
+        .setRetweets(post.tweet.retweetCount)
         .setFavorites(post.tweet.favorites)
         .setCommentCount(post.tweet.commentCount);
     return tweetBuilder.build();

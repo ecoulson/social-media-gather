@@ -20,7 +20,10 @@ const TweetJSONSerializer: Transformer<ITweet, ITweetJSONSchema> = (tweetEntity)
         screenName: tweetEntity.screenName(),
         urls: tweetEntity.urls().map((url) => TweetUrlJSONSerializer(url)),
         userMentions: tweetEntity.mentions().map((mention) => TweetMentionsJSONSerializer(mention)),
-        media: tweetEntity.media().map((media) => TweetMediaJSONSerializer(media))
+        media: tweetEntity.media().map((media) => TweetMediaJSONSerializer(media)),
+        favorites: tweetEntity.favorites(),
+        retweetCount: tweetEntity.retweetCount(),
+        commentCount: tweetEntity.commentCount()
     };
 };
 

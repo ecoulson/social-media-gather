@@ -10,6 +10,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
   const [feed, setFeed] = useState([]);
   const [originalHeight, setHeight] = useState(0);
   const [index, setIndex] = useState(0);
+
   const getFeed = useCallback(async () => {
     const response = await Axios.get(`${feedUrl}?offset=${index}`);
     setFeed((feed) => [...feed, ...response.data.data.posts]);
@@ -29,6 +30,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
   useEffect(() => {
     getFeed();
+    setHeight(getContainerHeight(scrollRef.current));
   }, [index, getFeed]);
 
   useEffect(() => {
@@ -40,11 +42,6 @@ export default function FeedFetcher({ feedUrl, Component }) {
   }, [onScroll]);
 
   useEffect(() => {
-    getFeed();
-    setHeight(getContainerHeight(scrollRef.current));
-  }, [getFeed]);
-
-  useEffect(() => {
     setIndex(0);
     setFeed([]);
     setHeight(getContainerHeight(scrollRef.current));
@@ -52,8 +49,8 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
   useEffect(() => {
     if (feed === []) {
-      console.log("here");
       getFeed();
+      setHeight(getContainerHeight(scrollRef.current));
     }
   }, [feed, getFeed]);
 
