@@ -1,5 +1,8 @@
-import IMessageStructure from "./IMessageStructure";
+import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
+import IMetaData from "./IMetaData";
 
-export default interface IMessage {
-    create(): IMessageStructure;
+export default interface IMessage<T> {
+    metadata(): IMetaData;
+    data(): T;
+    toJson(): IMessageJSONSchema;
 }

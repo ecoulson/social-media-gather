@@ -7,6 +7,7 @@ export default {
     WebhookRepository: Symbol.for("WebhookRepository"),
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     PostRepository: Symbol.for("PostRepository"),
+    ChannelRepository: Symbol.for("ChannelRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     Config: Symbol.for("Config"),
     PasswordManager: Symbol.for("PasswordManager"),
@@ -24,5 +25,7 @@ export default {
     InstagramChannelService: Symbol.for("InstagramChannelService"),
     TwitterChannelService: Symbol.for("TwitterChannelService"),
     TwitchChannelService: Symbol.for("TwitchChannelService"),
-    YouTubeChannelService: Symbol.for("YouTubeChannelService")
+    YouTubeChannelService: Symbol.for("YouTubeChannelService"),
+    ChannelService: Symbol.for("ChannelService"),
+    MessageQueue: Symbol.for("MessageQueue")
 };

@@ -4,6 +4,7 @@ import AuthenticationController from "./AuthenticationController";
 import FeedController from "./FeedController";
 import InstagramChannelController from "./InstagramChannelController";
 import SearchController from "./SearchController";
+import TestController from "./ChannelController";
 import TwitchChannelController from "./TwitchChannelController";
 import TwitchWebhookCallbackController from "./TwitchWebhookCallbackController";
 import TwitterChannelController from "./TwitterChannelController";
@@ -22,6 +23,7 @@ export default function ControllerFactory(container: Container): unknown[] {
         InstagramChannelController,
         TwitterChannelController,
         TwitchChannelController,
-        YouTubeChannelController
+        YouTubeChannelController,
+        TestController
     ];
 }

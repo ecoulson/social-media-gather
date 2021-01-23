@@ -1,4 +1,3 @@
-import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IInstagramPost from "../../../Entities/InstagramPost/IInstagramPost";
 import IImage from "../../../Entities/Media/IImage";
@@ -7,7 +6,7 @@ import IVideo from "../../../Entities/Media/IVideo";
 import IInstagramMediaDocument from "../../../Schemas/Mongo/Post/IInstagramMediaDocument";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
-const InstagramPostDocumentTransform: Transformer<IInstagramPost, UpdateQuery<IPostDocument>> = (
+const InstagramPostDocumentTransform: Transformer<IInstagramPost, Partial<IPostDocument>> = (
     post
 ) => {
     return {

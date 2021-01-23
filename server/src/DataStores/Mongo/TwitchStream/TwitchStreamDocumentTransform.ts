@@ -1,9 +1,8 @@
 import { Transformer } from "../../../@Types";
-import { UpdateQuery } from "mongoose";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
-const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPostDocument>> = (
+const TwitchStreamDocumentTransform: Transformer<ITwitchStream, Partial<IPostDocument>> = (
     stream
 ) => {
     return {

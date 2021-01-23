@@ -34,13 +34,17 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
     ) {}
 
     async searchPlatformForChannel(username: string): Promise<IMediaPlatformChannelSearchResult> {
-        const channels = await this.youTubeAPIClient.channels.searchChannels(username);
+        const channelSearch = await this.youTubeAPIClient.channels.searchChannels(username);
+        const channels = await this.youTubeAPIClient.channels.get({
+            ids: channelSearch.map((channelSearchResult) => channelSearchResult.id.channelId)
+        });
         return {
             channels: channels.map((channel) => {
                 return {
-                    id: channel.id.channelId,
+                    id: channel.id,
                     username: channel.snippet.title,
-                    profilePicture: channel.snippet.thumbnails.default.url
+                    profilePicture: channel.snippet.thumbnails.default.url,
+                    subscriberCount: parseInt(channel.statistics.subscriberCount)
                 };
             })
         };
@@ -62,8 +66,10 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
     }
 
     private async createYoutubePosts(user: IUser, youTubeChannelId: string) {
-        const youTubeChannel = await this.youTubeAPIClient.channels.get(youTubeChannelId);
-        let uploadPage = await this.getUploads(youTubeChannel);
+        const youTubeChannels = await this.youTubeAPIClient.channels.get({
+            ids: [youTubeChannelId]
+        });
+        let uploadPage = await this.getUploads(youTubeChannels[0]);
         do {
             const videos = await this.getUploadedVideosOnPage(uploadPage);
             this.createYouTubeVideoPosts(user, videos);

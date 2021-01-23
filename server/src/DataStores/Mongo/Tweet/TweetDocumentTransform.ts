@@ -1,4 +1,3 @@
-import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IMedia from "../../../Entities/Media/IMedia";
 import MediaType from "../../../Entities/Media/MediaType";
@@ -12,7 +11,7 @@ import ITweetMentionDocument from "../../../Schemas/Mongo/Post/ITweetMentionDocu
 import IImage from "../../../Entities/Media/IImage";
 import IVideo from "../../../Entities/Media/IVideo";
 
-const TweetDocumentTransform: Transformer<ITweet, UpdateQuery<IPostDocument>> = (tweet) => {
+const TweetDocumentTransform: Transformer<ITweet, Partial<IPostDocument>> = (tweet) => {
     return {
         type: "TWEET",
         userId: tweet.userId(),

@@ -1,4 +1,6 @@
 enum MessageType {
+    ChannelCreatedMessage = "ChannelCreated",
+    CreateChannelMessage = "CreateChannel",
     UserExistsMessage = "UserExists",
     UserDoesNotExistMessage = "UserDoesNotExist",
     Error = "InternalError",
@@ -9,7 +11,7 @@ enum MessageType {
     Authenticated = "Authenticated",
     DeletedUserMessage = "UserDeleted",
     IsFollowingMessage = "IsFollowing",
-    FeedMessage = "Feed",
+    PostsMessage = "PostsMessage",
     ChannelSearchResultMessage = "ChannelSearchResult"
 }
 

@@ -43,7 +43,8 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
                 return {
                     id: user.id_str,
                     username: user.screen_name,
-                    profilePicture: user.profile_image_url
+                    profilePicture: user.profile_image_url,
+                    subscriberCount: user.followers_count
                 };
             })
         };

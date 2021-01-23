@@ -51,6 +51,12 @@ import AWSConfig from "./Config/AWSConfig";
 import Environment from "./Environment";
 import ProcessConfig from "./Config/ProcessConfig";
 import IConfig from "./Config/IConfig";
+import ChannelRepository from "./Repositories/Channel/ChannelRepository";
+import ChannelMongoStore from "./DataStores/Mongo/Channel/ChannelMongoStore";
+import IMessageQueue from "./Services/MessageQueue/IMessageQueue";
+import ChannelService from "./Services/Channel/ChannelService";
+import IChannelService from "./Services/Channel/IChannelService";
+import TopicMessageQueue from "./Services/MessageQueue/TopicMessageQueue";
 
 configureEnvironment();
 
@@ -64,6 +70,7 @@ const mongoUserRepository = new UserRepository(new UserMongoDataStore());
 const mongoWebhookRepository = new WebhookRepository(new WebhookMongoDataStore());
 const mongoYouTubeRepository = new YouTubeRepository(new YouTubeVideoMongoDataStore());
 const mongoPostRepository = new PostRepository(new PostMongoDataStore());
+const mongoChannelRepository = new ChannelRepository(new ChannelMongoStore());
 
 const config = new Config(new AWSConfig(Environment.getType()), new ProcessConfig());
 container.bind<IConfig>(Types.Config).toConstantValue(config);
@@ -100,6 +107,10 @@ container
     .bind<InstanceType<typeof PostRepository>>(Types.PostRepository)
     .toConstantValue(mongoPostRepository)
     .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof ChannelRepository>>(Types.ChannelRepository)
+    .toConstantValue(mongoChannelRepository)
+    .whenTargetTagged(Tags.MONGO, true);
 
 container
     .bind<RequestHandler>(Types.RequiresAuthentication)
@@ -112,6 +123,7 @@ container
             )
         )
     );
+
 container.bind<IPasswordManager>(Types.PasswordManager).to(BcryptPasswordManager);
 container
     .bind<ITokenFactory<IUserTokenPayload>>(Types.TokenFactory)
@@ -141,5 +153,8 @@ container
 container.bind<IMediaPlatformChannelService>(Types.TwitterChannelService).to(TwitterChannelService);
 container.bind<IMediaPlatformChannelService>(Types.TwitchChannelService).to(TwitchChannelService);
 container.bind<IMediaPlatformChannelService>(Types.YouTubeChannelService).to(YouTubeChannelService);
+container.bind<IChannelService>(Types.ChannelService).to(ChannelService);
+
+container.bind<IMessageQueue>(Types.MessageQueue).toConstantValue(new TopicMessageQueue());
 
 export default container;

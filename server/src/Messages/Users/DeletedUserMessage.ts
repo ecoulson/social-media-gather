@@ -1,0 +1,13 @@
+import IMessageBody from "../Bodies/IMessageBody";
+import Message from "../Message";
+import MessageType from "../MessageType";
+import MetaData from "../MetaData";
+import { v4 as uuid } from "uuid";
+
+export default class DeletedUserMessage extends Message<IMessageBody> {
+    constructor(deletedUserId: string) {
+        super(new MetaData(uuid(), true, MessageType.DeletedUserMessage), {
+            message: `Deleted user id@${deletedUserId}`
+        });
+    }
+}

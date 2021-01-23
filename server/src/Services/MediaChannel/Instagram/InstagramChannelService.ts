@@ -34,7 +34,8 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                 return {
                     username: user.username,
                     id: user.pk.toString(),
-                    profilePicture: user.profile_pic_url
+                    profilePicture: user.profile_pic_url,
+                    subscriberCount: user.follower_count
                 };
             })
         };

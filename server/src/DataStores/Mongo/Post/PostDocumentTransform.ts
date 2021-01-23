@@ -13,18 +13,18 @@ import TwitchStreamDocumentTransform from "../TwitchStream/TwitchStreamDocumentT
 import TwitchVideoDocumentTransform from "../TwitchVideo/TwitchVideoDocumentTransform";
 import YouTubeVideoDocumentTransform from "../YouTubeVideo/YouTubeVideoDocumentTransform";
 
-const PostDocumentTransform: Transformer<IPost, IPostDocument> = (postEntity) => {
+const PostDocumentTransform: Transformer<IPost, Partial<IPostDocument>> = (postEntity) => {
     switch (postEntity.type()) {
         case PostType.INSTAGRAM_POST:
-            return InstagramPostDocumentTransform(postEntity as IInstagramPost) as IPostDocument;
+            return InstagramPostDocumentTransform(postEntity as IInstagramPost);
         case PostType.TWEET:
-            return TweetDocumentTransform(postEntity as ITweet) as IPostDocument;
+            return TweetDocumentTransform(postEntity as ITweet);
         case PostType.TWITCH_STREAM:
-            return TwitchStreamDocumentTransform(postEntity as ITwitchStream) as IPostDocument;
+            return TwitchStreamDocumentTransform(postEntity as ITwitchStream);
         case PostType.TWITCH_VIDEO:
-            return TwitchVideoDocumentTransform(postEntity as ITwitchVideo) as IPostDocument;
+            return TwitchVideoDocumentTransform(postEntity as ITwitchVideo);
         case PostType.YOUTUBE_VIDEO:
-            return YouTubeVideoDocumentTransform(postEntity as IYouTubeVideo) as IPostDocument;
+            return YouTubeVideoDocumentTransform(postEntity as IYouTubeVideo);
     }
 };
 

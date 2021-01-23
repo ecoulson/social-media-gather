@@ -1,8 +1,8 @@
 import { inject } from "inversify";
 import { controller, httpGet, httpPost, queryParam, requestBody } from "inversify-express-utils";
 import Types from "../@Types/Types";
-import IMessageStructure from "../Messages/IMessageStructure";
-import SuccessMessage from "../Messages/SuccessMessage";
+import SuccessMessage from "../Messages/Status/SuccessMessage";
+import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
 import ITwitchWebhookCallbackData from "../Services/WebhookCallbacks/ITwitchWebhookCallbackData";
 import IWebhookCallbackService from "../Services/WebhookCallbacks/IWebhookCallbackService";
 import ITwitchCallbackBody from "./RequestBodies/ITwitchCallbackBody";
@@ -23,11 +23,11 @@ export default class TwitchWebhookCallbackController {
     handleCallback(
         @queryParam("user_id") userId: string,
         @requestBody() twitchCallbackData: ITwitchCallbackBody
-    ): IMessageStructure {
+    ): IMessageJSONSchema {
         this.twitchWebhookCallbackService.handleCallback({
             userId,
             streams: twitchCallbackData.data
         });
-        return new SuccessMessage().create();
+        return new SuccessMessage().toJson();
     }
 }

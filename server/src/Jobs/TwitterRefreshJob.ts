@@ -6,6 +6,10 @@ import container from "../bootstrap";
 import IConfig from "../Config/IConfig";
 import Types from "../@Types/Types";
 import IMedia from "../Entities/Media/IMedia";
+import ITwitterMediaSchema from "../Libraries/Twitter/Schema/ITwitterMediaSchema";
+import ITwitterVideoVariant from "../Libraries/Twitter/Schema/ITwitterVideoVariant";
+import Video from "../Entities/Media/Video";
+import Image from "../Entities/Media/Image";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 async function getAllTwitterUsers() {
@@ -94,20 +98,21 @@ function getUserMentions(tweet: ITweetSchema) {
 
 function getMedia(tweet: ITweetSchema) {
     let media: IMedia[] = [];
+    console.log(tweet);
     if (hasMedia(tweet)) {
         media = media.concat(
             tweet.extended_entities.media
                 .filter(
                     (mediaItem) => mediaItem.type === "photo" || mediaItem.type === "animated_gif"
                 )
-                .map((mediaItem) => this.createImageFromMediaItem(mediaItem))
+                .map((mediaItem) => createImageFromMediaItem(mediaItem))
         );
     }
     if (hasMedia(tweet)) {
         media = media.concat(
             tweet.extended_entities.media
                 .filter((mediaItem) => mediaItem.type === "video")
-                .map((mediaItem) => this.createVideoFromMediaItem(mediaItem))
+                .map((mediaItem) => createVideoFromMediaItem(mediaItem))
                 .filter((mediaItem) => mediaItem !== null)
         );
     }
@@ -116,6 +121,27 @@ function getMedia(tweet: ITweetSchema) {
 
 function hasMedia(tweet: ITweetSchema): boolean {
     return tweet.extended_entities !== undefined && tweet.extended_entities.media !== undefined;
+}
+
+function createVideoFromMediaItem(media: ITwitterMediaSchema): Video {
+    let variant: ITwitterVideoVariant = null;
+    if (media.video_info) {
+        const sortedVariants = media.video_info.variants
+            .filter((variant) => variant.bitrate)
+            .sort((a, b) => a.bitrate - b.bitrate);
+        if (sortedVariants[sortedVariants.length - 1]) {
+            variant = sortedVariants[sortedVariants.length - 1];
+        }
+    }
+    if (variant) {
+        return new Video(media.id_str, variant.url, 0, 0, new Image("", media.media_url, 0, 0));
+    } else {
+        return null;
+    }
+}
+
+function createImageFromMediaItem(media: ITwitterMediaSchema): Image {
+    return new Image(media.id_str, media.media_url, 0, 0);
 }
 
 export default TwitterRefreshJob;

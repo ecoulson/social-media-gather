@@ -1,11 +1,13 @@
 import { Application } from "express";
 import Types from "../@Types/Types";
 import IConfig from "../Config/IConfig";
+import IMessageQueue from "../Services/MessageQueue/IMessageQueue";
 import ControllerLoader from "./ControllerLoader";
 import DILoader from "./DILoader";
 import ExpressLoader from "./ExpressLoader";
 import InstagramLoader from "./InstagramLoader";
 import MongooseLoader from "./MongooseLoader";
+import SubscriberLoader from "./SubscriberLoader";
 import TwitterJobLoader from "./TwitterJobLoader";
 import WebhookJobLoader from "./WebhookJobLoader";
 
@@ -26,5 +28,7 @@ export default async (configuration: Record<string, unknown>): Promise<Applicati
     console.log("Started twitter job...");
     WebhookJobLoader();
     console.log("Started webhook job...");
+    SubscriberLoader();
+    console.log("Subscribed to message queue...");
     return server;
 };

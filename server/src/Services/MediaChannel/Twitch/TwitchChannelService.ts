@@ -44,13 +44,19 @@ export default class TwitchChannelService implements IMediaPlatformChannelServic
             query: username
         });
         return {
-            channels: twitchChannelSearchResult.results().map((twitchChannel) => {
-                return {
-                    id: twitchChannel.id,
-                    profilePicture: twitchChannel.thumbnail_url,
-                    username: twitchChannel.display_name
-                };
-            })
+            channels: await Promise.all(
+                twitchChannelSearchResult.results().map(async (twitchChannel) => {
+                    const followers = await this.twitchApiClient.follows.get({
+                        to_id: twitchChannel.id
+                    });
+                    return {
+                        id: twitchChannel.id,
+                        profilePicture: twitchChannel.thumbnail_url,
+                        username: twitchChannel.display_name,
+                        subscriberCount: followers.results().total
+                    };
+                })
+            )
         };
     }
 

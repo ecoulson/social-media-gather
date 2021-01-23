@@ -4,21 +4,21 @@ import { controller, httpDelete, httpGet, httpPost, requestBody } from "inversif
 import Types from "../@Types/Types";
 import IUserService from "../Services/User/UserService";
 import container from "../bootstrap";
-import UserExistsMessage from "../Messages/UserExistsMessage";
 import IUserRegistrationBody from "./RequestBodies/IUserRegistrationBody";
 import IAuthenticationService from "../Services/Authentication/IAuthenticationService";
 import UserExistsException from "../Exceptions/UserExistsExceptions";
-import ErrorMessage from "../Messages/ErrorMessage";
-import IMessageStructure from "../Messages/IMessageStructure";
-import UsersMessage from "../Messages/UsersMessage";
 import ILoginBody from "./RequestBodies/ILoginBody";
 import UserDoesNotExistsException from "../Exceptions/UserDoesNotExistException";
-import UserDoesNotExistMessage from "../Messages/UserDoesNotExistMessage";
+import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
+import UsersMessage from "../Messages/Users/UsersMessage";
+import DeletedUserMessage from "../Messages/Users/DeletedUserMessage";
+import UnauthenticatedMessage from "../Messages/Security/UnauthenticatedMessage";
 import IllegalLoginException from "../Exceptions/IllegalLoginException";
-import UnauthenticatedMessage from "../Messages/UnauthenticatedMessage";
-import TokenMessage from "../Messages/TokenMessage";
-import AuthenticatedMessage from "../Messages/AuthenticatedMessage";
-import DeletedUserMessage from "../Messages/DeletedUserMessage";
+import UserDoesNotExistMessage from "../Messages/Users/UserDoesNotExistMessage";
+import TokenMessage from "../Messages/Token/TokenMessage";
+import ErrorMessage from "../Messages/Status/ErrorMessage";
+import UserExistsMessage from "../Messages/Users/UserExistsMessage";
+import AuthenticatedMessage from "../Messages/Security/AuthenticatedMessage";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);
 
@@ -32,59 +32,56 @@ export default class AuthenticationController {
     ) {}
 
     @httpGet("/me", AuthenticationMiddleware)
-    getAuthenticatedUser(request: Request): IMessageStructure {
-        return new UsersMessage([request.userEntity()]).create();
+    getAuthenticatedUser(request: Request): IMessageJSONSchema {
+        return new UsersMessage([request.user()]).toJson();
     }
 
     @httpDelete("/", AuthenticationMiddleware)
-    async deleteAuthenticatedUser(request: Request): Promise<IMessageStructure> {
-        await this.userService.deleteUser(request.userEntity());
-        return new DeletedUserMessage(request.userEntity().id()).create();
+    async deleteAuthenticatedUser(request: Request): Promise<IMessageJSONSchema> {
+        return new DeletedUserMessage(request.user().id()).toJson();
     }
 
     @httpPost("/login")
-    async login(@requestBody() body: ILoginBody): Promise<IMessageStructure> {
+    async login(@requestBody() body: ILoginBody): Promise<IMessageJSONSchema> {
         try {
             const token = await this.authenticationService.login(body.username, body.password);
-            return new TokenMessage(token).create();
+            return new TokenMessage(token).toJson();
         } catch (error) {
             if (error instanceof IllegalLoginException) {
-                return new UnauthenticatedMessage().create();
+                return new UnauthenticatedMessage().toJson();
             }
             if (error instanceof UserDoesNotExistsException) {
-                return new UserDoesNotExistMessage(body.username).create();
+                return new UserDoesNotExistMessage(body.username).toJson();
             }
-            return new ErrorMessage(error).create();
+            return new ErrorMessage(error).toJson();
         }
     }
 
     @httpPost("/register")
-    async register(@requestBody() body: IUserRegistrationBody): Promise<IMessageStructure> {
+    async register(@requestBody() body: IUserRegistrationBody): Promise<IMessageJSONSchema> {
         try {
             const user = await this.authenticationService.register(
                 body.username,
                 body.email,
                 body.password
             );
-            return new UsersMessage([user]).create();
+            return new UsersMessage([user]).toJson();
         } catch (error) {
             if (error instanceof UserExistsException) {
-                return new UserExistsMessage(body.username, body.email).create();
+                return new UserExistsMessage(body.username, body.email).toJson();
             }
-            return new ErrorMessage(error).create();
+            return new ErrorMessage(error).toJson();
         }
     }
 
     @httpPost("/verify", AuthenticationMiddleware)
-    async verifyUser(request: Request): Promise<IMessageStructure> {
-        const user = await this.userService.verifyUser(request.userEntity());
-        return new UsersMessage([user]).create();
+    async verifyUser(request: Request): Promise<IMessageJSONSchema> {
+        const user = await this.userService.verifyUser(request.user());
+        return new UsersMessage([user]).toJson();
     }
 
     @httpGet("/is-authenticated", AuthenticationMiddleware)
-    isAuthenticated(request: Request): IMessageStructure {
-        return new AuthenticatedMessage(
-            request.userEntity !== undefined && request.userEntity() !== null
-        ).create();
+    isAuthenticated(): IMessageJSONSchema {
+        return new AuthenticatedMessage().toJson();
     }
 }
