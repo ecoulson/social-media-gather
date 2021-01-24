@@ -8,11 +8,8 @@ const UserDocumentTransform: Transformer<IUser, Partial<IUserDocument>> = (user)
         verified: user.verified(),
         username: user.username(),
         following: user.following(),
-        twitterId: user.twitterId(),
-        twitchId: user.twitchId(),
         password: user.password(),
-        instagramId: user.instagramId(),
-        youtubeId: user.youTubeId()
+        isCreator: user.isCreator()
     };
 };
 

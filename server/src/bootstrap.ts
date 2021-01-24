@@ -57,6 +57,8 @@ import IMessageQueue from "./Services/MessageQueue/IMessageQueue";
 import ChannelService from "./Services/Channel/ChannelService";
 import IChannelService from "./Services/Channel/IChannelService";
 import TopicMessageQueue from "./Services/MessageQueue/TopicMessageQueue";
+import CreatorRepository from "./Repositories/Creator/CreatorRepository";
+import CreatorMongoDataStore from "./DataStores/Mongo/Creator/CreatorMongoDataStore";
 
 configureEnvironment();
 
@@ -67,6 +69,7 @@ const mongoTweetRepository = new TweetRepository(new TweetMongoDataStore());
 const mongoTwitchStreamRepository = new TwitchStreamRepository(new TwitchStreamMongoDataStore());
 const mongoTwitchVideoRepository = new TwitchVideoRepository(new TwitchVideoMongoDataStore());
 const mongoUserRepository = new UserRepository(new UserMongoDataStore());
+const mongoCreatorRepository = new CreatorRepository(new CreatorMongoDataStore());
 const mongoWebhookRepository = new WebhookRepository(new WebhookMongoDataStore());
 const mongoYouTubeRepository = new YouTubeRepository(new YouTubeVideoMongoDataStore());
 const mongoPostRepository = new PostRepository(new PostMongoDataStore());
@@ -110,6 +113,10 @@ container
 container
     .bind<InstanceType<typeof ChannelRepository>>(Types.ChannelRepository)
     .toConstantValue(mongoChannelRepository)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof CreatorRepository>>(Types.ChannelRepository)
+    .toConstantValue(mongoCreatorRepository)
     .whenTargetTagged(Tags.MONGO, true);
 
 container

@@ -8,6 +8,7 @@ export default {
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     PostRepository: Symbol.for("PostRepository"),
     ChannelRepository: Symbol.for("ChannelRepository"),
+    CreatorRepository: Symbol.for("CreatorRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     Config: Symbol.for("Config"),
     PasswordManager: Symbol.for("PasswordManager"),

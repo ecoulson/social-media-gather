@@ -7,14 +7,11 @@ const UserEntityTransform: Transformer<IUserDocument, IUser> = (user) => {
     const userBuilder = new UserBuilder();
     userBuilder
         .setId(user.id)
-        .setTwitchId(user.twitchId)
-        .setTwitterId(user.twitterId)
-        .setYouTubeId(user.youtubeId)
-        .setInstagramId(user.instagramId)
         .setEmail(user.email)
         .setUsername(user.username)
         .setPassword(user.password)
         .setVerified(user.verified)
+        .setCreator(user.isCreator)
         .setFollowers(user.following);
     return userBuilder.build();
 };
