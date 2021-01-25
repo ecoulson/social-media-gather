@@ -9,6 +9,7 @@ const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, Partial<IPostDoc
         type: "YOUTUBE_VIDEO",
         channelId: post.channelId(),
         timeCreated: post.publishedAt(),
+        creatorId: post.creatorId(),
         youtubeVideo: {
             publishedAt: post.publishedAt(),
             videoId: post.videoId(),

@@ -16,6 +16,7 @@ export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
     private gameName: string;
     private streamId: string;
     private id: string;
+    private creatorId: string;
 
     reset() {
         this.viewers = null;
@@ -29,6 +30,12 @@ export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
         this.gameName = null;
         this.streamId = null;
         this.id = null;
+        this.creatorId = null;
+    }
+
+    setCreatorId(creatorId: string): TwitchStreamBuilder {
+        this.creatorId = creatorId;
+        return this;
     }
 
     construct(): ITwitchStream {
@@ -44,6 +51,7 @@ export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
             this.id,
             this.gameName,
             this.streamId,
+            this.creatorId,
             this.endedAt
         );
     }

@@ -13,9 +13,10 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
         private _likes: number,
         private _dislikes: number,
         private _views: number,
-        private _commentCount: number
+        private _commentCount: number,
+        _creatorId: string
     ) {
-        super(PostType.YOUTUBE_VIDEO, _id, _channelId);
+        super(PostType.YOUTUBE_VIDEO, _id, _channelId, _creatorId);
     }
 
     publishedAt(): Date {

@@ -5,4 +5,5 @@ export default interface IPost extends IEntity {
     type(): PostType;
     isType(type: PostType): boolean;
     channelId(): string;
+    creatorId(): string;
 }

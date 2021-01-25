@@ -26,11 +26,10 @@ import Topic from "../../../MessageQueue/Topic";
 import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
 import IChannel from "../../../Entities/Channel/IChannel";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 
 @injectable()
-export default class TwitterChannelService
-    extends Subscriber
-    implements IMediaPlatformService {
+export default class TwitterChannelService extends Subscriber implements IMediaPlatformService {
     constructor(
         @inject(Types.TwitterAPIClient)
         private twitterAPIClient: TwitterAPIClient,
@@ -58,28 +57,35 @@ export default class TwitterChannelService
         };
     }
 
-    async createChannel(createChannelBody: ICreateChannelBody) {
-        // have create channel controller send a message depending on the platform then use this function to send a message to create a channel
+    async createChannel(createChannelBody: ICreateChannelBody, creator: ICreatorJSONSchema) {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
-        this.createPosts(channel);
+        this.createPosts(channel, creator);
         return channel;
     }
 
-    async createPosts(channel: IChannel): Promise<IPost[]> {
+    async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<IPost[]> {
         const tweets = await this.twitterAPIClient.tweets.lookup({
             ids: [channel.platformId()]
         });
-        return await Promise.all(tweets.map((tweet) => this.createPostFromTweet(tweet, channel)));
+        return await Promise.all(
+            tweets.map((tweet) => this.createPostFromTweet(tweet, channel, creator))
+        );
     }
 
-    async createPostFromTweet(tweetSchema: ITweetSchema, channel: IChannel): Promise<ITweet> {
+    async createPostFromTweet(
+        tweetSchema: ITweetSchema,
+        channel: IChannel,
+        creator: ICreatorJSONSchema
+    ): Promise<ITweet> {
+        console.log(creator, "here");
         const tweetBuilder = new TweetBuilder();
         tweetBuilder
             .setId("")
+            .setCreatorId(creator.id)
             .setText(
                 tweetSchema.full_text.substring(
                     tweetSchema.display_text_range[0],

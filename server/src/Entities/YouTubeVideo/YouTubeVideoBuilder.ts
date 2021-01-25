@@ -13,6 +13,7 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
     private dislikes: number;
     private views: number;
     private commentCount: number;
+    private creatorId: string;
 
     reset() {
         this.publishedAt = null;
@@ -25,6 +26,7 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
         this.dislikes = null;
         this.views = null;
         this.commentCount = null;
+        this.creatorId = null;
     }
 
     construct(): IYouTubeVideo {
@@ -38,8 +40,14 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
             this.likes,
             this.dislikes,
             this.views,
-            this.commentCount
+            this.commentCount,
+            this.creatorId
         );
+    }
+
+    setCreatorId(creatorId: string) {
+        this.creatorId = creatorId;
+        return this;
     }
 
     setId(id: string): YouTubeVideoBuilder {

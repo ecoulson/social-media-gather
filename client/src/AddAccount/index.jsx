@@ -51,14 +51,15 @@ export default function AddAccount() {
   return (
     <Panel className="add-account-panel">
       <h1>Add account</h1>
-      <Input value={name} onChange={setName} label="Enter Username" />
+      <Input value={name} onChange={setName} label="Pipe Username" />
+      <Button onClick={onRegister} id="register-button">
+        Register Account
+      </Button>
+      <h1>Link account</h1>
       <PlatformSelector
         platforms={platformIdMap}
         onPlatformChange={onPlatformChange(setPlatform)}
       />
-      <Button onClick={onRegister} id="register-button">
-        Register Account
-      </Button>
       <AccountSearch
         onAccountSelection={onPlatformIdMap(
           platform,

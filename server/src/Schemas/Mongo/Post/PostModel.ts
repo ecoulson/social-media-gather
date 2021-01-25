@@ -34,6 +34,7 @@ const schema = new Schema({
     },
     timeCreated: Date,
     channelId: String,
+    creatorId: String,
     twitchStream: {
         url: String,
         live: Boolean,

@@ -9,6 +9,7 @@ export default interface IPostDocument extends Document {
     type: string;
     timeCreated: Date;
     channelId: string;
+    creatorId: string;
     twitchStream?: ITwitchStreamDocument;
     twitchVideo?: ITwitchVideoDocument;
     youtubeVideo?: IYouTubeVideoDocument;

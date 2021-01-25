@@ -23,10 +23,12 @@ export default class YouTubeWebhookCallbackController {
     @httpPost("/", xmlparser({ trim: false, explicitArray: false }))
     handleCallback(
         @queryParam("channelId") channelId: string,
+        @queryParam("creatorId") creatorId: string,
         @requestBody() youTubeCallbackBody: IYouTubeCallbackBody
     ): IMessageJSONSchema {
         this.youTubeWebhookCallbackService.handleCallback({
             channelId: channelId,
+            creatorId: creatorId,
             feed: youTubeCallbackBody.feed
         });
         return new SuccessMessage().toJson();

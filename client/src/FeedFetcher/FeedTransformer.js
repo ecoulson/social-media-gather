@@ -21,6 +21,7 @@ function transformYouTubeVideo(post) {
   return {
     id: post._id,
     type: post.type,
+    author: post.channelName,
     publishedAt: post.youtubeVideo.publishedAt,
     title: post.youtubeVideo.title,
     media: {
@@ -52,7 +53,7 @@ function transformTwitchVideo(post) {
   return {
     id: post._id,
     type: post.type,
-    author: post.twitchVideo.userName,
+    author: post.channelName,
     publishedAt: post.twitchVideo.publishedAt,
     title: post.twitchVideo.title,
     media: {
@@ -72,7 +73,7 @@ function transformTwitchStream(post) {
   return {
     id: post._id,
     type: post.type,
-    author: post.twitchStream.userName,
+    author: post.channelName,
     publishedAt: post.twitchStream.startedAt,
     title: post.twitchStream.title,
     media: {
@@ -95,7 +96,7 @@ function transformTweet(post) {
   return {
     id: post.id,
     type: post.type,
-    author: post.tweet.screenName,
+    author: post.channelName,
     publishedAt: post.tweet.publishedAt,
     media: {
       content: post.tweet.media,
@@ -118,7 +119,7 @@ function transformInstagramPost(post) {
   return {
     id: post._id,
     type: post.type,
-    author: "",
+    author: post.channelName,
     publishedAt: post.instagram.takenAt,
     media: {
       caption: post.instagram.caption,

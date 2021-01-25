@@ -28,27 +28,31 @@ export default class CreatorService extends Subscriber implements ICreatorServic
     }
 
     async create(body: ICreateCreatorBody): Promise<ICreator> {
-        const channels = await this.createChannels(body.channels);
         const creatorBuilder = new CreatorBuilder();
         creatorBuilder
-            .setChannels(channels.map((channel) => channel.id()))
+            .setChannels([])
             .setEmail(body.email)
             .setPassword(await this.passwordManager.hash(body.password, 10))
             .setUsername(body.username)
             .setVerified(body.verified);
-        return (await this.creatorRepository.add(creatorBuilder.build())) as ICreator;
+        const creator = (await this.creatorRepository.add(creatorBuilder.build())) as ICreator;
+        const channels = await this.setupMediaChannels(body.channels, creator);
+        channels.forEach((channel) => {
+            creator.addChannel(channel.id());
+        });
+        return (await this.creatorRepository.update(creator)) as ICreator;
     }
 
-    async createChannels(channelBodies: ICreateChannelBody[]) {
+    async setupMediaChannels(channelBodies: ICreateChannelBody[], creator: ICreator) {
         return await Promise.all(
-            channelBodies.map((channelBody) => this.createChannel(channelBody))
+            channelBodies.map((channelBody) => this.setupMediaChannel(channelBody, creator))
         );
     }
 
-    async createChannel(channelBody: ICreateChannelBody) {
+    async setupMediaChannel(channelBody: ICreateChannelBody, creator: ICreator) {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
-            new SetupMediaChannelMessage(channelBody)
+            new SetupMediaChannelMessage(channelBody, creator)
         );
         return ChannelJSONDeserializer(channelResponse.data().channels[0]);
     }

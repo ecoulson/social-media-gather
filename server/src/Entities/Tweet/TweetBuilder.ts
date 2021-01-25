@@ -6,19 +6,20 @@ import ITweetUrl from "./ITweetUrl";
 import Tweet from "./Tweet";
 
 export default class TweetBuilder extends Builder<ITweet> {
-    _id: string;
-    _text: string;
-    _publishedAt: Date;
-    _screenName: string;
-    _hashtags: string[];
-    _urls: ITweetUrl[];
-    _mentions: ITweetMention[];
-    _media: IMedia[];
-    _tweetId: string;
-    _userId: string;
-    _favorites: number;
-    _retweets: number;
-    _commentCount: number;
+    private _id: string;
+    private _text: string;
+    private _publishedAt: Date;
+    private _screenName: string;
+    private _hashtags: string[];
+    private _urls: ITweetUrl[];
+    private _mentions: ITweetMention[];
+    private _media: IMedia[];
+    private _tweetId: string;
+    private _userId: string;
+    private _favorites: number;
+    private _retweets: number;
+    private _commentCount: number;
+    private _creatorId: string;
 
     reset(): void {
         this._id = null;
@@ -34,6 +35,7 @@ export default class TweetBuilder extends Builder<ITweet> {
         this._favorites = null;
         this._retweets = null;
         this._commentCount = null;
+        this._creatorId = null;
     }
 
     construct(): ITweet {
@@ -50,10 +52,16 @@ export default class TweetBuilder extends Builder<ITweet> {
             this._userId,
             this._favorites,
             this._retweets,
-            this._commentCount
+            this._commentCount,
+            this._creatorId
         );
         this.reset();
         return tweet;
+    }
+
+    setCreatorId(creatorId: string): TweetBuilder {
+        this._creatorId = creatorId;
+        return this;
     }
 
     setId(id: string): TweetBuilder {

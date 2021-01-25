@@ -9,6 +9,7 @@ const TwitchVideoEntityTransform: Transformer<IPostDocument, ITwitchVideo> = (po
     twitchVideoBuilder
         .setId(post.id)
         .setUrl(post.twitchVideo.url)
+        .setCreatorId(post.creatorId)
         .setGameName(post.twitchVideo.gameName)
         .setPublishedAt(post.twitchVideo.publishedAt)
         .setTitle(post.twitchVideo.title)

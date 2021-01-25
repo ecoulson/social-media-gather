@@ -19,9 +19,10 @@ export default class Tweet extends Post implements ITweet {
         _channelId: string,
         private _favorites: number,
         private _retweetCount: number,
-        private _commentCount: number
+        private _commentCount: number,
+        _creatorId: string
     ) {
-        super(PostType.TWEET, _id, _channelId);
+        super(PostType.TWEET, _id, _channelId, _creatorId);
     }
 
     text(): string {

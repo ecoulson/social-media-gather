@@ -22,11 +22,10 @@ import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeseri
 import Subscriber from "../../../MessageQueue/Subscriber";
 import IMessageQueue from "../../../MessageQueue/IMessageQueue";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 
 @injectable()
-export default class TwitchChannelService
-    extends Subscriber
-    implements IMediaPlatformService {
+export default class TwitchChannelService extends Subscriber implements IMediaPlatformService {
     private static readonly LEASE_TIME = 60 * 60 * 24 * 7;
 
     constructor(
@@ -67,36 +66,44 @@ export default class TwitchChannelService
         };
     }
 
-    async createChannel(createChannelBody: ICreateChannelBody): Promise<IChannel> {
+    async createChannel(
+        createChannelBody: ICreateChannelBody,
+        creator: ICreatorJSONSchema
+    ): Promise<IChannel> {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
-        this.createPosts(channel);
+        this.createPosts(channel, creator);
         return channel;
     }
 
-    async createPosts(channel: IChannel): Promise<void> {
+    async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         await Promise.all([
-            this.createPostForLiveStream(channel),
-            this.createPostForVideos(channel),
-            this.registerWebhooks(channel)
+            this.createPostForLiveStream(channel, creator),
+            this.createPostForVideos(channel, creator),
+            this.registerWebhooks(channel, creator)
         ]);
     }
 
-    async createPostForLiveStream(channel: IChannel): Promise<void> {
+    async createPostForLiveStream(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         const usersLiveBroadcasts = await this.twitchApiClient.stream.get({
             user_id: [channel.platformId()]
         });
         if (usersLiveBroadcasts.results().length > 0) {
-            const stream = await this.createStreamFromLiveBroadcast(channel, usersLiveBroadcasts);
+            const stream = await this.createStreamFromLiveBroadcast(
+                channel,
+                creator,
+                usersLiveBroadcasts
+            );
             await this.twitchStreamRepository.add(stream);
         }
     }
 
     private async createStreamFromLiveBroadcast(
         channel: IChannel,
+        creator: ICreatorJSONSchema,
         usersLiveBroadcasts: ITwitchPaginatedResult<ITwitchStreamSchema[]>
     ) {
         const stream = usersLiveBroadcasts.results()[0];
@@ -107,6 +114,7 @@ export default class TwitchChannelService
             .setGameName(game.getGames()[0].name)
             .setScreenName(stream.user_name)
             .setStartedAt(stream.started_at)
+            .setCreatorId(creator.id)
             .setStatus(true)
             .setStreamId(stream.id)
             .setThumbnail(new Image("", stream.thumbnail_url, 0, 0))
@@ -117,7 +125,7 @@ export default class TwitchChannelService
             .build();
     }
 
-    async createPostForVideos(channel: IChannel): Promise<void> {
+    async createPostForVideos(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         let videoPage = await this.twitchApiClient.videos.get({
             user_id: [channel.platformId()]
         });
@@ -128,7 +136,7 @@ export default class TwitchChannelService
                 );
                 await this.wait(waitTime);
             }
-            this.createVideosFromPage(channel, videoPage.results());
+            this.createVideosFromPage(channel, creator, videoPage.results());
             videoPage = await videoPage.nextPage();
         } while (videoPage.hasNext());
     }
@@ -141,12 +149,14 @@ export default class TwitchChannelService
 
     async createVideosFromPage(
         channel: IChannel,
+        creator: ICreatorJSONSchema,
         videosSchemas: ITwitchVideoSchema[]
     ): Promise<void> {
         const twitchVideoBuilder = new TwitchVideoBuilder();
         const videos = videosSchemas.map((videoSchema) => {
             twitchVideoBuilder
                 .setId("")
+                .setCreatorId(creator.id)
                 .setUrl(videoSchema.url)
                 .setGameName("")
                 .setPublishedAt(new Date(videoSchema.published_at))
@@ -163,10 +173,12 @@ export default class TwitchChannelService
         });
     }
 
-    async registerWebhooks(channel: IChannel): Promise<void> {
+    async registerWebhooks(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         const expirationDate = new Date();
         expirationDate.setSeconds(expirationDate.getSeconds() + TwitchChannelService.LEASE_TIME);
-        const callbackURL = `${await this.twitchApiClient.baseURL()}/api/webhook/twitch/callback?channelId=${channel.id()}`;
+        const callbackURL = `${await this.twitchApiClient.baseURL()}/api/webhook/twitch/callback?channelId=${channel.id()}&creatorId=${
+            creator.id
+        }`;
         const topicURL = `https://api.twitch.tv/helix/streams?user_id=${channel.platformId()}`;
         const webhook = new Webhook(
             "",

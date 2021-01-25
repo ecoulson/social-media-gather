@@ -21,8 +21,11 @@ export default class MediaChannelSubscriber extends Subscriber {
     }
 
     async setupMediaChannel(message: SetupMediaChannelMessage) {
-        const mediaPlatformService = this.mediaPlatformMap.get(message.data().platform);
-        const channel = await mediaPlatformService.createChannel(message.data());
+        const mediaPlatformService = this.mediaPlatformMap.get(message.data().channelBody.platform);
+        const channel = await mediaPlatformService.createChannel(
+            message.data().channelBody,
+            message.data().creator
+        );
         this.publish<IChannelsBody>(
             Topic.Channel,
             new ChannelsMessage([channel], message.metadata().id())

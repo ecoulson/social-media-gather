@@ -20,6 +20,7 @@ const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
     tweetBuilder
         .setId(post.id)
         .setText(post.tweet.text)
+        .setCreatorId(post.creatorId)
         .setPublishedAt(post.tweet.publishedAt)
         .setScreenName(post.tweet.screenName)
         .setHashtags(post.tweet.hashtags)

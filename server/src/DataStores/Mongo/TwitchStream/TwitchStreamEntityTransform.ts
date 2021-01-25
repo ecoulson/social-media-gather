@@ -9,6 +9,7 @@ const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (
     twitchStreamBuilder
         .setId(post.id)
         .setViewers(post.twitchStream.viewers)
+        .setCreatorId(post.creatorId)
         .setStatus(post.twitchStream.live)
         .setThumbnail(new Image("", post.twitchStream.thumbnailUrl, 0, 0))
         .setScreenName(post.twitchStream.userName)

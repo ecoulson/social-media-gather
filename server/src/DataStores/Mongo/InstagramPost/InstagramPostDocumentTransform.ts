@@ -13,6 +13,7 @@ const InstagramPostDocumentTransform: Transformer<IInstagramPost, Partial<IPostD
         type: "INSTAGRAM",
         channelId: post.channelId(),
         timeCreated: post.takenAt(),
+        creatorId: post.creatorId(),
         instagram: {
             takenAt: post.takenAt(),
             thumbnail: transformMediaEntity(post.thumbnail()),

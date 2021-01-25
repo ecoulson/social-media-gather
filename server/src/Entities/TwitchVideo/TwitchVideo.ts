@@ -14,9 +14,10 @@ export default class TwitchVideo extends Post implements ITwitchVideo {
         private _thumbnail: IImage,
         private _screenName: string,
         _channelId: string,
-        private _views: number
+        private _views: number,
+        _creatorId: string
     ) {
-        super(PostType.TWITCH_VIDEO, _id, _channelId);
+        super(PostType.TWITCH_VIDEO, _id, _channelId, _creatorId);
     }
 
     url(): string {

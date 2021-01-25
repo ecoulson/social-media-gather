@@ -12,6 +12,7 @@ const YouTubeVideoEntityTransform: Transformer<IPostDocument, IYouTubeVideo> = (
         .setThumbnailUrl(post.youtubeVideo.thumbnailUrl)
         .setTitle(post.youtubeVideo.title)
         .setVideoId(post.youtubeVideo.videoId)
+        .setCreatorId(post.creatorId)
         .setViews(post.youtubeVideo.views)
         .setLikes(post.youtubeVideo.likes)
         .setDislikes(post.youtubeVideo.dislikes)

@@ -15,6 +15,7 @@ const TweetDocumentTransform: Transformer<ITweet, Partial<IPostDocument>> = (twe
     return {
         type: "TWEET",
         channelId: tweet.channelId(),
+        creatorId: tweet.creatorId(),
         timeCreated: tweet.publishedAt(),
         tweet: {
             publishedAt: tweet.publishedAt(),

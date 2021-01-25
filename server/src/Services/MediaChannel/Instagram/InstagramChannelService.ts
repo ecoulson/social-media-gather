@@ -20,6 +20,7 @@ import ICreateChannelBody from "../../../Messages/Bodies/ICreateChannelBody";
 import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import InstagramAPIClient from "../../../Libraries/Instagram/InstagramAPIClient";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 
 @injectable()
 export default class InstagramChannelService extends Subscriber implements IMediaPlatformService {
@@ -51,17 +52,20 @@ export default class InstagramChannelService extends Subscriber implements IMedi
         };
     }
 
-    async createChannel(createChannelBody: ICreateChannelBody): Promise<IChannel> {
+    async createChannel(
+        createChannelBody: ICreateChannelBody,
+        creator: ICreatorJSONSchema
+    ): Promise<IChannel> {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
-        this.createPosts(channel);
+        this.createPosts(channel, creator);
         return channel;
     }
 
-    private async createPosts(channel: IChannel): Promise<void> {
+    private async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         const igUser = await this.instagramApi.client().user.info(channel.platformId());
         const userFeed = this.instagramApi.client().feed.user(channel.platformId());
         let count = 0;
@@ -82,6 +86,7 @@ export default class InstagramChannelService extends Subscriber implements IMedi
                                 .setId("")
                                 .setChannelId(channel.id())
                                 .setPostId(postItem.id)
+                                .setCreatorId(creator.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))
                                 .setCaption(this.getCaption(postItem))
@@ -96,6 +101,7 @@ export default class InstagramChannelService extends Subscriber implements IMedi
                                 .setId("")
                                 .setChannelId(channel.id())
                                 .setPostId(postItem.id)
+                                .setCreatorId(creator.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))
                                 .setCaption(this.getCaption(postItem))
@@ -108,6 +114,7 @@ export default class InstagramChannelService extends Subscriber implements IMedi
                                 .setId("")
                                 .setChannelId(channel.id())
                                 .setPostId(postItem.id)
+                                .setCreatorId(creator.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))
                                 .setCaption(this.getCaption(postItem))

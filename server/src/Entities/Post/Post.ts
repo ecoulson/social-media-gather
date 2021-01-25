@@ -2,7 +2,12 @@ import IPost from "./IPost";
 import PostType from "./PostType";
 
 export default abstract class Post implements IPost {
-    constructor(private _type: PostType, private _id: string, private _channelId: string) {}
+    constructor(
+        private _type: PostType,
+        private _id: string,
+        private _channelId: string,
+        private _creatorId: string
+    ) {}
 
     type(): PostType {
         return this._type;
@@ -18,5 +23,9 @@ export default abstract class Post implements IPost {
 
     channelId(): string {
         return this._channelId;
+    }
+
+    creatorId(): string {
+        return this._creatorId;
     }
 }

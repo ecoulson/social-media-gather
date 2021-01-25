@@ -35,7 +35,7 @@ export default function AccountSearch(props) {
 
   return (
     <div className="account-container">
-      <Input onChange={handleChange} label="username" />
+      <Input onChange={handleChange} label={`${props.platform} username`} />
       <div className="account-search-results">
         {results.map((result) => {
           return (

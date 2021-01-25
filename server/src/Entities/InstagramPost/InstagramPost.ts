@@ -14,9 +14,10 @@ export default class InstagramPost extends Post implements IInstagramPost {
         private _caption: string,
         private _media: IMedia[],
         private _thumbnail: IImage,
-        private _commentCount: number
+        private _commentCount: number,
+        _creatorId: string
     ) {
-        super(PostType.INSTAGRAM_POST, _id, _channelId);
+        super(PostType.INSTAGRAM_POST, _id, _channelId, _creatorId);
     }
 
     postId(): string {

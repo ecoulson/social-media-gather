@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import debounce from "../Library/debounce";
 import transformFeed from "./FeedTransformer";
+import GetUser from "../Library/GetUser";
 
 export default function FeedFetcher({ feedUrl, Component }) {
   const scrollRef = useRef(null);
@@ -12,7 +13,15 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
   const getFeed = useCallback(async () => {
     const response = await Axios.get(`${feedUrl}?offset=${index}`);
-    setFeed((feed) => [...feed, ...response.data.data.posts]);
+    const posts = await Promise.all(
+      response.data.data.posts.map(async (post) => {
+        const creator = await GetUser(post.creatorId);
+        post.channelName = creator.username;
+        return post;
+      })
+    );
+    console.log(posts[0]);
+    setFeed((feed) => [...feed, ...posts]);
   }, [index, feedUrl]);
 
   const onScroll = debounce(() => {

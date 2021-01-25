@@ -21,11 +21,10 @@ import CreateChannelMessage from "../../../Messages/Channel/CreateChannelMessage
 import Topic from "../../../MessageQueue/Topic";
 import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 
 @injectable()
-export default class YouTubeChannelService
-    extends Subscriber
-    implements IMediaPlatformService {
+export default class YouTubeChannelService extends Subscriber implements IMediaPlatformService {
     private static readonly LEASE_SECONDS = 60 * 60 * 24 * 7;
 
     constructor(
@@ -58,33 +57,33 @@ export default class YouTubeChannelService
         };
     }
 
-    async createChannel(createChannelBody: ICreateChannelBody) {
+    async createChannel(createChannelBody: ICreateChannelBody, creator: ICreatorJSONSchema) {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
-        this.createPosts(channel);
+        this.createPosts(channel, creator);
         return channel;
     }
 
-    private async createPosts(channel: IChannel): Promise<void> {
+    private async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
         try {
-            this.createYoutubePosts(channel);
-            this.registerWebhook(channel);
+            this.createYoutubePosts(channel, creator);
+            this.registerWebhook(channel, creator);
         } catch (error) {
             console.log(error);
         }
     }
 
-    private async createYoutubePosts(channel: IChannel) {
+    private async createYoutubePosts(channel: IChannel, creator: ICreatorJSONSchema) {
         const youTubeChannels = await this.youTubeAPIClient.channels.get({
             ids: [channel.platformId()]
         });
         let uploadPage = await this.getUploads(youTubeChannels[0]);
         do {
             const videos = await this.getUploadedVideosOnPage(uploadPage);
-            this.createYouTubeVideoPosts(channel, videos);
+            this.createYouTubeVideoPosts(channel, videos, creator);
             uploadPage = await uploadPage.getNextPage();
         } while (uploadPage.hasNextPage());
     }
@@ -109,7 +108,11 @@ export default class YouTubeChannelService
         });
     }
 
-    private async createYouTubeVideoPosts(channel: IChannel, videos: IYouTubeVideoSchema[]) {
+    private async createYouTubeVideoPosts(
+        channel: IChannel,
+        videos: IYouTubeVideoSchema[],
+        creator: ICreatorJSONSchema
+    ) {
         const youTubeVideoBuilder = new YouTubeVideoBuilder();
         const videoPosts = videos.map((video) =>
             youTubeVideoBuilder
@@ -117,6 +120,7 @@ export default class YouTubeChannelService
                 .setPublishedAt(new Date(video.snippet.publishedAt))
                 .setThumbnailUrl(this.getThumbnail(video.snippet.thumbnails))
                 .setTitle(video.snippet.title)
+                .setCreatorId(creator.id)
                 .setVideoId(video.id)
                 .setChannelId(channel.id())
                 .setLikes(this.parseStatistic(video.statistics.likeCount))
@@ -149,7 +153,7 @@ export default class YouTubeChannelService
         return thumbnails.default.url;
     }
 
-    private async registerWebhook(channel: IChannel) {
+    private async registerWebhook(channel: IChannel, creator: ICreatorJSONSchema) {
         const expirationDate = new Date();
         expirationDate.setSeconds(
             expirationDate.getSeconds() + YouTubeChannelService.LEASE_SECONDS
@@ -160,7 +164,9 @@ export default class YouTubeChannelService
             new Date(),
             "youtube",
             `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channel.platformId()}`,
-            `${await this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?channelId=${channel.id()}`,
+            `${await this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?channelId=${channel.id()}&creatorId=${
+                creator.id
+            }`,
             channel.platformId(),
             channel.id()
         );

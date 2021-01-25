@@ -14,6 +14,7 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
     private _media: IMedia[];
     private _thumbnail: IImage;
     private _postId: string;
+    private _creatorId: string;
 
     reset() {
         this._id = null;
@@ -25,6 +26,7 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
         this._media = null;
         this._thumbnail = null;
         this._postId = null;
+        this._creatorId = null;
     }
 
     construct(): IInstagramPost {
@@ -37,8 +39,14 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
             this._caption,
             this._media,
             this._thumbnail,
-            this._commentCount
+            this._commentCount,
+            this._creatorId
         );
+    }
+
+    setCreatorId(creatorId: string): InstagramPostBuilder {
+        this._creatorId = creatorId;
+        return this;
     }
 
     setId(id: string): InstagramPostBuilder {

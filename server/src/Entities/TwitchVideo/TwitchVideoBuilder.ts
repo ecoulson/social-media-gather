@@ -14,6 +14,7 @@ export default class TwitchVideoBuilder extends Builder<ITwitchVideo> {
     private _screenName: string;
     private _userId: string;
     private _views: number;
+    private _creatorId: string;
 
     reset() {
         this._id = null;
@@ -26,6 +27,7 @@ export default class TwitchVideoBuilder extends Builder<ITwitchVideo> {
         this._screenName = null;
         this._userId = null;
         this._views = null;
+        this._creatorId = null;
     }
 
     construct(): TwitchVideo {
@@ -39,12 +41,18 @@ export default class TwitchVideoBuilder extends Builder<ITwitchVideo> {
             this._thumbnail,
             this._screenName,
             this._userId,
-            this._views
+            this._views,
+            this._creatorId
         );
     }
 
     setId(id: string): TwitchVideoBuilder {
         this._id = id;
+        return this;
+    }
+
+    setCreatorId(creatorId: string): TwitchVideoBuilder {
+        this._creatorId = creatorId;
         return this;
     }
 
