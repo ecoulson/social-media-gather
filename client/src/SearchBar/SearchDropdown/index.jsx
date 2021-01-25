@@ -113,7 +113,6 @@ export default function SearchDropdown(props) {
   );
 
   function renderFollowing(me, user) {
-    console.log(me, user);
     if (me.following.includes(user.id)) {
       return (
         <span onClick={unfollow(user)} className="search-dropdown-following">

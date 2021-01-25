@@ -66,7 +66,7 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
         return this;
     }
 
-    setUserId(userId: string): InstagramPostBuilder {
+    setChannelId(userId: string): InstagramPostBuilder {
         this._userId = userId;
         return this;
     }

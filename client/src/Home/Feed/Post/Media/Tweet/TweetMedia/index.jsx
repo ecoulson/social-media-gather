@@ -3,7 +3,6 @@ import React from "react";
 import Video from "../../Video";
 
 export default ({ mediaItem }) => {
-  console.log(mediaItem.type === "IMAGE");
   return mediaItem.type === "IMAGE" ? (
     <Image maxWidth="700px" margin="0 auto" src={mediaItem.url} />
   ) : (

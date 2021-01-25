@@ -26,26 +26,26 @@ export default function AddAccount() {
   }
 
   async function onRegister() {
-    const userMessage = await Axios.post("/api/auth/register", {
+    await Axios.post("/api/creator/", {
+      channels: getChannels(),
       username: name,
       email: `${name}@unclaimed.account`,
       password: generatePassword(30),
+      verified: false,
     });
-    console.log(userMessage);
-    const user = userMessage.data.data.users[0];
-    const registerRequests = [];
-    platformIdMap.forEach(async (id, platform) => {
-      await Axios.put(
-        `/api/channel/${platform}/link/${id}/with/${user.id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${Cookie.getCookie("token")}`,
-          },
-        }
-      );
+  }
+
+  function getChannels() {
+    const channels = [];
+    platformIdMap.forEach((channel, platform) => {
+      channels.push({
+        name: channel.username,
+        subscriberCount: channel.subscriberCount,
+        platform: platform.toUpperCase(),
+        platformId: channel.platformId,
+      });
     });
-    await Promise.all(registerRequests);
+    return channels;
   }
 
   return (
@@ -77,9 +77,9 @@ function onPlatformChange(setPlatform) {
   };
 }
 
-function onPlatformIdMap(platform, platformIdMap, setPlatformIdMap) {
-  return (id) => {
-    platformIdMap.set(platform, id);
-    setPlatformIdMap(new Map(platformIdMap));
+function onPlatformIdMap(platform, platformChannelMap, setPlatformIdMap) {
+  return (channel) => {
+    platformChannelMap.set(platform, channel);
+    setPlatformIdMap(new Map(platformChannelMap));
   };
 }

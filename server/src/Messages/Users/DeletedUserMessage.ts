@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 export default class DeletedUserMessage extends Message<IMessageBody> {
     constructor(deletedUserId: string) {
-        super(new MetaData(uuid(), true, MessageType.DeletedUserMessage), {
+        super(new MetaData(uuid(), true, MessageType.DeletedUser), {
             message: `Deleted user id@${deletedUserId}`
         });
     }

@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 
 export default class ChannelSearchResultMessage extends Message<IChannelSearchResultBody> {
     constructor(results: IMediaPlatformChannelSearchResult) {
-        super(new MetaData(uuid(), true, MessageType.ChannelSearchResultMessage), {
+        super(new MetaData(uuid(), true, MessageType.ChannelSearchResult), {
             results
         });
     }

@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 export default class UserDoesNotExistMessage extends Message<IMessageBody> {
     constructor(username: string) {
-        super(new MetaData(uuid(), false, MessageType.UserDoesNotExistMessage), {
+        super(new MetaData(uuid(), false, MessageType.UserDoesNotExist), {
             message: `User with username: ${username} does not exist`
         });
     }

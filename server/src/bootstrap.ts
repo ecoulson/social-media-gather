@@ -40,7 +40,7 @@ import { config as configureEnvironment } from "dotenv";
 import IYouTubeWebhookCallbackData from "./Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import YouTubeWebhookCallbackService from "./Services/WebhookCallbacks/YouTubeWebhookCallbackService";
 import YouTubeAPIClient from "./Libraries/YouTube/YouTubeAPIClient";
-import IMediaPlatformChannelService from "./Services/MediaChannel/IMediaChannelService";
+import IMediaPlatformService from "./Services/MediaChannel/IMediaPlatformService";
 import InstagramChannelService from "./Services/MediaChannel/Instagram/InstagramChannelService";
 import TwitterChannelService from "./Services/MediaChannel/Twitter/TwitterChannelService";
 import TwitterAPIClient from "./Libraries/Twitter/TwitterAPIClient";
@@ -53,12 +53,17 @@ import ProcessConfig from "./Config/ProcessConfig";
 import IConfig from "./Config/IConfig";
 import ChannelRepository from "./Repositories/Channel/ChannelRepository";
 import ChannelMongoStore from "./DataStores/Mongo/Channel/ChannelMongoStore";
-import IMessageQueue from "./Services/MessageQueue/IMessageQueue";
+import IMessageQueue from "./MessageQueue/IMessageQueue";
 import ChannelService from "./Services/Channel/ChannelService";
 import IChannelService from "./Services/Channel/IChannelService";
-import TopicMessageQueue from "./Services/MessageQueue/TopicMessageQueue";
+import TopicMessageQueue from "./MessageQueue/TopicMessageQueue";
 import CreatorRepository from "./Repositories/Creator/CreatorRepository";
 import CreatorMongoDataStore from "./DataStores/Mongo/Creator/CreatorMongoDataStore";
+import ICreatorService from "./Services/Creator/ICreatorService";
+import CreatorService from "./Services/Creator/CreatorService";
+import Platform from "./Entities/Platform/Platform";
+import { IgApiClient } from "instagram-private-api";
+import InstagramAPIClient from "./Libraries/Instagram/InstagramAPIClient";
 
 configureEnvironment();
 
@@ -76,6 +81,7 @@ const mongoPostRepository = new PostRepository(new PostMongoDataStore());
 const mongoChannelRepository = new ChannelRepository(new ChannelMongoStore());
 
 const config = new Config(new AWSConfig(Environment.getType()), new ProcessConfig());
+const messageQueue = new TopicMessageQueue();
 container.bind<IConfig>(Types.Config).toConstantValue(config);
 
 container
@@ -115,7 +121,7 @@ container
     .toConstantValue(mongoChannelRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
-    .bind<InstanceType<typeof CreatorRepository>>(Types.ChannelRepository)
+    .bind<InstanceType<typeof CreatorRepository>>(Types.CreatorRepository)
     .toConstantValue(mongoCreatorRepository)
     .whenTargetTagged(Tags.MONGO, true);
 
@@ -143,6 +149,9 @@ container
 container
     .bind<TwitterAPIClient>(Types.TwitterAPIClient)
     .toConstantValue(new TwitterAPIClient(config));
+container
+    .bind<InstagramAPIClient>(Types.InstagramAPIClient)
+    .toConstantValue(new InstagramAPIClient(config));
 
 container.bind<IUserService>(Types.UserService).to(UserService);
 container.bind<IAuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
@@ -154,14 +163,53 @@ container
 container
     .bind<IWebhookCallbackService<IYouTubeWebhookCallbackData>>(Types.YouTubeWebhookCallbackService)
     .to(YouTubeWebhookCallbackService);
-container
-    .bind<IMediaPlatformChannelService>(Types.InstagramChannelService)
-    .to(InstagramChannelService);
-container.bind<IMediaPlatformChannelService>(Types.TwitterChannelService).to(TwitterChannelService);
-container.bind<IMediaPlatformChannelService>(Types.TwitchChannelService).to(TwitchChannelService);
-container.bind<IMediaPlatformChannelService>(Types.YouTubeChannelService).to(YouTubeChannelService);
+container.bind<IMediaPlatformService>(Types.InstagramChannelService).to(InstagramChannelService);
+container.bind<IMediaPlatformService>(Types.TwitterChannelService).to(TwitterChannelService);
+container.bind<IMediaPlatformService>(Types.TwitchChannelService).to(TwitchChannelService);
+container.bind<IMediaPlatformService>(Types.YouTubeChannelService).to(YouTubeChannelService);
 container.bind<IChannelService>(Types.ChannelService).to(ChannelService);
+container.bind<ICreatorService>(Types.CreatorService).to(CreatorService);
 
-container.bind<IMessageQueue>(Types.MessageQueue).toConstantValue(new TopicMessageQueue());
+container.bind<IMessageQueue>(Types.MessageQueue).toConstantValue(messageQueue);
+
+container.bind<Map<Platform, IMediaPlatformService>>(Types.MediaPlatformMap).toConstantValue(
+    new Map<Platform, IMediaPlatformService>([
+        [
+            Platform.TWITCH,
+            new TwitchChannelService(
+                container.get<TwitchAPIClient>(Types.TwitchAPIClient),
+                mongoTwitchStreamRepository,
+                mongoTwitchVideoRepository,
+                mongoWebhookRepository,
+                messageQueue
+            )
+        ],
+        [
+            Platform.TWITTER,
+            new TwitterChannelService(
+                container.get<TwitterAPIClient>(Types.TwitterAPIClient),
+                mongoTweetRepository,
+                messageQueue
+            )
+        ],
+        [
+            Platform.YOUTUBE,
+            new YouTubeChannelService(
+                container.get<YouTubeAPIClient>(Types.YouTubeAPIClient),
+                mongoYouTubeRepository,
+                mongoWebhookRepository,
+                messageQueue
+            )
+        ],
+        [
+            Platform.INSTAGRAM,
+            new InstagramChannelService(
+                container.get<InstagramAPIClient>(Types.InstagramAPIClient),
+                mongoInstagramRepository,
+                messageQueue
+            )
+        ]
+    ])
+);
 
 export default container;

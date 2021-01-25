@@ -1,5 +1,4 @@
 import Post from "../Schemas/Mongo/Post/PostModel";
-import User from "../Schemas/Mongo/User/UserModel";
 import axios from "axios";
 import ITweetSchema from "../Libraries/Twitter/Schema/ITweetSchema";
 import container from "../bootstrap";
@@ -10,19 +9,22 @@ import ITwitterMediaSchema from "../Libraries/Twitter/Schema/ITwitterMediaSchema
 import ITwitterVideoVariant from "../Libraries/Twitter/Schema/ITwitterVideoVariant";
 import Video from "../Entities/Media/Video";
 import Image from "../Entities/Media/Image";
+import ChannelModel from "../Schemas/Mongo/Channel/ChannelModel";
+import Platform from "../Entities/Platform/Platform";
+import IChannelDocument from "../Schemas/Mongo/Channel/IChannelDocument";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
-async function getAllTwitterUsers() {
-    return (await User.find()).filter((user) => user.twitterId);
+async function getAllTwitterChannels() {
+    return (await ChannelModel.find()).filter((channel) => channel.platform === Platform.TWITTER);
 }
 
 async function TwitterRefreshJob(): Promise<void> {
-    const users = await getAllTwitterUsers();
-    await Promise.all(users.map((user) => createTwitterPostsForUser(user.twitterId, user.id)));
+    const channels = await getAllTwitterChannels();
+    await Promise.all(channels.map((channel) => createTwitterPostsForChannel(channel)));
 }
 
-async function createTwitterPostsForUser(twitterId: string, userId: string) {
-    const tweets = await getTwitterPosts(twitterId);
+async function createTwitterPostsForChannel(channel: IChannelDocument) {
+    const tweets = await getTwitterPosts(channel.platformId);
     await Promise.all(
         tweets.map(async (tweet) => {
             const post = await Post.findOne({ "tweet.id": tweet.id_str });
@@ -32,7 +34,7 @@ async function createTwitterPostsForUser(twitterId: string, userId: string) {
                 await post.save();
                 return Promise.resolve();
             }
-            return createPostFromTweet(tweet, userId);
+            return createPostFromTweet(tweet, channel.id);
         })
     );
 }
@@ -98,7 +100,6 @@ function getUserMentions(tweet: ITweetSchema) {
 
 function getMedia(tweet: ITweetSchema) {
     let media: IMedia[] = [];
-    console.log(tweet);
     if (hasMedia(tweet)) {
         media = media.concat(
             tweet.extended_entities.media

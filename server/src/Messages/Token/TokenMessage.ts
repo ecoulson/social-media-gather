@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 
 export default class TokenMessage<T> extends Message<ITokenBody> {
     constructor(token: IToken<T>) {
-        super(new MetaData(uuid(), true, MessageType.TokenMessage), {
+        super(new MetaData(uuid(), true, MessageType.Token), {
             token: token.sign()
         });
     }

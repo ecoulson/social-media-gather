@@ -7,7 +7,7 @@ const YouTubeVideoEntityTransform: Transformer<IPostDocument, IYouTubeVideo> = (
     const youTubeVideoBuilder = new YouTubeVideoBuilder();
     youTubeVideoBuilder
         .setId(post.id)
-        .setUserId(post.userId)
+        .setChannelId(post.channelId)
         .setPublishedAt(post.youtubeVideo.publishedAt)
         .setThumbnailUrl(post.youtubeVideo.thumbnailUrl)
         .setTitle(post.youtubeVideo.title)

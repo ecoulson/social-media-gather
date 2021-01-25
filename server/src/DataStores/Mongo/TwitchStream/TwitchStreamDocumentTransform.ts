@@ -7,7 +7,7 @@ const TwitchStreamDocumentTransform: Transformer<ITwitchStream, Partial<IPostDoc
 ) => {
     return {
         type: "TWITCH_STREAM",
-        userId: stream.userId(),
+        channelId: stream.channelId(),
         timeCreated: stream.startedAt(),
         twitchStream: {
             endedAt: stream.endedAt(),

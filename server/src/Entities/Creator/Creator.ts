@@ -9,18 +9,15 @@ export default class Creator extends User implements ICreator {
         _password: string,
         _verified: boolean,
         _followingIds: string[],
-        private _channelIds: string[]
+        _channels: string[]
     ) {
-        super(_id, _email, _username, _password, _verified, _followingIds, true);
+        super(_id, _email, _username, _password, _verified, _followingIds, true, _channels);
     }
 
-    channels(): string[] {
-        return this._channelIds;
-    }
     addChannel(channelId: string): void {
-        this._channelIds.push(channelId);
+        this._channels.push(channelId);
     }
     removeChannel(channelId: string): void {
-        this._channelIds.splice(this._channelIds.indexOf(channelId), 1);
+        this._channels.splice(this._channels.indexOf(channelId), 1);
     }
 }

@@ -10,6 +10,7 @@ export default class UserBuilder extends Builder<IUser> {
     private _verified: boolean;
     private _followers: string[];
     private _isCreator: boolean;
+    private _channels: string[];
 
     reset() {
         this._id = null;
@@ -19,6 +20,7 @@ export default class UserBuilder extends Builder<IUser> {
         this._verified = false;
         this._followers = [];
         this._isCreator = false;
+        this._channels = [];
     }
 
     construct(): IUser {
@@ -29,8 +31,14 @@ export default class UserBuilder extends Builder<IUser> {
             this._password,
             this._verified,
             this._followers,
-            this._isCreator
+            this._isCreator,
+            this._channels
         );
+    }
+
+    setChannels(channels: string[]): UserBuilder {
+        this._channels = channels;
+        return this;
     }
 
     setCreator(isCreator: boolean): UserBuilder {

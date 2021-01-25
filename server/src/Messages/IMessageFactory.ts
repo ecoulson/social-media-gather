@@ -16,26 +16,26 @@ import { v4 as uuid } from 'uuid';
 export default class IMessageFactory {
     create(message: IMessageJSONSchema) {
         switch (message.metadata.type) {
-            case MessageType.ChannelSearchResultMessage:
+            case MessageType.ChannelSearchResult:
                 return this.createMessage<IChannelSearchResultBody>(message);
-            case MessageType.CreateChannelMessage:
+            case MessageType.CreateChannel:
                 return this.createMessage<ICreateChanneBody>(message);
-            case MessageType.DeletedUserMessage:
+            case MessageType.DeletedUser:
             case MessageType.Unauthenticated:
-            case MessageType.UserDoesNotExistMessage:
-            case MessageType.UserExistsMessage:
+            case MessageType.UserDoesNotExist:
+            case MessageType.UserExists:
                 return this.createMessage<IMessageBody>(message);
             case MessageType.Error:
                 return this.createMessage<IErrorBody>(message);
-            case MessageType.PostsMessage:
+            case MessageType.Posts:
                 return this.createMessage<IPostsBody>(message);
-            case MessageType.IsFollowingMessage:
+            case MessageType.IsFollowing:
                 return this.createMessage<IIsFollowingBody>(message);
             case MessageType.Success:
                 return this.createMessage(message);
-            case MessageType.TokenMessage:
+            case MessageType.Token:
                 return this.createMessage<ITokenBody>(message);
-            case MessageType.UsersMessage:
+            case MessageType.Users:
                 return this.createMessage<IUsersBody>(message);
         }
     }

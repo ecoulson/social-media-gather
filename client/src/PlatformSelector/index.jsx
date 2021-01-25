@@ -9,8 +9,8 @@ import "./index.css";
 export default function PlatformSelector(props) {
     const [platform, setPlatform] = useState("twitch")
 
-    function renderPlatformUsed(id) {
-        if (props.platforms.has(id)) {
+    function renderPlatformUsed(platform) {
+        if (props.platforms.has(platform)) {
             return <Check className="platform-icon-check" />
         }
         return null;

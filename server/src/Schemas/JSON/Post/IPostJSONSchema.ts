@@ -9,7 +9,7 @@ export interface IPostJSONSchema {
     type: PostType;
     id: string;
     timeCreated: Date;
-    userId: string;
+    channelId: string;
     twitchStream?: ITwitchStreamJSONSchema;
     twitchVideo?: ITwitchVideoJSONSchema;
     youtubeVideo?: IYouTubeVideoJSONSchema;

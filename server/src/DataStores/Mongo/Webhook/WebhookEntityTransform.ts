@@ -13,8 +13,8 @@ const WebhookEntityTransformer: Transformer<IWebhookDocument, IWebhook> = (webho
         .setPlatform(webhookDocument.platform)
         .setTopicUrl(webhookDocument.topicURL)
         .setCallbackUrl(webhookDocument.callbackURL)
-        .setChannelId(webhookDocument.channelId)
-        .setUserId(webhookDocument.userId);
+        .setPlatformId(webhookDocument.platformId)
+        .setChannelId(webhookDocument.channelId);
     return webhookBuilder.build();
 };
 

@@ -12,7 +12,7 @@ const InstagramPostEntityTransform: Transformer<IPostDocument, IInstagramPost> =
     const instagramPostBuilder = new InstagramPostBuilder();
     instagramPostBuilder
         .setId(post._id)
-        .setUserId(post.userId)
+        .setChannelId(post.channelId)
         .setPostId(post.instagram.id)
         .setLikes(parseInt(post.instagram.likes))
         .setTakenAt(post.instagram.takenAt)

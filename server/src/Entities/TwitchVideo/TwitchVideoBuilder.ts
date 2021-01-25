@@ -83,7 +83,7 @@ export default class TwitchVideoBuilder extends Builder<ITwitchVideo> {
         return this;
     }
 
-    setUserId(userId: string) {
+    setChannelId(userId: string) {
         this._userId = userId;
         return this;
     }

@@ -83,7 +83,7 @@ export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
         return this;
     }
 
-    setUserId(userId: string): TwitchStreamBuilder {
+    setChannelId(userId: string): TwitchStreamBuilder {
         this.userId = userId;
         return this;
     }

@@ -32,11 +32,9 @@ const renderMedia = (type) => {
 };
 
 const renderTwitchVideo = ({ live, url, thumbnailUrl }) => {
-  console.log(thumbnailUrl);
   const sizedThumbnailUrl = thumbnailUrl
     .replace("%{width}", "1080")
     .replace("%{height}", "720");
-  console.log(sizedThumbnailUrl);
   return renderVideo({ live, url, thumbnailUrl: sizedThumbnailUrl });
 };
 

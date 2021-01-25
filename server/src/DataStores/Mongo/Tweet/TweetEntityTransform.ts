@@ -27,7 +27,7 @@ const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
         .setMentions(post.tweet.userMentions.map((mention) => transformMentions(mention)))
         .setMedia(post.tweet.media.map((mediaItem) => transformMedia(mediaItem)))
         .setTweetId(post.tweet.id)
-        .setUserId(post.userId)
+        .setChannelId(post.channelId)
         .setRetweets(post.tweet.retweetCount)
         .setFavorites(post.tweet.favorites)
         .setCommentCount(post.tweet.commentCount);

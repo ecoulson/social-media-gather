@@ -21,11 +21,11 @@ export default class TwitchWebhookCallbackController {
 
     @httpPost("/")
     handleCallback(
-        @queryParam("user_id") userId: string,
+        @queryParam("channelId") channelId: string,
         @requestBody() twitchCallbackData: ITwitchCallbackBody
     ): IMessageJSONSchema {
         this.twitchWebhookCallbackService.handleCallback({
-            userId,
+            channelId: channelId,
             streams: twitchCallbackData.data
         });
         return new SuccessMessage().toJson();

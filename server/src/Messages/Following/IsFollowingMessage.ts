@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 
 export default class IsFollowingMessage extends Message<IIsFollowingBody> {
     constructor(isFollowing: boolean) {
-        super(new MetaData(uuid(), true, MessageType.IsFollowingMessage), {
+        super(new MetaData(uuid(), true, MessageType.IsFollowing), {
             isFollowing: isFollowing
         });
     }

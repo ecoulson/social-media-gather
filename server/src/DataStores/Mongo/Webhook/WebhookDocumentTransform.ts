@@ -10,9 +10,9 @@ const WebhookDocumentTransform: Transformer<IWebhook, Partial<IWebhookDocument>>
         topicURL: webhook.topicUrl(),
         expirationDate: webhook.expirationDate(),
         dateCreated: webhook.dateCreated(),
-        channelId: webhook.channelId(),
+        platformId: webhook.platformChannelId(),
         platform: webhook.platform(),
-        userId: webhook.userId()
+        channelId: webhook.channelId()
     };
 };
 

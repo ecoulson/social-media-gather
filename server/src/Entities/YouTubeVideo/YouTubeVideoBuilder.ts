@@ -67,7 +67,7 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
         return this;
     }
 
-    setUserId(userId: string): YouTubeVideoBuilder {
+    setChannelId(userId: string): YouTubeVideoBuilder {
         this.userId = userId;
         return this;
     }

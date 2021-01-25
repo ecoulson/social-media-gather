@@ -12,7 +12,6 @@ export default interface ITweet extends IPost {
     mentions(): ITweetMention[];
     media(): IMedia[];
     tweetId(): string;
-    userId(): string;
     favorites(): number;
     retweetCount(): number;
     commentCount(): number;

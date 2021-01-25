@@ -5,7 +5,7 @@ import IYouTubeVideo from "./IYouTubeVideo";
 export default class YouTubeVideo extends Post implements IYouTubeVideo {
     constructor(
         _id: string,
-        private _userId: string,
+        _channelId: string,
         private _publishedAt: Date,
         private _thumbnailUrl: string,
         private _title: string,
@@ -15,11 +15,7 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
         private _views: number,
         private _commentCount: number
     ) {
-        super(PostType.YOUTUBE_VIDEO, _id);
-    }
-
-    userId(): string {
-        return this._userId;
+        super(PostType.YOUTUBE_VIDEO, _id, _channelId);
     }
 
     publishedAt(): Date {

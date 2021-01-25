@@ -6,8 +6,8 @@ import IConfig from "../Config/IConfig";
 export default async (config: IConfig): Promise<IgApiClient> => {
     try {
         const ig = new IgApiClient();
-        // ig.state.generateDevice(await config.getValue("INSTAGRAM_USER"));
-        // await setupInstagram(ig, config);
+        ig.state.generateDevice(await config.getValue("INSTAGRAM_USER"));
+        await setupInstagram(ig, config);
         container.bind<IgApiClient>(Types.InstagramAPIClient).toConstantValue(ig);
         return ig;
     } catch (error) {

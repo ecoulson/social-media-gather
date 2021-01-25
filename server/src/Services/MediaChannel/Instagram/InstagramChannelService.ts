@@ -1,5 +1,4 @@
 import {
-    IgApiClient,
     UserFeedResponseCarouselMediaItem,
     UserFeedResponseItemsItem
 } from "instagram-private-api";
@@ -9,52 +8,62 @@ import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
 import Image from "../../../Entities/Media/Image";
 import Video from "../../../Entities/Media/Video";
-import IUser from "../../../Entities/User/IUser";
 import InstagramPostRepository from "../../../Repositories/InstagramPost/InstagramPostRepository";
-import UserRepository from "../../../Repositories/User/UserRepository";
-import IMediaPlatformChannelService from "../IMediaChannelService";
+import IMediaPlatformService from "../IMediaPlatformService";
 import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
+import IChannel from "../../../Entities/Channel/IChannel";
+import Subscriber from "../../../MessageQueue/Subscriber";
+import IMessageQueue from "../../../MessageQueue/IMessageQueue";
+import Topic from "../../../MessageQueue/Topic";
+import CreateChannelMessage from "../../../Messages/Channel/CreateChannelMessage";
+import ICreateChannelBody from "../../../Messages/Bodies/ICreateChannelBody";
+import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
+import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import InstagramAPIClient from "../../../Libraries/Instagram/InstagramAPIClient";
 
 @injectable()
-export default class InstagramChannelService implements IMediaPlatformChannelService {
+export default class InstagramChannelService extends Subscriber implements IMediaPlatformService {
     constructor(
-        @inject(Types.InstagramAPIClient) private instagramApi: IgApiClient,
-        @inject(Types.UserRepository)
-        @tagged(Tags.MONGO, true)
-        private userRepository: InstanceType<typeof UserRepository>,
+        @inject(Types.InstagramAPIClient) private instagramApi: InstagramAPIClient,
         @inject(Types.InstagramPostRepository)
         @tagged(Tags.MONGO, true)
-        private instagramPostRepository: InstanceType<typeof InstagramPostRepository>
-    ) {}
+        private instagramPostRepository: InstanceType<typeof InstagramPostRepository>,
+        @inject(Types.MessageQueue)
+        messageQueue: IMessageQueue
+    ) {
+        super(messageQueue);
+    }
 
     async searchPlatformForChannel(username: string): Promise<IMediaPlatformChannelSearchResult> {
-        const searchResults = await this.instagramApi.search.users(username);
+        const searchResults = await this.instagramApi.client().search.users(username);
         return {
-            channels: searchResults.map((user) => {
-                return {
-                    username: user.username,
-                    id: user.pk.toString(),
-                    profilePicture: user.profile_pic_url,
-                    subscriberCount: user.follower_count
-                };
-            })
+            channels: await Promise.all(
+                searchResults.map(async (user) => {
+                    const details = await this.instagramApi.client().user.info(user.pk);
+                    return {
+                        username: user.username,
+                        id: user.pk.toString(),
+                        profilePicture: user.profile_pic_url,
+                        subscriberCount: details.follower_count
+                    };
+                })
+            )
         };
     }
 
-    async linkChannelWithUserId(userId: string, instagramAccountId: string): Promise<void> {
-        const user = await this.userRepository.findById(userId);
-        this.linkChannel(user, instagramAccountId);
+    async createChannel(createChannelBody: ICreateChannelBody): Promise<IChannel> {
+        const channelResponse = await this.query<IChannelsBody>(
+            Topic.Channel,
+            new CreateChannelMessage(createChannelBody)
+        );
+        const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
+        this.createPosts(channel);
+        return channel;
     }
 
-    async linkChannel(user: IUser, instagramAccountId: string): Promise<void> {
-        user.setInstagramId(instagramAccountId);
-        if (user.id() === "") {
-            await this.userRepository.add(user);
-        } else {
-            await this.userRepository.update(user);
-        }
-        const igUser = await this.instagramApi.user.info(instagramAccountId);
-        const userFeed = this.instagramApi.feed.user(instagramAccountId);
+    private async createPosts(channel: IChannel): Promise<void> {
+        const igUser = await this.instagramApi.client().user.info(channel.platformId());
+        const userFeed = this.instagramApi.client().feed.user(channel.platformId());
         let count = 0;
         let page = await userFeed.items();
         const instagramIds = new Set();
@@ -71,7 +80,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                         if (postItem.media_type === 8) {
                             builder
                                 .setId("")
-                                .setUserId(user.id())
+                                .setChannelId(channel.id())
                                 .setPostId(postItem.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))
@@ -85,7 +94,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                         } else if (postItem.media_type === 2) {
                             builder
                                 .setId("")
-                                .setUserId(user.id())
+                                .setChannelId(channel.id())
                                 .setPostId(postItem.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))
@@ -97,7 +106,7 @@ export default class InstagramChannelService implements IMediaPlatformChannelSer
                         } else {
                             builder
                                 .setId("")
-                                .setUserId(user.id())
+                                .setChannelId(channel.id())
                                 .setPostId(postItem.id)
                                 .setLikes(postItem.like_count)
                                 .setTakenAt(new Date(postItem.taken_at * 1000))

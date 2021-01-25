@@ -6,7 +6,6 @@ export default interface IInstagramPost extends IPost {
     likes(): number;
     commentCount(): number;
     caption(): string;
-    userId(): string;
     media(): IMedia[];
     thumbnail(): IMedia;
     postId(): string;

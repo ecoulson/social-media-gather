@@ -8,8 +8,13 @@ export default class User implements IUser {
         private _password: string,
         private _verified: boolean,
         private _followingIds: string[],
-        private _isCreator: boolean
+        private _isCreator: boolean,
+        protected _channels: string[]
     ) {}
+
+    channels() {
+        return Array.from(this._channels);
+    }
 
     id(): string {
         return this._id;
@@ -36,7 +41,7 @@ export default class User implements IUser {
     }
 
     following(): string[] {
-        return this._followingIds;
+        return Array.from(this._followingIds);
     }
 
     verify(): void {

@@ -7,7 +7,7 @@ import IInstagramPost from "./IInstagramPost";
 export default class InstagramPost extends Post implements IInstagramPost {
     constructor(
         _id: string,
-        private _userId: string,
+        _channelId: string,
         private _postId: string,
         private _likes: number,
         private _takenAt: Date,
@@ -16,11 +16,7 @@ export default class InstagramPost extends Post implements IInstagramPost {
         private _thumbnail: IImage,
         private _commentCount: number
     ) {
-        super(PostType.INSTAGRAM_POST, _id);
-    }
-
-    userId(): string {
-        return this._userId;
+        super(PostType.INSTAGRAM_POST, _id, _channelId);
     }
 
     postId(): string {

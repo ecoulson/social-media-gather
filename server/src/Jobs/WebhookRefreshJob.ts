@@ -55,9 +55,9 @@ async function renew(webhooks: IWebhookDocument[], accessToken: string) {
                     "hub.lease_seconds": leaseTime,
                     "hub.callback": `${await config.getValue(
                         "BASE_URL"
-                    )}/api/feed/youtube/callback?userId=${webhook.userId}`,
+                    )}/api/feed/youtube/callback?channelId=${webhook.channelId}`,
                     "hub.verify": "async",
-                    "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${webhook.channelId}`
+                    "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${webhook.platformId}`
                 };
                 await Axios.post(
                     "https://pubsubhubbub.appspot.com/subscribe",
@@ -100,9 +100,9 @@ async function cancel(webhooks: IWebhookDocument[], accessToken: string) {
                     "hub.mode": "subscribe",
                     "hub.callback": `${await config.getValue(
                         "BASE_URL"
-                    )}/api/feed/youtube/callback?userId=${webhook.userId}`,
+                    )}/api/feed/youtube/callback?channelId=${webhook.channelId}`,
                     "hub.verify": "async",
-                    "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${webhook.channelId}`
+                    "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${webhook.platformId}`
                 };
                 await Axios.post(
                     "https://pubsubhubbub.appspot.com/subscribe",

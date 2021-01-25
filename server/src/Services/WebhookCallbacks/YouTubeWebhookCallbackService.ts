@@ -20,7 +20,7 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
         super();
     }
 
-    async handleCallback({ userId, feed }: IYouTubeWebhookCallbackData): Promise<void> {
+    async handleCallback({ channelId, feed }: IYouTubeWebhookCallbackData): Promise<void> {
         if (await this.isNewVideo(feed.entry["yt:videoid"])) {
             const youTubeVideos = await this.youtubeAPIClient.videos.list({
                 ids: [feed.entry["yt:videoid"]],
@@ -31,7 +31,7 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
                 .setPublishedAt(new Date(newVideoData.snippet.publishedAt))
                 .setThumbnailUrl(this.getThumbnailUrl(newVideoData.snippet.thumbnails))
                 .setTitle(newVideoData.snippet.title)
-                .setUserId(userId)
+                .setChannelId(channelId)
                 .setVideoId(newVideoData.id)
                 .setLikes(parseInt(newVideoData.statistics.likeCount))
                 .setDislikes(parseInt(newVideoData.statistics.dislikeCount))

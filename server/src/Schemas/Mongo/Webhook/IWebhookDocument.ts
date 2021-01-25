@@ -6,6 +6,6 @@ export default interface IWebhookDocument extends Document {
     platform: string;
     topicURL: string;
     callbackURL: string;
-    userId: string;
     channelId: string;
+    platformId: string;
 }

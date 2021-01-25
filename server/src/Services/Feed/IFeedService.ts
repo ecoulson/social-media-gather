@@ -3,5 +3,5 @@ import IUser from "../../Entities/User/IUser";
 
 export default interface IFeedService {
     getUsersFeed(user: IUser, postOffset: number): Promise<IPost[]>;
-    getUsersPosts(userId: string, postOffset: number): Promise<IPost[]>;
+    getCreatorsPosts(creatorId: string, postOffset: number): Promise<IPost[]>;
 }

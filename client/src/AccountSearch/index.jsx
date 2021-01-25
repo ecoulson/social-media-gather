@@ -1,52 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import Account from './Account';
-import Axios from "axios"
+import React, { useEffect, useState } from "react";
+import Account from "./Account";
+import Axios from "axios";
 import debounce from "../Library/debounce";
 import "./index.css";
-import Input from '../Input';
+import Input from "../Input";
 
 export default function AccountSearch(props) {
-    const [results, setResults] = useState([])
-    const [username, setUsername] = useState("")
-    const debouncedSetResults = debounce((username) => {
-        setUsername(username)
-    }, 500)
+  const [results, setResults] = useState([]);
+  const [username, setUsername] = useState("");
+  const debouncedSetUsername = debounce((username) => {
+    setUsername(username);
+  }, 500);
 
-
-    useEffect(() => { 
-        async function getResults() {
-            let formattedUsername = username.trim();
-            if (formattedUsername !== "") {
-                const response = await Axios.get(`/api/channel/${props.platform}/search?username=${formattedUsername}`);
-                setResults(response.data.data.results.channels)
-            }
-        }
-        getResults()
-    }, [username, props.platform])
-
-    return (
-        <div className="account-container">
-            <Input onChange={(event) => { handleChange(event, debouncedSetResults)}} label="username" />
-            <div className="account-search-results">
-                {results.map((result) => {
-                    return <Account 
-                                profilePicture={result.profilePicture} 
-                                key={result.id}
-                                id={result.id}
-                                onClick={handleAccountSelection(props.onAccountSelection)}
-                                username={result.username} />
-                })}
-            </div>
-        </div>
-    )
-}
-
-function handleAccountSelection(onAccountSelection) {
-    return (id) => {
-        onAccountSelection(id);
+  useEffect(() => {
+    async function getResults() {
+      let formattedUsername = username.trim();
+      if (formattedUsername !== "") {
+        const response = await Axios.get(
+          `/api/channel/${props.platform}/search?username=${formattedUsername}`
+        );
+        setResults(response.data.data.results.channels);
+      }
     }
-}
+    getResults();
+  }, [username, props.platform]);
 
-function handleChange(value, setResults) {
-    setResults(value)
+  const handleAccountSelection = (channel) => {
+    props.onAccountSelection(channel);
+  };
+
+  function handleChange(value) {
+    debouncedSetUsername(value);
+  }
+
+  return (
+    <div className="account-container">
+      <Input onChange={handleChange} label="username" />
+      <div className="account-search-results">
+        {results.map((result) => {
+          return (
+            <Account
+              profilePicture={result.profilePicture}
+              key={result.id}
+              id={result.id}
+              subscriberCount={result.subscriberCount}
+              onClick={handleAccountSelection}
+              username={result.username}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 }

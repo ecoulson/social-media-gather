@@ -11,4 +11,5 @@ export default interface IUser extends IEntity {
     verify(): void;
     addFollower(user: IUser): void;
     removeFollower(user: IUser): void;
+    channels(): string[];
 }

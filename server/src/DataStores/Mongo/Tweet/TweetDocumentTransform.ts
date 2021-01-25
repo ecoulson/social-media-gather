@@ -14,7 +14,7 @@ import IVideo from "../../../Entities/Media/IVideo";
 const TweetDocumentTransform: Transformer<ITweet, Partial<IPostDocument>> = (tweet) => {
     return {
         type: "TWEET",
-        userId: tweet.userId(),
+        channelId: tweet.channelId(),
         timeCreated: tweet.publishedAt(),
         tweet: {
             publishedAt: tweet.publishedAt(),

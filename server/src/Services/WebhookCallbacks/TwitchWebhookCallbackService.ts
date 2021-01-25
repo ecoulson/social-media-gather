@@ -22,11 +22,11 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
         super();
     }
 
-    async handleCallback({ userId, streams }: ITwitchWebhookCallbackData): Promise<void> {
+    async handleCallback({ channelId, streams }: ITwitchWebhookCallbackData): Promise<void> {
         if (this.hasBroadcastStarted(streams)) {
-            this.startBroadcast(userId, streams[0]);
+            this.startBroadcast(channelId, streams[0]);
         } else {
-            this.endBroadcast(userId);
+            this.endBroadcast(channelId);
         }
         return;
     }
@@ -35,7 +35,7 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
         return streams.length === 1;
     }
 
-    private async startBroadcast(userId: string, stream: ITwitchStreamSchema) {
+    private async startBroadcast(channelId: string, stream: ITwitchStreamSchema) {
         const game = await this.getBroadcastedGame(stream);
         const newBroadcast = new TwitchStreamBuilder()
             .setGameName(game.name)
@@ -46,7 +46,7 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
             .setThumbnail(new Image("", stream.thumbnail_url, 0, 0))
             .setTitle(stream.title)
             .setUrl(`https://www.twitch.tv/${stream.user_name}`)
-            .setUserId(userId)
+            .setChannelId(channelId)
             .setViewers(stream.viewer_count)
             .build();
         await this.twitchStreamRepository.add(newBroadcast);

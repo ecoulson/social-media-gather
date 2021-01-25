@@ -1,16 +1,13 @@
 import IChannel from "../../Entities/Channel/IChannel";
-import ChannelJSONSerializer from "../../Serializers/ChannelJSONSerializer";
-import IChannelCreatedBody from "../Bodies/IChannelCreatedBody";
-import Message from "../Message";
-import MessageType from "../MessageType";
-import MetaData from "../MetaData";
+import ChannelJSONSerializer from "../../Serializers/JSON/ChannelJSONSerializer";
 import { v4 as uuid } from "uuid";
+import ResponseMessage from "../Users/ResponseMessage";
+import IChannelsBody from "../Bodies/IChannelsBody";
 
-export default class ChannelCreatedMessage extends Message<IChannelCreatedBody> {
-    constructor(channel: IChannel, responseId: string) {
-        super(new MetaData(uuid(), true, MessageType.ChannelCreatedMessage), {
-            originalId: responseId,
-            channel: ChannelJSONSerializer(channel)
+export default class ChannelCreatedMessage extends ResponseMessage<IChannelsBody> {
+    constructor(channel: IChannel, originalMessageId: string) {
+        super(uuid(), originalMessageId, {
+            channels: [ChannelJSONSerializer(channel)]
         });
     }
 }

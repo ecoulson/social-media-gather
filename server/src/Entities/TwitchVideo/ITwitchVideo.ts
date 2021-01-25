@@ -9,6 +9,5 @@ export default interface ITwitchVideo extends IPost {
     description(): string;
     thumbnail(): IImage;
     screenName(): string;
-    userId(): string;
     views(): number;
 }

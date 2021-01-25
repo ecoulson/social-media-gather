@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 export default class UserExistsMessage extends Message<IMessageBody> {
     constructor(username: string, email: string) {
-        super(new MetaData(uuid(), false, MessageType.UserExistsMessage), {
+        super(new MetaData(uuid(), false, MessageType.UserExists), {
             message: `Username '${username}' or email '${email}' is already taken`
         });
     }

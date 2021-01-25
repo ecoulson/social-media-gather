@@ -1,10 +1,8 @@
 import { inject, injectable, tagged } from "inversify";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
-import IUser from "../../../Entities/User/IUser";
 import TweetRepository from "../../../Repositories/Tweet/TweetRepository";
-import UserRepository from "../../../Repositories/User/UserRepository";
-import IMediaPlatformChannelService from "../IMediaChannelService";
+import IMediaPlatformService from "../IMediaPlatformService";
 import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
 import TwitterAPIClient from "../../../Libraries/Twitter/TwitterAPIClient";
 import ITweetSchema from "../../../Libraries/Twitter/Schema/ITweetSchema";
@@ -20,19 +18,29 @@ import ITwitterVideoVariant from "../../../Libraries/Twitter/Schema/ITwitterVide
 import TweetBuilder from "../../../Entities/Tweet/TweetBuilder";
 import ITwitterMediaSchema from "../../../Libraries/Twitter/Schema/ITwitterMediaSchema";
 import IMedia from "../../../Entities/Media/IMedia";
+import Subscriber from "../../../MessageQueue/Subscriber";
+import IMessageQueue from "../../../MessageQueue/IMessageQueue";
+import CreateChannelMessage from "../../../Messages/Channel/CreateChannelMessage";
+import ICreateChannelBody from "../../../Messages/Bodies/ICreateChannelBody";
+import Topic from "../../../MessageQueue/Topic";
+import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
+import IChannel from "../../../Entities/Channel/IChannel";
+import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 
 @injectable()
-export default class TwitterChannelService implements IMediaPlatformChannelService {
+export default class TwitterChannelService
+    extends Subscriber
+    implements IMediaPlatformService {
     constructor(
         @inject(Types.TwitterAPIClient)
         private twitterAPIClient: TwitterAPIClient,
-        @inject(Types.UserRepository)
-        @tagged(Tags.MONGO, true)
-        private userRepository: InstanceType<typeof UserRepository>,
         @inject(Types.TweetRepository)
         @tagged(Tags.MONGO, true)
-        private tweetRepository: InstanceType<typeof TweetRepository>
-    ) {}
+        private tweetRepository: InstanceType<typeof TweetRepository>,
+        @inject(Types.MessageQueue) messageQueue: IMessageQueue
+    ) {
+        super(messageQueue);
+    }
 
     async searchPlatformForChannel(userHandle: string): Promise<IMediaPlatformChannelSearchResult> {
         const users = await this.twitterAPIClient.users.lookup({
@@ -50,24 +58,25 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
         };
     }
 
-    async linkChannel(user: IUser, twitterId: string): Promise<void> {
-        user.setTwitterId(twitterId);
-        this.createTwitterPostsForUser(twitterId, user.id());
-        if (user.id() === "") {
-            await this.userRepository.add(user);
-        } else {
-            await this.userRepository.update(user);
-        }
+    async createChannel(createChannelBody: ICreateChannelBody) {
+        // have create channel controller send a message depending on the platform then use this function to send a message to create a channel
+        const channelResponse = await this.query<IChannelsBody>(
+            Topic.Channel,
+            new CreateChannelMessage(createChannelBody)
+        );
+        const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
+        this.createPosts(channel);
+        return channel;
     }
 
-    async createTwitterPostsForUser(twitterId: string, userId: string): Promise<IPost[]> {
+    async createPosts(channel: IChannel): Promise<IPost[]> {
         const tweets = await this.twitterAPIClient.tweets.lookup({
-            ids: [twitterId]
+            ids: [channel.platformId()]
         });
-        return await Promise.all(tweets.map((tweet) => this.createPostFromTweet(tweet, userId)));
+        return await Promise.all(tweets.map((tweet) => this.createPostFromTweet(tweet, channel)));
     }
 
-    async createPostFromTweet(tweetSchema: ITweetSchema, userId: string): Promise<ITweet> {
+    async createPostFromTweet(tweetSchema: ITweetSchema, channel: IChannel): Promise<ITweet> {
         const tweetBuilder = new TweetBuilder();
         tweetBuilder
             .setId("")
@@ -84,7 +93,7 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
             .setMentions(this.getUserMentions(tweetSchema))
             .setMedia(this.getMedia(tweetSchema))
             .setTweetId(tweetSchema.id_str)
-            .setUserId(userId)
+            .setChannelId(channel.id())
             .setFavorites(tweetSchema.favorite_count)
             .setRetweets(tweetSchema.retweet_count)
             .setCommentCount(tweetSchema.reply_count);
@@ -155,10 +164,5 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
 
     private createImageFromMediaItem(media: ITwitterMediaSchema): Image {
         return new Image(media.id_str, media.media_url, 0, 0);
-    }
-
-    async linkChannelWithUserId(userId: string, twitterId: string): Promise<void> {
-        const user = await this.userRepository.findById(userId);
-        this.linkChannel(user, twitterId);
     }
 }

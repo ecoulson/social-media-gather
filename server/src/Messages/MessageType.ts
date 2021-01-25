@@ -1,18 +1,24 @@
 enum MessageType {
-    ChannelCreatedMessage = "ChannelCreated",
-    CreateChannelMessage = "CreateChannel",
-    UserExistsMessage = "UserExists",
-    UserDoesNotExistMessage = "UserDoesNotExist",
+    ChannelCreated = "ChannelCreated",
+    SetupMediaChannel = "SetupMediaChannel",
+    GetChannels = "GetChannels",
+    CreateChannel = "CreateChannel",
+    CreateCreator = "CreateCreator",
+    CreatorCreated = "CreatorCreated",
+    UserExists = "UserExists",
+    UserDoesNotExist = "UserDoesNotExist",
     Error = "InternalError",
     Success = "Success",
-    UsersMessage = "UsersMessage",
+    Users = "UsersMessage",
     Unauthenticated = "Unauthenticated",
-    TokenMessage = "TokenMessage",
+    Token = "TokenMessage",
     Authenticated = "Authenticated",
-    DeletedUserMessage = "UserDeleted",
-    IsFollowingMessage = "IsFollowing",
-    PostsMessage = "PostsMessage",
-    ChannelSearchResultMessage = "ChannelSearchResult"
+    DeletedUser = "UserDeleted",
+    IsFollowing = "IsFollowing",
+    Posts = "PostsMessage",
+    ChannelSearchResult = "ChannelSearchResult",
+    Response = "Response",
+    Channels = "ChannelsMessage"
 }
 
 export default MessageType;

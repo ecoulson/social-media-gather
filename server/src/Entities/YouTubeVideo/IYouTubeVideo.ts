@@ -5,7 +5,6 @@ export default interface IYouTubeVideo extends IPost {
     thumbnailUrl(): string;
     title(): string;
     videoId(): string;
-    userId(): string;
     likes(): number;
     dislikes(): number;
     commentCount(): number;

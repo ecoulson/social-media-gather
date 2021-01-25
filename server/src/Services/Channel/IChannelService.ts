@@ -1,6 +1,7 @@
 import IChannel from "../../Entities/Channel/IChannel";
-import ICreateChannelOptions from "./ICreateChannelOptions";
+import ICreateChannelBody from "../../Messages/Bodies/ICreateChannelBody";
 
 export default interface IChannelService {
-    create(options: ICreateChannelOptions): Promise<IChannel>;
+    create(options: ICreateChannelBody): Promise<IChannel>;
+    getChannels(id: string[]): Promise<IChannel[]>;
 }

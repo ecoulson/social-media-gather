@@ -9,7 +9,8 @@ const UserDocumentTransform: Transformer<IUser, Partial<IUserDocument>> = (user)
         username: user.username(),
         following: user.following(),
         password: user.password(),
-        isCreator: user.isCreator()
+        isCreator: user.isCreator(),
+        channels: user.channels()
     };
 };
 

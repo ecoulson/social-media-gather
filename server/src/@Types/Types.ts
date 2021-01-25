@@ -28,5 +28,7 @@ export default {
     TwitchChannelService: Symbol.for("TwitchChannelService"),
     YouTubeChannelService: Symbol.for("YouTubeChannelService"),
     ChannelService: Symbol.for("ChannelService"),
-    MessageQueue: Symbol.for("MessageQueue")
+    CreatorService: Symbol.for("CreatorService"),
+    MessageQueue: Symbol.for("MessageQueue"),
+    MediaPlatformMap: Symbol.for("MediaPlatformMap")
 };

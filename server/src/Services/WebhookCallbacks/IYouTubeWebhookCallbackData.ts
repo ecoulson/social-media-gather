@@ -1,5 +1,5 @@
 export default interface IYouTubeWebhookCallbackData {
-    userId: string;
+    channelId: string;
     feed: {
         entry: {
             "yt:videoid": string;

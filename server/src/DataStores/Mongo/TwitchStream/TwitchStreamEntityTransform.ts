@@ -15,7 +15,7 @@ const TwitchStreamEntityTransform: Transformer<IPostDocument, ITwitchStream> = (
         .setStartedAt(post.twitchStream.startedAt)
         .setUrl(post.twitchStream.url)
         .setTitle(post.twitchStream.title)
-        .setUserId(post.userId)
+        .setChannelId(post.channelId)
         .setGameName(post.twitchStream.gameName)
         .setStreamId(post.twitchStream.streamId)
         .setEndedAt(post.twitchStream.endedAt);

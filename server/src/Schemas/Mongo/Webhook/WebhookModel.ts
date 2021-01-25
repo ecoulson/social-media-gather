@@ -12,8 +12,8 @@ const WebhookSchema = new Schema({
     platform: String,
     topicURL: String,
     callbackURL: String,
-    userId: String,
-    channelId: String
+    channelId: String,
+    platformId: String
 });
 
 export default mongoose.model<IWebhookDocument>("Webhook", WebhookSchema);

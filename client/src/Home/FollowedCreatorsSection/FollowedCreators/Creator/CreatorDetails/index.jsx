@@ -3,11 +3,11 @@ import CreatorMedias from "../CreatorMedias";
 import CreatorDetailsContainer from "./CreatorDetailsContainer";
 import CreatorName from "./CreatorName";
 
-export default function CreatorDetails({ user }) {
-    return (
-        <CreatorDetailsContainer>
-            <CreatorName user={user} />
-            <CreatorMedias user={user} />
-        </CreatorDetailsContainer>
-    )
+export default function CreatorDetails({ user, channels }) {
+  return (
+    <CreatorDetailsContainer>
+      <CreatorName user={user} />
+      <CreatorMedias user={user} channels={channels} />
+    </CreatorDetailsContainer>
+  );
 }

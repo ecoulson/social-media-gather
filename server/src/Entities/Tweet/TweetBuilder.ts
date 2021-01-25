@@ -100,7 +100,7 @@ export default class TweetBuilder extends Builder<ITweet> {
         return this;
     }
 
-    setUserId(userId: string): TweetBuilder {
+    setChannelId(userId: string): TweetBuilder {
         this._userId = userId;
         return this;
     }

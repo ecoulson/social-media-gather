@@ -8,7 +8,6 @@ import transformFeed from "./FeedTransformer";
 export default function FeedFetcher({ feedUrl, Component }) {
   const scrollRef = useRef(null);
   const [feed, setFeed] = useState([]);
-  const [originalHeight, setHeight] = useState(0);
   const [index, setIndex] = useState(0);
 
   const getFeed = useCallback(async () => {
@@ -19,9 +18,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
   const onScroll = debounce(() => {
     const height = getContainerHeight(scrollRef.current);
     if (
-      scrollRef.current.scrollTop +
-        scrollRef.current.clientHeight +
-        originalHeight >
+      scrollRef.current.scrollTop + scrollRef.current.clientHeight >
       height - 500
     ) {
       setIndex((index) => index + 20);
@@ -29,9 +26,9 @@ export default function FeedFetcher({ feedUrl, Component }) {
   }, 250);
 
   useEffect(() => {
+    console.log("Brother bilo", getContainerHeight(scrollRef.current));
     getFeed();
-    setHeight(getContainerHeight(scrollRef.current));
-  }, [index, getFeed]);
+  }, [getFeed]);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -44,13 +41,12 @@ export default function FeedFetcher({ feedUrl, Component }) {
   useEffect(() => {
     setIndex(0);
     setFeed([]);
-    setHeight(getContainerHeight(scrollRef.current));
   }, [feedUrl]);
 
   useEffect(() => {
     if (feed === []) {
+      console.log("Brother bilo 2");
       getFeed();
-      setHeight(getContainerHeight(scrollRef.current));
     }
   }, [feed, getFeed]);
 

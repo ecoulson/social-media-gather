@@ -27,7 +27,7 @@ export default class FeedController {
         @requestParam("userId") userId: string,
         @queryParam("offset") offset: string
     ): Promise<IMessageJSONSchema> {
-        const usersPosts = await this.feedService.getUsersPosts(userId, parseInt(offset));
+        const usersPosts = await this.feedService.getCreatorsPosts(userId, parseInt(offset));
         return new PostMessage(usersPosts).toJson();
     }
 }

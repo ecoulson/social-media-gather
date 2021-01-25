@@ -6,6 +6,6 @@ export default interface IWebhook extends IEntity {
     platform(): string;
     topicUrl(): string;
     callbackUrl(): string;
+    platformChannelId(): string;
     channelId(): string;
-    userId(): string;
 }

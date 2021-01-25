@@ -6,6 +6,6 @@ import { v4 as uuid } from "uuid";
 
 export default class CreateChannelMessage extends Message<ICreateChannelBody> {
     constructor(body: ICreateChannelBody) {
-        super(new MetaData(uuid(), true, MessageType.CreateChannelMessage), body);
+        super(new MetaData(uuid(), true, MessageType.CreateChannel), body);
     }
 }

@@ -33,7 +33,7 @@ const schema = new Schema({
         required: true
     },
     timeCreated: Date,
-    userId: String,
+    channelId: String,
     twitchStream: {
         url: String,
         live: Boolean,

@@ -15,7 +15,7 @@ const TwitchVideoEntityTransform: Transformer<IPostDocument, ITwitchVideo> = (po
         .setDescription(post.twitchVideo.description)
         .setThumbnail(new Image("", post.twitchVideo.thumbnailUrl, 0, 0))
         .setScreenName(post.twitchVideo.userName)
-        .setUserId(post.userId)
+        .setChannelId(post.channelId)
         .setViews(post.twitchVideo.views);
     return twitchVideoBuilder.build();
 };

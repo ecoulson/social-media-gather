@@ -7,7 +7,7 @@ const TwitchVideoDocumentTransform: Transformer<ITwitchVideo, Partial<IPostDocum
 ) => {
     return {
         type: "TWITCH_VIDEO",
-        userId: video.userId(),
+        channelId: video.channelId(),
         timeCreated: video.publishedAt(),
         twitchVideo: {
             gameName: video.gameName(),

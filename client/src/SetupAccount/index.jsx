@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AccountSearch from "../AccountSearch";
 import PlatformSelector from "../PlatformSelector";
-import "./index.css"
+import "./index.css";
 import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import Cookie from "../Library/Cookie";
@@ -10,51 +10,69 @@ import Panel from "../Panel";
 import Button from "../Button";
 
 export default function SignUp() {
-    const [platform, setPlatform] = useState("twitch")
-    const [platformIdMap, setPlatformIdMap] = useState(new Map());
-    const history = useHistory();
+  const [platform, setPlatform] = useState("twitch");
+  const [platformChannelMap, setPlatformChannelMap] = useState(new Map());
+  const history = useHistory();
 
-    useEffect(() => {
-        async function checkAuthentication() {
-            if (!await isAuthenticated()) {
-                history.push('/login')
-            }
-        }
-        checkAuthentication();
-    })
+  useEffect(() => {
+    async function checkAuthentication() {
+      if (!(await isAuthenticated())) {
+        history.push("/login");
+      }
+    }
+    checkAuthentication();
+  });
 
-    return (
-        <Panel className="sign-up-container">
-            <Button onClick={onRegister(platformIdMap)} id="register-button">Register</Button>
-            <PlatformSelector platforms={platformIdMap} onPlatformChange={onPlatformChange(setPlatform)} />
-            <AccountSearch onAccountSelection={onPlatformIdMap(platform, platformIdMap, setPlatformIdMap)} platform={platform} />
-        </Panel>
-    )
+  return (
+    <Panel className="sign-up-container">
+      <Button onClick={onRegister(platformChannelMap)} id="register-button">
+        Register
+      </Button>
+      <PlatformSelector
+        platforms={platformChannelMap}
+        onPlatformChange={onPlatformChange(setPlatform)}
+      />
+      <AccountSearch
+        onAccountSelection={onPlatformIdMap(
+          platform,
+          platformChannelMap,
+          setPlatformChannelMap
+        )}
+        platform={platform}
+      />
+    </Panel>
+  );
 }
 
-function onRegister(platformIdMap) {
-    return async () => {
-        const registerRequests = [];
-        platformIdMap.forEach((id, platform) => {
-            registerRequests.push(Axios.put(`/api/channel/${platform}/link/${id}`, {}, {
-                headers: {
-                    "Authorization": `Bearer ${Cookie.getCookie("token")}`
-                }
-            }))
-        })
-        await Promise.all(registerRequests);
-    }
+function onRegister(platformChannelMap) {
+  return async () => {
+    const registerRequests = [];
+    platformChannelMap.forEach((id, platform) => {
+      registerRequests.push(
+        Axios.put(
+          `/api/channel/${platform}/link/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${Cookie.getCookie("token")}`,
+            },
+          }
+        )
+      );
+    });
+    await Promise.all(registerRequests);
+  };
 }
 
 function onPlatformChange(setPlatform) {
-    return platform => {
-        setPlatform(platform);
-    }
+  return (platform) => {
+    setPlatform(platform);
+  };
 }
 
-function onPlatformIdMap(platform, platformIdMap, setPlatformIdMap) {
-    return (id) => {
-        platformIdMap.set(platform, id);
-        setPlatformIdMap(new Map(platformIdMap));
-    }
+function onPlatformIdMap(platform, platformIdMap, setPlatformChannelMap) {
+  return (channel) => {
+    platformIdMap.set(platform, channel);
+    setPlatformChannelMap(new Map(platformIdMap));
+  };
 }

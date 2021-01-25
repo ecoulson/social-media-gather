@@ -9,8 +9,8 @@ export default class WebhookBuilder extends Builder<IWebhook> {
     private _platform: string;
     private _topicUrl: string;
     private _callbackUrl: string;
+    private _platformId: string;
     private _channelId: string;
-    private _userId: string;
 
     reset(): void {
         this._id = null;
@@ -19,8 +19,8 @@ export default class WebhookBuilder extends Builder<IWebhook> {
         this._platform = null;
         this._topicUrl = null;
         this._callbackUrl = null;
+        this._platformId = null;
         this._channelId = null;
-        this._userId = null;
     }
 
     construct(): IWebhook {
@@ -31,8 +31,8 @@ export default class WebhookBuilder extends Builder<IWebhook> {
             this._platform,
             this._topicUrl,
             this._callbackUrl,
-            this._channelId,
-            this._userId
+            this._platformId,
+            this._channelId
         );
     }
 
@@ -66,13 +66,13 @@ export default class WebhookBuilder extends Builder<IWebhook> {
         return this;
     }
 
-    setChannelId(channelId: string): WebhookBuilder {
-        this._channelId = channelId;
+    setPlatformId(platformId: string): WebhookBuilder {
+        this._platformId = platformId;
         return this;
     }
 
-    setUserId(userId: string): WebhookBuilder {
-        this._userId = userId;
+    setChannelId(channelId: string): WebhookBuilder {
+        this._channelId = channelId;
         return this;
     }
 }

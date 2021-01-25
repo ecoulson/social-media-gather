@@ -12,6 +12,7 @@ const UserEntityTransform: Transformer<IUserDocument, IUser> = (user) => {
         .setPassword(user.password)
         .setVerified(user.verified)
         .setCreator(user.isCreator)
+        .setChannels(user.channels)
         .setFollowers(user.following);
     return userBuilder.build();
 };

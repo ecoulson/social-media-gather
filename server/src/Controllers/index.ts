@@ -11,6 +11,7 @@ import TwitterChannelController from "./TwitterChannelController";
 import UserController from "./UsersController";
 import YouTubeChannelController from "./YouTubeChannelController";
 import YouTubeWebhookCallbackController from "./YouTubeWebhookCallbackController";
+import CreatorController from "./CreatorController";
 
 export default function ControllerFactory(container: Container): unknown[] {
     return [
@@ -24,6 +25,7 @@ export default function ControllerFactory(container: Container): unknown[] {
         TwitterChannelController,
         TwitchChannelController,
         YouTubeChannelController,
-        TestController
+        TestController,
+        CreatorController
     ];
 }

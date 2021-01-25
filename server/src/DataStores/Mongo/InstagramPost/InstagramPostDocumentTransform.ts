@@ -11,7 +11,7 @@ const InstagramPostDocumentTransform: Transformer<IInstagramPost, Partial<IPostD
 ) => {
     return {
         type: "INSTAGRAM",
-        userId: post.userId(),
+        channelId: post.channelId(),
         timeCreated: post.takenAt(),
         instagram: {
             takenAt: post.takenAt(),
