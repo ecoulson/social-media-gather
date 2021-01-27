@@ -1,7 +1,7 @@
 import { inject } from "inversify";
 import Types from "../../@Types/Types";
 import CreateCreatorMessage from "../../Messages/Creator/CreateCreatorMessage";
-import CreatorCreatedMessage from "../../Messages/Creator/CreatorCreatedMessage";
+import CreatorsMessage from "../../Messages/Creator/CreatorsMessage";
 import MessageType from "../../Messages/MessageType";
 import ICreatorService from "../../Services/Creator/ICreatorService";
 import IMessageQueue from "../../MessageQueue/IMessageQueue";
@@ -19,6 +19,6 @@ export default class CreatorSubscriber extends Subscriber {
 
     async handleCreate(message: CreateCreatorMessage) {
         const creator = await this.creatorService.create(message.data());
-        this.publish(Topic.Users, new CreatorCreatedMessage(message.metadata().id(), creator));
+        this.publish(Topic.Users, new CreatorsMessage([creator], message));
     }
 }

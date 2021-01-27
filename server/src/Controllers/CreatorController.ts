@@ -6,7 +6,8 @@ import CreateCreatorMessage from "../Messages/Creator/CreateCreatorMessage";
 import IMessageQueue from "../MessageQueue/IMessageQueue";
 import Topic from "../MessageQueue/Topic";
 import Subscriber from "../MessageQueue/Subscriber";
-import ICreatorCreatedBody from "../Messages/Bodies/ICreatorCreatedBody";
+import ICreatorsBody from "../Messages/Bodies/ICreatorsBody";
+import MessageType from "../Messages/MessageType";
 
 @controller("/api/creator")
 export default class CreatorController extends Subscriber {
@@ -17,7 +18,11 @@ export default class CreatorController extends Subscriber {
     @httpPost("/")
     async handleCreateCreator(@requestBody() body: ICreateCreatorBody) {
         return (
-            await this.query<ICreatorCreatedBody>(Topic.Users, new CreateCreatorMessage(body))
+            await this.query<ICreatorsBody>(
+                Topic.Users,
+                MessageType.CreateCreator,
+                new CreateCreatorMessage(body)
+            )
         ).toJson();
     }
 }

@@ -26,9 +26,6 @@ export default class MediaChannelSubscriber extends Subscriber {
             message.data().channelBody,
             message.data().creator
         );
-        this.publish<IChannelsBody>(
-            Topic.Channel,
-            new ChannelsMessage([channel], message.metadata().id())
-        );
+        this.publish<IChannelsBody>(Topic.Channel, new ChannelsMessage([channel], message));
     }
 }

@@ -22,11 +22,11 @@ export default class ChannelSubscriber extends Subscriber {
 
     async handleCreate(message: CreateChannelMessage) {
         const channel = await this.channelService.create(message.data());
-        this.publish(Topic.Channel, new ChannelCreatedMessage(channel, message.metadata().id()));
+        this.publish(Topic.Channel, new ChannelCreatedMessage(channel, message));
     }
 
     async handleGetChannels(message: GetChannelsMessage) {
         const channels = await this.channelService.getChannels(message.data().ids);
-        this.publish(Topic.Channel, new ChannelsMessage(channels, message.metadata().id()));
+        this.publish(Topic.Channel, new ChannelsMessage(channels, message));
     }
 }

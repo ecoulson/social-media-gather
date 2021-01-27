@@ -21,6 +21,7 @@ import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeseri
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import InstagramAPIClient from "../../../Libraries/Instagram/InstagramAPIClient";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
+import MessageType from "../../../Messages/MessageType";
 
 @injectable()
 export default class InstagramChannelService extends Subscriber implements IMediaPlatformService {
@@ -58,6 +59,7 @@ export default class InstagramChannelService extends Subscriber implements IMedi
     ): Promise<IChannel> {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
+            MessageType.Channels,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);

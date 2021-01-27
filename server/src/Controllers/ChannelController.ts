@@ -8,6 +8,7 @@ import CreateChannelMessage from "../Messages/Channel/CreateChannelMessage";
 import Subscriber from "../MessageQueue/Subscriber";
 import IChannelsBody from "../Messages/Bodies/IChannelsBody";
 import GetChannelsMessage from "../Messages/Channel/GetChannelsMessage";
+import MessageType from "../Messages/MessageType";
 
 @controller("/api/channel")
 export default class ChannelController extends Subscriber {
@@ -18,7 +19,11 @@ export default class ChannelController extends Subscriber {
     @httpPost("/")
     async create(@requestBody() body: ICreateChanneBody) {
         return (
-            await this.query<IChannelsBody>(Topic.Channel, new CreateChannelMessage(body))
+            await this.query<IChannelsBody>(
+                Topic.Channel,
+                MessageType.Channels,
+                new CreateChannelMessage(body)
+            )
         ).toJson();
     }
 
@@ -27,6 +32,7 @@ export default class ChannelController extends Subscriber {
         return (
             await this.query<IChannelsBody>(
                 Topic.Channel,
+                MessageType.Channels,
                 new GetChannelsMessage(rawIds.split(","))
             )
         ).toJson();

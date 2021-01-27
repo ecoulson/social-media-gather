@@ -10,6 +10,10 @@ export default interface ISubscriber {
         type: MessageType,
         handler: (message: IMessage<T>) => void
     ): ISubscribition;
-    query<T>(topic: Topic, originalMessage: IMessage<unknown>): Promise<IMessage<T>>;
+    query<T>(
+        topic: Topic,
+        type: MessageType,
+        originalMessage: IMessage<unknown>
+    ): Promise<IMessage<T>>;
     unsubscribe(topic: Topic, subscriber: ISubscribition): void;
 }

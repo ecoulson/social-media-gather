@@ -23,6 +23,7 @@ import Subscriber from "../../../MessageQueue/Subscriber";
 import IMessageQueue from "../../../MessageQueue/IMessageQueue";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
+import MessageType from "../../../Messages/MessageType";
 
 @injectable()
 export default class TwitchChannelService extends Subscriber implements IMediaPlatformService {
@@ -72,6 +73,7 @@ export default class TwitchChannelService extends Subscriber implements IMediaPl
     ): Promise<IChannel> {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
+            MessageType.Channels,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);

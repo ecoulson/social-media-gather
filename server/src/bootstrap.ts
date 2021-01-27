@@ -62,8 +62,11 @@ import CreatorMongoDataStore from "./DataStores/Mongo/Creator/CreatorMongoDataSt
 import ICreatorService from "./Services/Creator/ICreatorService";
 import CreatorService from "./Services/Creator/CreatorService";
 import Platform from "./Entities/Platform/Platform";
-import { IgApiClient } from "instagram-private-api";
 import InstagramAPIClient from "./Libraries/Instagram/InstagramAPIClient";
+import IPostsService from "./Services/Posts/IPostsService";
+import PostsService from "./Services/Posts/PostsService";
+import YouTubeCommentService from "./Services/Comment/YouTubeCommentService";
+import ICommentService from "./Services/Comment/ICommentService";
 
 configureEnvironment();
 
@@ -169,6 +172,8 @@ container.bind<IMediaPlatformService>(Types.TwitchChannelService).to(TwitchChann
 container.bind<IMediaPlatformService>(Types.YouTubeChannelService).to(YouTubeChannelService);
 container.bind<IChannelService>(Types.ChannelService).to(ChannelService);
 container.bind<ICreatorService>(Types.CreatorService).to(CreatorService);
+container.bind<IPostsService>(Types.PostsService).to(PostsService);
+container.bind<ICommentService>(Types.YouTubeCommentsService).to(YouTubeCommentService);
 
 container.bind<IMessageQueue>(Types.MessageQueue).toConstantValue(messageQueue);
 

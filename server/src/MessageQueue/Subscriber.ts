@@ -14,22 +14,24 @@ import IResponseMessage from "../Messages/IResponseMessage";
 export default abstract class Subscriber implements ISubscriber {
     constructor(@inject(Types.MessageQueue) private messageQueue: IMessageQueue) {}
 
-    query<T>(topic: Topic, originalMessage: IMessage<unknown>): Promise<IMessage<T>> {
-        return new Promise(
-            (resolve: (message: IMessage<T>) => void, reject: (error: Error) => void) => {
-                this.publish(topic, originalMessage);
-                const subscription = this.subscribe(
-                    topic,
-                    MessageType.Response,
-                    (message: IResponseMessage<T>) => {
-                        if (originalMessage.metadata().id() === message.originalMessageId()) {
-                            this.unsubscribe(topic, subscription);
-                            return resolve(message);
-                        }
+    query<T>(
+        topic: Topic,
+        messageType: MessageType,
+        originalMessage: IMessage<unknown>
+    ): Promise<IMessage<T>> {
+        return new Promise((resolve: (message: IMessage<T>) => void) => {
+            this.publish(topic, originalMessage);
+            const subscription = this.subscribe(
+                topic,
+                messageType,
+                (message: IResponseMessage<T>) => {
+                    if (originalMessage.metadata().id() === message.originalMessageId()) {
+                        this.unsubscribe(topic, subscription);
+                        return resolve(message);
                     }
-                );
-            }
-        );
+                }
+            );
+        });
     }
 
     unsubscribe(topic: Topic, subscription: ISubscribition): void {

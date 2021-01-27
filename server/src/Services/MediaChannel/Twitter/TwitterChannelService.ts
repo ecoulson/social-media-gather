@@ -27,6 +27,7 @@ import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeseri
 import IChannel from "../../../Entities/Channel/IChannel";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
+import MessageType from "../../../Messages/MessageType";
 
 @injectable()
 export default class TwitterChannelService extends Subscriber implements IMediaPlatformService {
@@ -60,6 +61,7 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
     async createChannel(createChannelBody: ICreateChannelBody, creator: ICreatorJSONSchema) {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
+            MessageType.Channels,
             new CreateChannelMessage(createChannelBody)
         );
         const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);

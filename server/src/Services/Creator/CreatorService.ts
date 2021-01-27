@@ -10,6 +10,7 @@ import IChannelsBody from "../../Messages/Bodies/IChannelsBody";
 import ICreateChannelBody from "../../Messages/Bodies/ICreateChannelBody";
 import ICreateCreatorBody from "../../Messages/Bodies/ICreateCreatorBody";
 import SetupMediaChannelMessage from "../../Messages/MediaChannel/SetupMediaChannelMessage";
+import MessageType from "../../Messages/MessageType";
 import CreatorRepository from "../../Repositories/Creator/CreatorRepository";
 import IPasswordManager from "../../Security/PasswordManagers/IPasswordManager";
 import ChannelJSONDeserializer from "../../Serializers/JSON/ChannelJSONDeserializer";
@@ -52,6 +53,7 @@ export default class CreatorService extends Subscriber implements ICreatorServic
     async setupMediaChannel(channelBody: ICreateChannelBody, creator: ICreator) {
         const channelResponse = await this.query<IChannelsBody>(
             Topic.Channel,
+            MessageType.Channels,
             new SetupMediaChannelMessage(channelBody, creator)
         );
         return ChannelJSONDeserializer(channelResponse.data().channels[0]);

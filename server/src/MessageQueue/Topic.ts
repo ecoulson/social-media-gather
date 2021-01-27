@@ -1,9 +1,7 @@
 enum Topic {
     Channel = "Channel",
-    TWITCH = "TWITCH",
-    YOUTUBE = "YOUTUBE",
-    INSTAGRAM = "INSTAGRAM",
-    TWITTER = "TWITTER",
+    Comments = "Comments",
+    Posts = "Posts",
     Users = "Users",
     Error = "Error"
 }

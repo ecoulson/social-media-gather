@@ -1,6 +1,7 @@
 import { google, youtube_v3 } from "googleapis";
 import IConfig from "../../Config/IConfig";
 import YouTubeChannelClient from "./Channels/YouTubeChannelClient";
+import CommentClient from "./Comments/CommentClient";
 import PlaylistClient from "./Playlist/PlaylistClient";
 import VideoClient from "./Videos/VideoClient";
 import WebhookClient from "./Webhooks/WebhookClient";
@@ -11,6 +12,7 @@ export default class YouTubeAPIClient {
     private playlistClient: PlaylistClient;
     private webhookClient: WebhookClient;
     private youtubeAPIService: youtube_v3.Youtube;
+    private commentClient: CommentClient;
 
     constructor(private config: IConfig) {
         this.videoClient = new VideoClient(this);
@@ -18,6 +20,7 @@ export default class YouTubeAPIClient {
         this.playlistClient = new PlaylistClient(this);
         this.webhookClient = new WebhookClient();
         this.youtubeAPIService = google.youtube("v3");
+        this.commentClient = new CommentClient(this);
     }
 
     apiKey(): Promise<string> {
@@ -46,5 +49,9 @@ export default class YouTubeAPIClient {
 
     get webhooks(): WebhookClient {
         return this.webhookClient;
+    }
+
+    get comments(): CommentClient {
+        return this.commentClient;
     }
 }
