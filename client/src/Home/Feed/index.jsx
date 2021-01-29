@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
-import TextDivider from "./TextDivider";
+import TextDivider from "../../TextDivider";
 import Post from "./Post";
 import moment from "moment";
 

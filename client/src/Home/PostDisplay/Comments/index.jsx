@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from "react";
-import GetComments from "../../../Library/GetComments";
+import React from "react";
 import Comment from "./Comment";
 import TextDivider from "../../../TextDivider";
 
-export default function Comments({ post }) {
-  const [comments, setComments] = useState([]);
-
-  useEffect(() => {
-    async function handleGetComments() {
-      const comments = await GetComments(post.id);
-      setComments(comments);
-    }
-
-    if (post) {
-      handleGetComments();
-    }
-  }, [post]);
-
-  if (!post) {
+export default function Comments({ comments }) {
+  if (!comments) {
     return null;
   }
 

@@ -1,10 +1,7 @@
 import React, { useCallback, useRef } from "react";
-import Axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import debounce from "../Library/debounce";
-import transformFeed from "./FeedTransformer";
-import GetUser from "../Library/GetUser";
 import styled from "@emotion/styled";
 import { Box } from "@chakra-ui/react";
 
@@ -15,39 +12,32 @@ const ScrollContainer = styled(Box)`
   box-sizing: border-box;
 `;
 
-export default function InfiniteScroll({ feedUrl, next, children }) {
+export default function InfiniteScroll({ next, children, items }) {
   const scrollRef = useRef(null);
-  const [feed, setFeed] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(items ? items.length : 0);
 
-  const getFeed = useCallback(async () => {
-    const response = await Axios.get(`${feedUrl}?offset=${index}`);
-    const posts = await Promise.all(
-      response.data.data.posts.map(async (post) => {
-        const creator = await GetUser(post.creatorId);
-        post.channelName = creator.username;
-        return post;
-      })
-    );
-    setFeed((feed) => [...feed, ...transformFeed(posts)]);
-  }, [index, feedUrl]);
+  const getNext = useCallback(async () => {
+    console.log(index);
+    next(index);
+  }, [index]);
 
   const onScroll = debounce(() => {
     const height = getContainerHeight(scrollRef.current);
-    if (
-      scrollRef.current.scrollTop + scrollRef.current.clientHeight >
-      height - 500
-    ) {
-      setIndex((index) => index + 20);
+    if (shouldFetch(height)) {
+      setIndex(items.length);
     }
   }, 250);
 
+  function shouldFetch(height) {
+    return (
+      scrollRef.current.scrollTop + scrollRef.current.clientHeight >
+      height - 500
+    );
+  }
+
   useEffect(() => {
-    if (next) {
-      next(index);
-    }
-    getFeed();
-  }, [getFeed]);
+    getNext();
+  }, [getNext]);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -59,17 +49,7 @@ export default function InfiniteScroll({ feedUrl, next, children }) {
 
   useEffect(() => {
     setIndex(0);
-    setFeed([]);
-  }, [feedUrl]);
-
-  useEffect(() => {
-    if (feed === []) {
-      if (next) {
-        next(index);
-      }
-      getFeed();
-    }
-  }, [feed, getFeed]);
+  }, []);
 
   return <ScrollContainer ref={scrollRef}>{children}</ScrollContainer>;
 }
