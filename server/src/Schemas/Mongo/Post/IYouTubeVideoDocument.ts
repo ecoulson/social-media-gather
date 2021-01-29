@@ -7,4 +7,5 @@ export default interface IYouTubeVideoDocument {
     dislikes: number;
     views: number;
     commentCount: number;
+    commentPageToken: string;
 }

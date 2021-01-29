@@ -16,7 +16,8 @@ const YouTubeVideoEntityTransform: Transformer<IPostDocument, IYouTubeVideo> = (
         .setViews(post.youtubeVideo.views)
         .setLikes(post.youtubeVideo.likes)
         .setDislikes(post.youtubeVideo.dislikes)
-        .setCommentCount(post.youtubeVideo.commentCount);
+        .setCommentCount(post.youtubeVideo.commentCount)
+        .setCommentPageToken(post.youtubeVideo.commentPageToken);
     return youTubeVideoBuilder.build();
 };
 

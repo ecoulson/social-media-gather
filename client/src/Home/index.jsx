@@ -47,7 +47,7 @@ export default function Home() {
     <HomeLayout>
       <FollowedCreatorsSection />
       <GridItem gridArea="feed">
-        <InfiniteScroll next={getNext}>
+        <InfiniteScroll items={feed} next={getNext}>
           <Feed posts={feed} onPostClick={handlePostSelection} />
         </InfiniteScroll>
       </GridItem>

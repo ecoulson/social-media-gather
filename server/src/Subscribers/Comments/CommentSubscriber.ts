@@ -24,13 +24,13 @@ export default class CommentSubscriber extends Subscriber {
     }
 
     async handleGetComments(message: GetCommentsMessage) {
-        const { platform, postId, offset } = message.data();
+        const { platform, postId, offset } = message.body();
         const comments = await this.commentServiceMap.get(platform).getComments(postId, offset);
         this.publish(Topic.Comments, new CommentsMessage(comments, message));
     }
 
     async handleCreateComments(message: CreateCommentMessage) {
-        const { platform, postId } = message.data();
+        const { platform, postId } = message.body();
         const comments = await this.commentServiceMap.get(platform).loadCommentsFromMedia(postId);
         this.publish(Topic.Comments, new CommentsMessage(comments, message));
     }

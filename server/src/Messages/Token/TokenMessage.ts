@@ -11,4 +11,8 @@ export default class TokenMessage<T> extends Message<ITokenBody> {
             token: token.sign()
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().token as unknown) as T;
+    }
 }

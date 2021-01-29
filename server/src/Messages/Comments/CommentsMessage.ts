@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import MessageType from "../MessageType";
 import CommentJSONSerializer from "../../Serializers/JSON/CommentJSONSerializer";
 import IMessage from "../IMessage";
+import CommentJSONDeserializer from "../../Serializers/JSON/CommentJSONDeserializer";
 
 export default class CommentsMessage extends ResponseMessage<ICommentsBody> {
     constructor(comments: IComment[], originalMessage?: IMessage<unknown>) {
@@ -16,5 +17,11 @@ export default class CommentsMessage extends ResponseMessage<ICommentsBody> {
             },
             originalMessage
         );
+    }
+
+    deserialize<T>(): T {
+        return (this.body().comments.map((comment) =>
+            CommentJSONDeserializer(comment)
+        ) as unknown) as T;
     }
 }

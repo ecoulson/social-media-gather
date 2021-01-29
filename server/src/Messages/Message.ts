@@ -2,14 +2,14 @@ import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
 import IMessage from "./IMessage";
 import IMetaData from "./IMetaData";
 
-export default class Message<T> implements IMessage<T> {
-    constructor(private _metadata: IMetaData, private _data: T) {}
+export default abstract class Message<Body> implements IMessage<Body> {
+    constructor(private _metadata: IMetaData, private _data: Body) {}
 
     metadata(): IMetaData {
         return this._metadata;
     }
 
-    data(): T {
+    body(): Body {
         return this._data;
     }
 
@@ -22,4 +22,6 @@ export default class Message<T> implements IMessage<T> {
             data: this._data
         };
     }
+
+    abstract deserialize<Data>(): Data;
 }

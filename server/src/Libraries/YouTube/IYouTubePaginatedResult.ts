@@ -4,4 +4,6 @@ export default interface IYouTubePaginatedResult<T> {
     items(): T;
     getNextPage(): Promise<IYouTubePaginatedResult<T>>;
     getPreviousPage(): Promise<IYouTubePaginatedResult<T>>;
+    getNextPageToken(): string;
+    getPreviousPageToken(): string;
 }

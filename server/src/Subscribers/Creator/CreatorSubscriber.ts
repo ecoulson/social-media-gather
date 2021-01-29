@@ -18,7 +18,7 @@ export default class CreatorSubscriber extends Subscriber {
     }
 
     async handleCreate(message: CreateCreatorMessage) {
-        const creator = await this.creatorService.create(message.data());
+        const creator = await this.creatorService.create(message.body());
         this.publish(Topic.Users, new CreatorsMessage([creator], message));
     }
 }

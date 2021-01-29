@@ -8,4 +8,8 @@ export default class CreateCreatorMessage extends Message<ICreateCreatorBody> {
     constructor(body: ICreateCreatorBody) {
         super(new MetaData(uuid(), true, MessageType.CreateCreator), body);
     }
+
+    deserialize<T>(): T {
+        return (this.body() as unknown) as T;
+    }
 }

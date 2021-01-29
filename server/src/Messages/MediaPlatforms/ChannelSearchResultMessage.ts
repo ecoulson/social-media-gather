@@ -11,4 +11,8 @@ export default class ChannelSearchResultMessage extends Message<IChannelSearchRe
             results
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().results as unknown) as T;
+    }
 }

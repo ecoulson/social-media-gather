@@ -102,7 +102,7 @@ export default function Profile(props) {
     <HomeLayout>
       <FollowedCreatorsSection />
       <GridItem gridArea="feed">
-        <InfiniteScroll next={getNext}>
+        <InfiniteScroll items={feed} next={getNext}>
           <Feed posts={feed} onPostClick={handlePostClick} />
         </InfiniteScroll>
       </GridItem>

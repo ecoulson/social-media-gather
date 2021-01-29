@@ -4,7 +4,7 @@ import Message from "./Message";
 import MessageType from "./MessageType";
 import MetaData from "./MetaData";
 
-export default class ResponseMessage<T> extends Message<T> implements IResponseMessage<T> {
+export default abstract class ResponseMessage<T> extends Message<T> implements IResponseMessage<T> {
     constructor(
         id: string,
         type: MessageType,
@@ -17,4 +17,6 @@ export default class ResponseMessage<T> extends Message<T> implements IResponseM
     originalMessageId(): string {
         return this._originalMessage.metadata().id();
     }
+
+    abstract deserialize<T>(): T;
 }

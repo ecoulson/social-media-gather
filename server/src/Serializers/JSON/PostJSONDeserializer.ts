@@ -19,6 +19,7 @@ function DeserializeYouTubeVideo(schema: IPostJSONSchema): IYouTubeVideo {
     youtubeVideoBuilder
         .setChannelId(schema.channelId)
         .setCommentCount(schema.youtubeVideo.commentCount)
+        .setCommentPageToken(schema.youtubeVideo.commentPageToken)
         .setCreatorId(schema.creatorId)
         .setDislikes(schema.youtubeVideo.dislikes)
         .setId(schema.id)

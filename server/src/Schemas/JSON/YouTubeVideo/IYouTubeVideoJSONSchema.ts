@@ -7,4 +7,5 @@ export default interface IYouTubeVideoJSONSchema {
     dislikes: number;
     commentCount: number;
     views: number;
+    commentPageToken: string;
 }

@@ -10,4 +10,8 @@ export default class UserExistsMessage extends Message<IMessageBody> {
             message: `Username '${username}' or email '${email}' is already taken`
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().message as unknown) as T;
+    }
 }

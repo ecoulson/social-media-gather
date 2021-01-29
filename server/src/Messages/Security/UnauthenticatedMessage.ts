@@ -10,4 +10,8 @@ export default class UnauthenticatedMessage extends Message<IMessageBody> {
             message: `Unauthenticated`
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().message as unknown) as T;
+    }
 }

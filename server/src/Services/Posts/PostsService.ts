@@ -26,4 +26,8 @@ export default class PostsService implements IPostsService {
             }
         });
     }
+
+    updatePosts(posts: IPost[]): Promise<IPost[]> {
+        return this.postRepository.updateAll(posts);
+    }
 }

@@ -14,6 +14,7 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
     private views: number;
     private commentCount: number;
     private creatorId: string;
+    private commentPageToken: string;
 
     reset() {
         this.publishedAt = null;
@@ -27,6 +28,7 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
         this.views = null;
         this.commentCount = null;
         this.creatorId = null;
+        this.commentPageToken = null;
     }
 
     construct(): IYouTubeVideo {
@@ -41,7 +43,8 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
             this.dislikes,
             this.views,
             this.commentCount,
-            this.creatorId
+            this.creatorId,
+            this.commentPageToken
         );
     }
 
@@ -97,6 +100,11 @@ export default class YouTubeVideoBuilder extends Builder<IYouTubeVideo> {
 
     setCommentCount(commentCount: number): YouTubeVideoBuilder {
         this.commentCount = commentCount;
+        return this;
+    }
+
+    setCommentPageToken(commentPageToken: string): YouTubeVideoBuilder {
+        this.commentPageToken = commentPageToken;
         return this;
     }
 }

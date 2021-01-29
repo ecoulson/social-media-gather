@@ -6,6 +6,7 @@ import MessageType from "../MessageType";
 import ISetupMediaChannelBody from "../Bodies/ISetupMediaChannelBody";
 import CreatorJSONSerializer from "../../Serializers/JSON/CreatorJSONSerializer";
 import ICreator from "../../Entities/Creator/ICreator";
+import CreatorJSONDeserializer from "../../Serializers/JSON/CreatorJSONDeserializer";
 
 export default class SetupMediaChannelMessage extends Message<ISetupMediaChannelBody> {
     constructor(channelBody: ICreateChannelBody, creator: ICreator) {
@@ -13,5 +14,12 @@ export default class SetupMediaChannelMessage extends Message<ISetupMediaChannel
             channelBody,
             creator: CreatorJSONSerializer(creator)
         });
+    }
+
+    deserialize<T>(): T {
+        return ({
+            creator: CreatorJSONDeserializer(this.body().creator),
+            channelBody: this.body().channelBody
+        } as unknown) as T;
     }
 }

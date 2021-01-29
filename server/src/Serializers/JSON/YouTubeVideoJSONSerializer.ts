@@ -13,7 +13,8 @@ const YouTubeVideoJSONSerializer: Transformer<IYouTubeVideo, IYouTubeVideoJSONSc
         likes: youTubeVideo.likes(),
         dislikes: youTubeVideo.dislikes(),
         commentCount: youTubeVideo.commentCount(),
-        views: youTubeVideo.views()
+        views: youTubeVideo.views(),
+        commentPageToken: youTubeVideo.commentPageToken()
     };
 };
 

@@ -10,11 +10,12 @@ export default function PostDisplay({ post }) {
 
   useEffect(() => {
     async function handleGetComments() {
-      const comments = await GetComments(post.id);
+      const comments = await GetComments(post.id, 0);
       setComments(comments);
     }
 
     if (post) {
+      setComments([]);
       handleGetComments();
     }
   }, [post]);
@@ -35,6 +36,8 @@ export default function PostDisplay({ post }) {
       setComments((comments) => [...comments, ...newComments]);
     }
   }
+
+  console.log(comments);
 
   return (
     <PostDisplayLayout>

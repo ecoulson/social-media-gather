@@ -14,7 +14,8 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
         private _dislikes: number,
         private _views: number,
         private _commentCount: number,
-        _creatorId: string
+        _creatorId: string,
+        private _commentPageToken: string
     ) {
         super(PostType.YOUTUBE_VIDEO, _id, _channelId, _creatorId);
     }
@@ -49,5 +50,13 @@ export default class YouTubeVideo extends Post implements IYouTubeVideo {
 
     views(): number {
         return this._views;
+    }
+
+    commentPageToken(): string {
+        return this._commentPageToken;
+    }
+
+    setCommentPageToken(pageToken: string): void {
+        this._commentPageToken = pageToken;
     }
 }

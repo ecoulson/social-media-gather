@@ -1,8 +1,9 @@
 import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
 import IMetaData from "./IMetaData";
 
-export default interface IMessage<T> {
+export default interface IMessage<Body> {
     metadata(): IMetaData;
-    data(): T;
+    body(): Body;
     toJson(): IMessageJSONSchema;
+    deserialize<Data>(): Data;
 }

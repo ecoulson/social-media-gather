@@ -56,6 +56,6 @@ export default class CreatorService extends Subscriber implements ICreatorServic
             MessageType.Channels,
             new SetupMediaChannelMessage(channelBody, creator)
         );
-        return ChannelJSONDeserializer(channelResponse.data().channels[0]);
+        return ChannelJSONDeserializer(channelResponse.body().channels[0]);
     }
 }

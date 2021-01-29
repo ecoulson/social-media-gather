@@ -5,6 +5,7 @@ import CreatorJSONSerializer from "../../Serializers/JSON/CreatorJSONSerializer"
 import ResponseMessage from "../ResponseMessage";
 import MessageType from "../MessageType";
 import IMessage from "../IMessage";
+import CreatorJSONDeserializer from "../../Serializers/JSON/CreatorJSONDeserializer";
 
 export default class CreatorsMessage extends ResponseMessage<ICreatorsBody> {
     constructor(creators: ICreator[], originalMessage?: IMessage<unknown>) {
@@ -16,5 +17,11 @@ export default class CreatorsMessage extends ResponseMessage<ICreatorsBody> {
             },
             originalMessage
         );
+    }
+
+    deserialize<T>(): T {
+        return (this.body().creators.map((creator) =>
+            CreatorJSONDeserializer(creator)
+        ) as unknown) as T;
     }
 }

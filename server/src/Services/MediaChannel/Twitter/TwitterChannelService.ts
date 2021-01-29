@@ -64,7 +64,7 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
             MessageType.Channels,
             new CreateChannelMessage(createChannelBody)
         );
-        const channel = ChannelJSONDeserializer(channelResponse.data().channels[0]);
+        const channel = ChannelJSONDeserializer(channelResponse.body().channels[0]);
         this.createPosts(channel, creator);
         return channel;
     }

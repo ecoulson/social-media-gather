@@ -10,4 +10,8 @@ export default class DeletedUserMessage extends Message<IMessageBody> {
             message: `Deleted user id@${deletedUserId}`
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().message as unknown) as T;
+    }
 }

@@ -9,4 +9,6 @@ export default interface IYouTubeVideo extends IPost {
     dislikes(): number;
     commentCount(): number;
     views(): number;
+    commentPageToken(): string;
+    setCommentPageToken(pageToken: string): void;
 }

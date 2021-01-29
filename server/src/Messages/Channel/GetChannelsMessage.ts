@@ -10,4 +10,8 @@ export default class GetChannelsMessage extends Message<IGetChannelsBody> {
             ids
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().ids as unknown) as T;
+    }
 }

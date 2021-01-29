@@ -10,4 +10,8 @@ export default class GetPostsMessage extends Message<IGetPostsBody> {
             ids
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().ids as unknown) as T;
+    }
 }

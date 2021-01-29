@@ -7,4 +7,8 @@ export default class SuccessMessage extends Message<unknown> {
     constructor() {
         super(new MetaData(uuid(), true, MessageType.Success), {});
     }
+
+    deserialize<T>(): T {
+        return null;
+    }
 }

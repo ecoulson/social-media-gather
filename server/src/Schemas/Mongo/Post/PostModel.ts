@@ -65,7 +65,8 @@ const schema = new Schema({
         likes: Number,
         dislikes: Number,
         views: Number,
-        commentCount: Number
+        commentCount: Number,
+        commentPageToken: String
     },
     tweet: {
         id: String,

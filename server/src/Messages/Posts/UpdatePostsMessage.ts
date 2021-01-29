@@ -1,17 +1,17 @@
-import IPost from "../../Entities/Post/IPost";
-import PostJSONSerializer from "../../Serializers/JSON/PostJSONSerializer";
 import IPostsBody from "../Bodies/IPostsBody";
-import MessageType from "../MessageType";
-import { v4 as uuid } from "uuid";
 import ResponseMessage from "../ResponseMessage";
+import { v4 as uuid } from "uuid";
+import MessageType from "../MessageType";
+import IPost from "../../Entities/Post/IPost";
 import IMessage from "../IMessage";
+import PostJSONSerializer from "../../Serializers/JSON/PostJSONSerializer";
 import PostJSONDeserializer from "../../Serializers/JSON/PostJSONDeserializer";
 
-export default class PostMessage extends ResponseMessage<IPostsBody> {
+export default class UpdatePostsMessage extends ResponseMessage<IPostsBody> {
     constructor(posts: IPost[], originalMessage?: IMessage<unknown>) {
         super(
             uuid(),
-            MessageType.Posts,
+            MessageType.UpdatePosts,
             {
                 posts: posts.map((post) => PostJSONSerializer(post))
             },
@@ -20,8 +20,6 @@ export default class PostMessage extends ResponseMessage<IPostsBody> {
     }
 
     deserialize<T>(): T {
-        return (this.body().posts.map((postSchema) =>
-            PostJSONDeserializer(postSchema)
-        ) as unknown) as T;
+        return (this.body().posts.map((post) => PostJSONDeserializer(post)) as unknown) as T;
     }
 }

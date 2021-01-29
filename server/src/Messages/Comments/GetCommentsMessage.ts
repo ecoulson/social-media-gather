@@ -23,4 +23,8 @@ export default class GetCommentsMessage extends ResponseMessage<IGetCommentsBody
             originalMessage
         );
     }
+
+    deserialize<T>(): T {
+        return (this.body() as unknown) as T;
+    }
 }

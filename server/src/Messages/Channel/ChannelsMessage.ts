@@ -5,6 +5,7 @@ import ChannelJSONSerializer from "../../Serializers/JSON/ChannelJSONSerializer"
 import ResponseMessage from "../ResponseMessage";
 import MessageType from "../MessageType";
 import IMessage from "../IMessage";
+import ChannelJSONDeserializer from "../../Serializers/JSON/ChannelJSONDeserializer";
 
 export default class ChannelsMessage extends ResponseMessage<IChannelsBody> {
     constructor(channels: IChannel[], originalMessage: IMessage<unknown>) {
@@ -16,5 +17,11 @@ export default class ChannelsMessage extends ResponseMessage<IChannelsBody> {
             },
             originalMessage
         );
+    }
+
+    deserialize<T>(): T {
+        return (this.body().channels.map((channel) =>
+            ChannelJSONDeserializer(channel)
+        ) as unknown) as T;
     }
 }

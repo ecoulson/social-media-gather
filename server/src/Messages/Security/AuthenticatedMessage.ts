@@ -10,4 +10,8 @@ export default class AuthenticatedMessage extends Message<IAuthenticatedBody> {
             isAuthenticated: true
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().isAuthenticated as unknown) as T;
+    }
 }

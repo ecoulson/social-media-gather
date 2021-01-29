@@ -10,4 +10,8 @@ export default class UserDoesNotExistMessage extends Message<IMessageBody> {
             message: `User with username: ${username} does not exist`
         });
     }
+
+    deserialize<T>(): T {
+        return (this.body().message as unknown) as T;
+    }
 }

@@ -17,4 +17,8 @@ export default class CreateCommentMessage extends ResponseMessage<ICreateComment
             originalMessage
         );
     }
+
+    deserialize<T>(): T {
+        return (this.body() as unknown) as T;
+    }
 }
