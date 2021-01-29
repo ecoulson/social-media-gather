@@ -7,4 +7,5 @@ export default interface IRepositoryMixin<Entity extends IEntity> {
     update(entity: Entity): Promise<Entity>;
     delete(entity: Entity): Promise<Entity>;
     add(entity: Entity): Promise<Entity>;
+    addAll(entity: Entity[]): Promise<Entity[]>;
 }

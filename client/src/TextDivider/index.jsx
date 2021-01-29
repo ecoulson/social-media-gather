@@ -3,11 +3,11 @@ import Container from "./Container";
 import Divider from "./Divider";
 import Text from "./Text";
 
-export default ({ date }) => {
+export default ({ text }) => {
     return (
         <Container>
             <Divider />
-            <Text date={date} />
+            <Text text={text} />
         </Container>
     )
 }

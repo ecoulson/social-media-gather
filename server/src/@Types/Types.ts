@@ -9,6 +9,7 @@ export default {
     PostRepository: Symbol.for("PostRepository"),
     ChannelRepository: Symbol.for("ChannelRepository"),
     CreatorRepository: Symbol.for("CreatorRepository"),
+    CommentsRepository: Symbol.for("CommentsRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     Config: Symbol.for("Config"),
     PasswordManager: Symbol.for("PasswordManager"),
@@ -32,5 +33,6 @@ export default {
     CreatorService: Symbol.for("CreatorService"),
     MessageQueue: Symbol.for("MessageQueue"),
     MediaPlatformMap: Symbol.for("MediaPlatformMap"),
+    CommentServiceMap: Symbol.for("CommentServiceMap"),
     YouTubeCommentsService: Symbol.for("YouTubeCommentsService")
 };

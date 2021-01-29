@@ -24,6 +24,6 @@ export default () => {
     new PostSubscriber(messageQueue, container.get<IPostsService>(Types.PostsService));
     new CommentSubscriber(
         messageQueue,
-        container.get<ICommentService>(Types.YouTubeCommentsService)
+        container.get<Map<Platform, ICommentService>>(Types.CommentServiceMap)
     );
 };

@@ -2,33 +2,33 @@ import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "../Button";
-import FeedFetcher from "../FeedFetcher";
+import InfiniteScroll from "../InfiniteScroll";
 import { ReactComponent as Check } from "../Assets/check.svg";
 import Cookie from "../Library/Cookie";
 import "./index.css";
 import { useRef } from "react";
-import Panel from "../Panel";
 import Feed from "../Home/Feed";
 import HomeLayout from "../Home/HomeLayout";
 import FollowedCreatorsSection from "../Home/FollowedCreatorsSection";
 import { GridItem } from "@chakra-ui/react";
+import GetUser from "../Library/GetUser";
+import transformFeed from "../InfiniteScroll/FeedTransformer";
+import PostDisplay from "../Home/PostDisplay";
 
 export default function Profile(props) {
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
   const followButton = useRef(null);
+  const [feed, setFeed] = useState([]);
+  const [currentPost, setPost] = useState(null);
 
   useEffect(() => {
-    async function checkAuthenticated() {
-      // if (!await isAuthenticated()) {
-      // history.push('/')
-      // } else {
+    async function getUser() {
       const response = await Axios.get(
         `/api/users/username/${props.match.params.username}`
       );
       setUser(response.data.data.users[0]);
-      // }
     }
 
     async function isFollowing() {
@@ -43,7 +43,7 @@ export default function Profile(props) {
       setFollowing(response.data.data.isFollowing);
     }
 
-    checkAuthenticated();
+    getUser();
     isFollowing();
   }, [props.match.params.username, history]);
 
@@ -81,14 +81,32 @@ export default function Profile(props) {
       </Button>
     );
   }
+
+  async function getNext(index) {
+    const response = await Axios.get(`/api/feed/${user.id}?offset=${index}`);
+    const posts = await Promise.all(
+      response.data.data.posts.map(async (post) => {
+        const creator = await GetUser(post.creatorId);
+        post.channelName = creator.username;
+        return post;
+      })
+    );
+    setFeed((feed) => [...feed, ...transformFeed(posts)]);
+  }
+
+  function handlePostClick(post) {
+    setPost(post);
+  }
+
   return (
     <HomeLayout>
       <FollowedCreatorsSection />
       <GridItem gridArea="feed">
-        <h1 className="profile-username">{user.username}</h1>
-        {renderFollowButton()}
-        <FeedFetcher Component={Feed} feedUrl={`/api/feed/${user.id}`} />
+        <InfiniteScroll next={getNext}>
+          <Feed posts={feed} onPostClick={handlePostClick} />
+        </InfiniteScroll>
       </GridItem>
+      <PostDisplay post={currentPost} />
     </HomeLayout>
   );
 }

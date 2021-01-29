@@ -2,6 +2,7 @@ enum MessageType {
     SetupMediaChannel = "SetupMediaChannel",
     GetPosts = "GetPosts",
     GetChannels = "GetChannels",
+    GetComments = "GetComments",
     CreateChannel = "CreateChannel",
     CreateCreator = "CreateCreator",
     CreateComments = "CreateComments",

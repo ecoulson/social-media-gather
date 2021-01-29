@@ -19,11 +19,12 @@ const transformPost = (post) => {
 
 function transformYouTubeVideo(post) {
   return {
-    id: post._id,
+    id: post.id,
     type: post.type,
     author: post.channelName,
     publishedAt: post.youtubeVideo.publishedAt,
     title: post.youtubeVideo.title,
+    platform: "YOUTUBE",
     media: {
       url: `https://youtube.com/watch?v=${post.youtubeVideo.videoId}`,
       thumbnailUrl: post.youtubeVideo.thumbnailUrl,
@@ -51,11 +52,12 @@ function transformYouTubeVideo(post) {
 
 function transformTwitchVideo(post) {
   return {
-    id: post._id,
+    id: post.id,
     type: post.type,
     author: post.channelName,
     publishedAt: post.twitchVideo.publishedAt,
     title: post.twitchVideo.title,
+    platform: "TWITCH",
     media: {
       url: post.twitchVideo.url,
       thumbnailUrl: post.twitchVideo.thumbnailUrl,
@@ -71,7 +73,8 @@ function transformTwitchVideo(post) {
 
 function transformTwitchStream(post) {
   return {
-    id: post._id,
+    id: post.id,
+    platform: "TWITCH",
     type: post.type,
     author: post.channelName,
     publishedAt: post.twitchStream.startedAt,
@@ -96,6 +99,7 @@ function transformTweet(post) {
   return {
     id: post.id,
     type: post.type,
+    platform: "TWEET",
     author: post.channelName,
     publishedAt: post.tweet.publishedAt,
     media: {
@@ -117,8 +121,9 @@ function transformTweet(post) {
 
 function transformInstagramPost(post) {
   return {
-    id: post._id,
+    id: post.id,
     type: post.type,
+    platform: "INSTAGRAM",
     author: post.channelName,
     publishedAt: post.instagram.takenAt,
     media: {

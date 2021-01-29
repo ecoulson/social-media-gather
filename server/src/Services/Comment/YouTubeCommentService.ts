@@ -1,4 +1,5 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable, tagged } from "inversify";
+import Tags from "../../@Types/Tags";
 import Types from "../../@Types/Types";
 import CommentBuilder from "../../Entities/Comment/CommentBuilder";
 import IComment from "../../Entities/Comment/IComment";
@@ -12,6 +13,7 @@ import Topic from "../../MessageQueue/Topic";
 import IPostsBody from "../../Messages/Bodies/IPostsBody";
 import MessageType from "../../Messages/MessageType";
 import GetPostsMessage from "../../Messages/Posts/GetPostsMessage";
+import CommentRepository from "../../Repositories/Comment/CommentRepository";
 import PostJSONDeserializer from "../../Serializers/JSON/PostJSONDeserializer";
 import ICommentService from "./ICommentService";
 
@@ -19,23 +21,38 @@ import ICommentService from "./ICommentService";
 export default class YouTubeCommentService extends Subscriber implements ICommentService {
     constructor(
         @inject(Types.YouTubeAPIClient) private youtubeAPIClient: YouTubeAPIClient,
+        @inject(Types.CommentsRepository)
+        @tagged(Tags.MONGO, true)
+        private commentsRepository: InstanceType<typeof CommentRepository>,
         @inject(Types.MessageQueue) messageQueue: IMessageQueue
     ) {
         super(messageQueue);
     }
 
     async loadCommentsFromMedia(postId: string): Promise<IComment[]> {
+        const post = await this.getPostFById(postId);
+        const comments = await this.getCommentsFromYouTube(post);
+        return await this.commentsRepository.addAll(comments);
+    }
+
+    private async getPostFById(postId: string) {
         const postsMessage = await this.query<IPostsBody>(
             Topic.Posts,
             MessageType.Posts,
             new GetPostsMessage([postId])
         );
-        const post = PostJSONDeserializer(postsMessage.data().posts[0]) as IYouTubeVideo;
-        const comments = await this.youtubeAPIClient.comments.listThreads({
-            videoId: post.videoId(),
+        return PostJSONDeserializer(postsMessage.data().posts[0]) as IYouTubeVideo;
+    }
+
+    private async getCommentsFromYouTube(youtubeVideo: IYouTubeVideo) {
+        const commentThreadsResponse = await this.youtubeAPIClient.comments.listThreads({
+            videoId: youtubeVideo.videoId(),
             part: ["snippet", "replies"]
         });
-        return comments.items().map((thread) => this.buildComment(postId, thread));
+        const comments = commentThreadsResponse
+            .items()
+            .map((commentThread) => this.buildComment(youtubeVideo.id(), commentThread));
+        return comments;
     }
 
     private buildComment(postId: string, commentThread: IYouTubeCommentThreadSchema): IComment {
@@ -59,7 +76,13 @@ export default class YouTubeCommentService extends Subscriber implements ICommen
         return commentBuilder.build();
     }
 
-    getComments(offset: number): Promise<IComment[]> {
-        throw new Error("Method not implemented.");
+    getComments(postId: string, offset: number): Promise<IComment[]> {
+        return this.commentsRepository.find({
+            where: {
+                postId
+            },
+            skip: offset,
+            limit: 10
+        });
     }
 }

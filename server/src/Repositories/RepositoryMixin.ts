@@ -41,6 +41,10 @@ function RepositoryMixin<Entity extends IEntity>() {
                 );
                 return createdEntity;
             }
+
+            async addAll(entities: Entity[]) {
+                return Promise.all(entities.map((entity) => this.add(entity)));
+            }
         };
     };
 }

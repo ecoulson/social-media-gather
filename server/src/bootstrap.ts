@@ -67,6 +67,8 @@ import IPostsService from "./Services/Posts/IPostsService";
 import PostsService from "./Services/Posts/PostsService";
 import YouTubeCommentService from "./Services/Comment/YouTubeCommentService";
 import ICommentService from "./Services/Comment/ICommentService";
+import CommentRepository from "./Repositories/Comment/CommentRepository";
+import MongoCommentStore from "./DataStores/Mongo/Comment/MongoCommentStore";
 
 configureEnvironment();
 
@@ -82,6 +84,7 @@ const mongoWebhookRepository = new WebhookRepository(new WebhookMongoDataStore()
 const mongoYouTubeRepository = new YouTubeRepository(new YouTubeVideoMongoDataStore());
 const mongoPostRepository = new PostRepository(new PostMongoDataStore());
 const mongoChannelRepository = new ChannelRepository(new ChannelMongoStore());
+const mongoCommentRepository = new CommentRepository(new MongoCommentStore());
 
 const config = new Config(new AWSConfig(Environment.getType()), new ProcessConfig());
 const messageQueue = new TopicMessageQueue();
@@ -94,6 +97,10 @@ container
 container
     .bind<InstanceType<typeof InstagramPostRepository>>(Types.InstagramPostRepository)
     .toConstantValue(mongoInstagramRepository)
+    .whenTargetTagged(Tags.MONGO, true);
+container
+    .bind<InstanceType<typeof CommentRepository>>(Types.CommentsRepository)
+    .toConstantValue(mongoCommentRepository)
     .whenTargetTagged(Tags.MONGO, true);
 container
     .bind<InstanceType<typeof TweetRepository>>(Types.TweetRepository)
@@ -211,6 +218,19 @@ container.bind<Map<Platform, IMediaPlatformService>>(Types.MediaPlatformMap).toC
             new InstagramChannelService(
                 container.get<InstagramAPIClient>(Types.InstagramAPIClient),
                 mongoInstagramRepository,
+                messageQueue
+            )
+        ]
+    ])
+);
+
+container.bind<Map<Platform, ICommentService>>(Types.CommentServiceMap).toConstantValue(
+    new Map<Platform, ICommentService>([
+        [
+            Platform.YOUTUBE,
+            new YouTubeCommentService(
+                container.get<YouTubeAPIClient>(Types.YouTubeAPIClient),
+                mongoCommentRepository,
                 messageQueue
             )
         ]

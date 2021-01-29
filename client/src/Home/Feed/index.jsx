@@ -1,39 +1,37 @@
 import { Flex } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
-import DateDivider from "./DateDivider";
+import TextDivider from "./TextDivider";
 import Post from "./Post";
 import moment from "moment";
 
 const FeedContainer = styled(Flex)`
-flex-direction: column;
-max-height: calc(100vh - 75px);
-border-right: 1px solid black;
-overflow-y: scroll;
-box-sizing: border-box;
-padding-top: 4px;
+  flex-direction: column;
+  border-right: 1px solid black;
+  overflow-y: scroll;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding-top: 4px;
 `;
 
-const renderFeed = (posts) => {
+export default ({ posts, scrollRef, onPostClick }) => {
+  const renderFeed = () => {
     let currentDate = "";
     return posts.map((post, i) => {
-        const newDate = moment(post.publishedAt).format("D/M/YYYY");
-        if (newDate !== currentDate) {
-            currentDate = newDate;
-            return [
-                <DateDivider date={post.publishedAt} />,
-                <Post key={i} post={post} />
-            ]
-        } else {
-            return <Post key={i} post={post} />
-        }
-    })
-} 
+      const newDate = moment(post.publishedAt).format("D/M/YYYY");
+      if (newDate !== currentDate) {
+        currentDate = newDate;
+        return [
+          <TextDivider
+            text={moment(post.publishedAt).format("dddd, MMMM Do")}
+          />,
+          <Post onClick={onPostClick} key={i} post={post} />,
+        ];
+      } else {
+        return <Post onClick={onPostClick} key={i} post={post} />;
+      }
+    });
+  };
 
-export default ({ posts, scrollRef }) => {
-    return (
-        <FeedContainer ref={scrollRef}>
-            {renderFeed(posts)}
-        </FeedContainer>
-    )
-}
+  return <FeedContainer ref={scrollRef}>{renderFeed()}</FeedContainer>;
+};

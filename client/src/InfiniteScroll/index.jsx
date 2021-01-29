@@ -5,8 +5,17 @@ import { useEffect } from "react";
 import debounce from "../Library/debounce";
 import transformFeed from "./FeedTransformer";
 import GetUser from "../Library/GetUser";
+import styled from "@emotion/styled";
+import { Box } from "@chakra-ui/react";
 
-export default function FeedFetcher({ feedUrl, Component }) {
+const ScrollContainer = styled(Box)`
+  overflow-y: scroll;
+  max-height: 100%;
+  height: 100%;
+  box-sizing: border-box;
+`;
+
+export default function InfiniteScroll({ feedUrl, next, children }) {
   const scrollRef = useRef(null);
   const [feed, setFeed] = useState([]);
   const [index, setIndex] = useState(0);
@@ -20,8 +29,7 @@ export default function FeedFetcher({ feedUrl, Component }) {
         return post;
       })
     );
-    console.log(posts[0]);
-    setFeed((feed) => [...feed, ...posts]);
+    setFeed((feed) => [...feed, ...transformFeed(posts)]);
   }, [index, feedUrl]);
 
   const onScroll = debounce(() => {
@@ -35,7 +43,9 @@ export default function FeedFetcher({ feedUrl, Component }) {
   }, 250);
 
   useEffect(() => {
-    console.log("Brother bilo", getContainerHeight(scrollRef.current));
+    if (next) {
+      next(index);
+    }
     getFeed();
   }, [getFeed]);
 
@@ -54,12 +64,14 @@ export default function FeedFetcher({ feedUrl, Component }) {
 
   useEffect(() => {
     if (feed === []) {
-      console.log("Brother bilo 2");
+      if (next) {
+        next(index);
+      }
       getFeed();
     }
   }, [feed, getFeed]);
 
-  return <Component scrollRef={scrollRef} posts={transformFeed(feed)} />;
+  return <ScrollContainer ref={scrollRef}>{children}</ScrollContainer>;
 }
 
 function getContainerHeight(element) {

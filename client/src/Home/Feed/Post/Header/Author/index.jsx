@@ -8,7 +8,6 @@ const Author = styled(Link)`
 `;
 
 export default ({ author }) => {
-  console.log(author, "here");
   return (
     <GridItem gridArea="author">
       <Author href={`/profile/${author}`}>@{author}</Author>
