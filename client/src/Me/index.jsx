@@ -1,6 +1,6 @@
 import { GridItem } from "@chakra-ui/react";
 import Axios from "axios";
-import React from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -10,7 +10,7 @@ import FollowedCreatorsSection from "../Home/FollowedCreatorsSection";
 import HomeLayout from "../Home/HomeLayout";
 import PostDisplay from "../Home/PostDisplay";
 import InfiniteScroll from "../InfiniteScroll";
-import transformFeed from "../InfiniteScroll/FeedTransformer";
+import transformFeed from "../Library/FeedTransformer";
 import Cookie from "../Library/Cookie";
 import GetUser from "../Library/GetUser";
 import Loader from "../Loader";
@@ -22,6 +22,21 @@ export default function Me() {
   const history = useHistory();
   const [feed, setFeed] = useState([]);
   const [currentPost, setCurrentPost] = useState(null);
+
+  const getNext = useCallback(
+    async (index) => {
+      const response = await Axios.get(`/api/feed/${user.id}?offset=${index}`);
+      const posts = await Promise.all(
+        response.data.data.posts.map(async (post) => {
+          const creator = await GetUser(post.creatorId);
+          post.channelName = creator.username;
+          return post;
+        })
+      );
+      setFeed((feed) => [...feed, ...transformFeed(posts)]);
+    },
+    [user]
+  );
 
   useEffect(() => {
     async function checkAuthenticated() {
@@ -50,18 +65,6 @@ export default function Me() {
         <Loader />
       </Panel>
     );
-  }
-
-  async function getNext(index) {
-    const response = await Axios.get(`/api/feed/${user.id}?offset=${index}`);
-    const posts = await Promise.all(
-      response.data.data.posts.map(async (post) => {
-        const creator = await GetUser(post.creatorId);
-        post.channelName = creator.username;
-        return post;
-      })
-    );
-    setFeed((feed) => [...feed, ...transformFeed(posts)]);
   }
 
   return (

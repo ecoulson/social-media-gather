@@ -25,7 +25,10 @@ export default abstract class Subscriber implements ISubscriber {
                 topic,
                 messageType,
                 (message: IResponseMessage<T>) => {
-                    if (originalMessage.metadata().id() === message.originalMessageId()) {
+                    if (
+                        message.originalMessageId() !== null &&
+                        originalMessage.metadata().id() === message.originalMessageId()
+                    ) {
                         this.unsubscribe(topic, subscription);
                         return resolve(message);
                     }

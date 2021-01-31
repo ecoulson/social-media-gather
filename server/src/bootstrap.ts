@@ -69,6 +69,7 @@ import YouTubeCommentService from "./Services/Comment/YouTubeCommentService";
 import ICommentService from "./Services/Comment/ICommentService";
 import CommentRepository from "./Repositories/Comment/CommentRepository";
 import MongoCommentStore from "./DataStores/Mongo/Comment/MongoCommentStore";
+import InstagramCommentService from "./Services/Comment/InstagramCommentService";
 
 configureEnvironment();
 
@@ -232,6 +233,14 @@ container.bind<Map<Platform, ICommentService>>(Types.CommentServiceMap).toConsta
                 container.get<YouTubeAPIClient>(Types.YouTubeAPIClient),
                 mongoCommentRepository,
                 messageQueue
+            )
+        ],
+        [
+            Platform.INSTAGRAM,
+            new InstagramCommentService(
+                messageQueue,
+                mongoCommentRepository,
+                container.get<InstagramAPIClient>(Types.InstagramAPIClient)
             )
         ]
     ])

@@ -1,12 +1,12 @@
 import ICreateCreatorBody from "../Bodies/ICreateCreatorBody";
-import Message from "../Message";
-import MetaData from "../MetaData";
 import { v4 as uuid } from "uuid";
 import MessageType from "../MessageType";
+import ResponseMessage from "../ResponseMessage";
+import IMessage from "../IMessage";
 
-export default class CreateCreatorMessage extends Message<ICreateCreatorBody> {
-    constructor(body: ICreateCreatorBody) {
-        super(new MetaData(uuid(), true, MessageType.CreateCreator), body);
+export default class CreateCreatorMessage extends ResponseMessage<ICreateCreatorBody> {
+    constructor(body: ICreateCreatorBody, originalMessage?: IMessage<unknown>) {
+        super(uuid(), MessageType.CreateCreator, body, originalMessage);
     }
 
     deserialize<T>(): T {

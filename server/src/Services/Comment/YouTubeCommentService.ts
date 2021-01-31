@@ -14,10 +14,8 @@ import Topic from "../../MessageQueue/Topic";
 import IPostsBody from "../../Messages/Bodies/IPostsBody";
 import MessageType from "../../Messages/MessageType";
 import GetPostsMessage from "../../Messages/Posts/GetPostsMessage";
-import PostMessage from "../../Messages/Posts/PostMessage";
 import UpdatePostsMessage from "../../Messages/Posts/UpdatePostsMessage";
 import CommentRepository from "../../Repositories/Comment/CommentRepository";
-import PostJSONDeserializer from "../../Serializers/JSON/PostJSONDeserializer";
 import ICommentService from "./ICommentService";
 
 @injectable()
@@ -44,7 +42,7 @@ export default class YouTubeCommentService extends Subscriber implements ICommen
             MessageType.Posts,
             new GetPostsMessage([postId])
         );
-        return PostJSONDeserializer(postsMessage.body().posts[0]) as IYouTubeVideo;
+        return postsMessage.deserialize<IPost[]>()[0] as IYouTubeVideo;
     }
 
     private async getCommentsFromYouTube(youtubeVideo: IYouTubeVideo) {
@@ -87,16 +85,7 @@ export default class YouTubeCommentService extends Subscriber implements ICommen
 
     async getComments(youTubeVideoId: string, offset: number): Promise<IComment[]> {
         const posts = await this.getYouTubeVideos(youTubeVideoId);
-        if (
-            posts[0].commentCount() >
-            (
-                await this.commentsRepository.find({
-                    where: {
-                        postId: posts[0].id()
-                    }
-                })
-            ).length
-        ) {
+        if (await this.shouldLoadComments(posts, offset)) {
             await this.loadCommentsFromMedia(youTubeVideoId);
         }
         return this.commentsRepository.find({
@@ -106,6 +95,21 @@ export default class YouTubeCommentService extends Subscriber implements ICommen
             skip: offset,
             limit: 10
         });
+    }
+
+    private async shouldLoadComments(posts: IYouTubeVideo[], offset: number) {
+        const postCommentCount = await this.getPostCommentCount(posts);
+        return posts[0].commentCount() > postCommentCount && offset >= postCommentCount;
+    }
+
+    private async getPostCommentCount(posts: IYouTubeVideo[]) {
+        return (
+            await this.commentsRepository.find({
+                where: {
+                    postId: posts[0].id()
+                }
+            })
+        ).length;
     }
 
     private async getYouTubeVideos(youTubeVideoId: string) {

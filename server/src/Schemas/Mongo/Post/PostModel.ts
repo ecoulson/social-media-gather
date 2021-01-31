@@ -86,6 +86,7 @@ const schema = new Schema({
         id: String,
         likes: String,
         commentCount: Number,
+        commentCursor: String,
         caption: String,
         media: [InstagramMedia],
         thumbnail: InstagramMedia

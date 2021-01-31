@@ -12,12 +12,13 @@ const InstagramJSONSerializer: Transformer<IInstagramPost, IInstagramJSONSchema>
 ) => {
     return {
         takenAt: instagramPost.takenAt(),
-        id: instagramPost.id(),
+        id: instagramPost.postId(),
         likes: instagramPost.likes(),
         caption: instagramPost.caption(),
         media: instagramPost.media().map((media) => InstagramMediaJSONSerializer(media)),
         thumbnail: InstagramMediaJSONSerializer(instagramPost.thumbnail()),
-        commentCount: instagramPost.commentCount()
+        commentCount: instagramPost.commentCount(),
+        commentCursor: instagramPost.commentCursor()
     };
 };
 

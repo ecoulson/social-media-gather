@@ -22,6 +22,7 @@ import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import InstagramAPIClient from "../../../Libraries/Instagram/InstagramAPIClient";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 import MessageType from "../../../Messages/MessageType";
+import IInstagramPost from "../../../Entities/InstagramPost/IInstagramPost";
 
 @injectable()
 export default class InstagramChannelService extends Subscriber implements IMediaPlatformService {
@@ -68,69 +69,101 @@ export default class InstagramChannelService extends Subscriber implements IMedi
     }
 
     private async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
-        const igUser = await this.instagramApi.client().user.info(channel.platformId());
         const userFeed = this.instagramApi.client().feed.user(channel.platformId());
-        let count = 0;
         let page = await userFeed.items();
         const instagramIds = new Set();
-        const builder = new InstagramPostBuilder();
-        while (count < igUser.media_count) {
-            count += page.length;
-            await Promise.all(
-                page
-                    .map(async (postItem) => {
-                        if (instagramIds.has(postItem.id)) {
-                            return null;
-                        }
-                        instagramIds.add(postItem.id);
-                        if (postItem.media_type === 8) {
-                            builder
-                                .setId("")
-                                .setChannelId(channel.id())
-                                .setPostId(postItem.id)
-                                .setCreatorId(creator.id)
-                                .setLikes(postItem.like_count)
-                                .setTakenAt(new Date(postItem.taken_at * 1000))
-                                .setCaption(this.getCaption(postItem))
-                                .setMedia(
-                                    postItem.carousel_media.map((slide) => this.createImage(slide))
-                                )
-                                .setThumbnail(this.createImage(postItem.carousel_media[0]))
-                                .setCommentCount(postItem.comment_count);
-                            return this.instagramPostRepository.add(builder.build());
-                        } else if (postItem.media_type === 2) {
-                            builder
-                                .setId("")
-                                .setChannelId(channel.id())
-                                .setPostId(postItem.id)
-                                .setCreatorId(creator.id)
-                                .setLikes(postItem.like_count)
-                                .setTakenAt(new Date(postItem.taken_at * 1000))
-                                .setCaption(this.getCaption(postItem))
-                                .setMedia([this.createVideo(postItem)])
-                                .setThumbnail(this.createImage(postItem))
-                                .setCommentCount(postItem.comment_count);
-                            return this.instagramPostRepository.add(builder.build());
-                        } else {
-                            builder
-                                .setId("")
-                                .setChannelId(channel.id())
-                                .setPostId(postItem.id)
-                                .setCreatorId(creator.id)
-                                .setLikes(postItem.like_count)
-                                .setTakenAt(new Date(postItem.taken_at * 1000))
-                                .setCaption(this.getCaption(postItem))
-                                .setMedia([this.createImage(postItem)])
-                                .setThumbnail(this.createImage(postItem))
-                                .setCommentCount(postItem.comment_count);
-                            return this.instagramPostRepository.add(builder.build());
-                        }
-                    })
-                    .filter((postItem) => postItem !== null)
-            );
+        do {
+            const posts: IInstagramPost[] = [];
+            page.map((postItem) => {
+                if (instagramIds.has(postItem.id)) {
+                    return null;
+                }
+                instagramIds.add(postItem.id);
+                posts.push(this.buildInstagramPost(postItem, channel, creator));
+            }).filter((postItem) => postItem !== null);
             page = await userFeed.items();
+            await this.instagramPostRepository.addAll(posts);
             await this.wait(5000 + Math.random() * 500);
+        } while (userFeed.isMoreAvailable());
+    }
+
+    private buildInstagramPost(
+        postItem: UserFeedResponseItemsItem,
+        channel: IChannel,
+        creator: ICreatorJSONSchema
+    ) {
+        if (this.isCarouselPost(postItem)) {
+            return this.buildCarouselPost(channel, postItem, creator);
+        } else if (this.isVideoPost(postItem)) {
+            return this.buildVideoPost(channel, postItem, creator);
+        } else {
+            return this.buildImagePost(channel, postItem, creator);
         }
+    }
+
+    private isVideoPost(postItem: UserFeedResponseItemsItem) {
+        return postItem.media_type === 2;
+    }
+
+    private isCarouselPost(postItem: UserFeedResponseItemsItem) {
+        return postItem.media_type === 8;
+    }
+
+    private buildImagePost(
+        channel: IChannel,
+        postItem: UserFeedResponseItemsItem,
+        creator: ICreatorJSONSchema
+    ) {
+        return new InstagramPostBuilder()
+            .setId("")
+            .setChannelId(channel.id())
+            .setPostId(postItem.id)
+            .setCreatorId(creator.id)
+            .setLikes(postItem.like_count)
+            .setTakenAt(new Date(postItem.taken_at * 1000))
+            .setCaption(this.getCaption(postItem))
+            .setMedia([this.createImage(postItem)])
+            .setThumbnail(this.createImage(postItem))
+            .setCommentCount(postItem.comment_count)
+            .build();
+    }
+
+    private buildVideoPost(
+        channel: IChannel,
+        postItem: UserFeedResponseItemsItem,
+        creator: ICreatorJSONSchema
+    ) {
+        return new InstagramPostBuilder()
+            .setId("")
+            .setChannelId(channel.id())
+            .setPostId(postItem.id)
+            .setCreatorId(creator.id)
+            .setLikes(postItem.like_count)
+            .setTakenAt(new Date(postItem.taken_at * 1000))
+            .setCaption(this.getCaption(postItem))
+            .setMedia([this.createVideo(postItem)])
+            .setThumbnail(this.createImage(postItem))
+            .setCommentCount(postItem.comment_count)
+            .build();
+    }
+
+    private buildCarouselPost(
+        channel: IChannel,
+        postItem: UserFeedResponseItemsItem,
+        creator: ICreatorJSONSchema
+    ) {
+        return new InstagramPostBuilder()
+            .setId("")
+            .setChannelId(channel.id())
+            .setPostId(postItem.id)
+            .setCreatorId(creator.id)
+            .setLikes(postItem.like_count)
+            .setTakenAt(new Date(postItem.taken_at * 1000))
+            .setCaption(this.getCaption(postItem))
+            .setMedia(postItem.carousel_media.map((slide) => this.createImage(slide)))
+            .setThumbnail(this.createImage(postItem.carousel_media[0]))
+            .setCommentCount(postItem.comment_count)
+            .build();
     }
 
     private createImage(

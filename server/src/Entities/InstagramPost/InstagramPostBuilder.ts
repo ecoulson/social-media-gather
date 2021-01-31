@@ -15,6 +15,7 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
     private _thumbnail: IImage;
     private _postId: string;
     private _creatorId: string;
+    private _commentCursor: string;
 
     reset() {
         this._id = null;
@@ -27,6 +28,7 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
         this._thumbnail = null;
         this._postId = null;
         this._creatorId = null;
+        this._commentCursor = null;
     }
 
     construct(): IInstagramPost {
@@ -40,7 +42,8 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
             this._media,
             this._thumbnail,
             this._commentCount,
-            this._creatorId
+            this._creatorId,
+            this._commentCursor
         );
     }
 
@@ -91,6 +94,11 @@ export default class InstagramPostBuilder extends Builder<IInstagramPost> {
 
     setPostId(postId: string): InstagramPostBuilder {
         this._postId = postId;
+        return this;
+    }
+
+    setCommentCursor(commentCursor: string): InstagramPostBuilder {
+        this._commentCursor = commentCursor;
         return this;
     }
 }

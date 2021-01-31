@@ -12,7 +12,7 @@ export default function Creator({ user }) {
     (async () => {
       setChannels(await GetChannels(user.channels));
     })();
-  }, []);
+  }, [user]);
 
   return (
     <CreatorContainer href={`/profile/${user.username}`}>

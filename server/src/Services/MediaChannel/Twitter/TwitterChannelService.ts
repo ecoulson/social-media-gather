@@ -83,7 +83,6 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
         channel: IChannel,
         creator: ICreatorJSONSchema
     ): Promise<ITweet> {
-        console.log(creator, "here");
         const tweetBuilder = new TweetBuilder();
         tweetBuilder
             .setId("")

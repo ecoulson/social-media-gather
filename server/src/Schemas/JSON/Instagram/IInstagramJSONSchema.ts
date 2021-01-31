@@ -5,6 +5,8 @@ export default interface IInstagramJSONSchema {
     id: string;
     likes: number;
     caption: string;
+    commentCursor: string;
+    commentCount: number;
     media: IInstagramMediaJSONSchema[];
     thumbnail: IInstagramMediaJSONSchema;
 }

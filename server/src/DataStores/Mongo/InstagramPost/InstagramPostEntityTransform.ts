@@ -20,7 +20,8 @@ const InstagramPostEntityTransform: Transformer<IPostDocument, IInstagramPost> =
         .setCaption(post.instagram.caption)
         .setMedia(post.instagram.media.map((mediaItem) => transformInstagramMedia(mediaItem)))
         .setThumbnail(new Image("", post.instagram.thumbnail.url, 0, 0))
-        .setCommentCount(post.instagram.commentCount);
+        .setCommentCount(post.instagram.commentCount)
+        .setCommentCursor(post.instagram.commentCursor);
     return instagramPostBuilder.build();
 };
 

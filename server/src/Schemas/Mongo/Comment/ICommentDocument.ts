@@ -10,4 +10,5 @@ export default interface ICommentDocument extends Document {
     dateCreated: Date;
     username: string;
     profilePicture: string;
+    commentCursor: string;
 }

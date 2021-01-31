@@ -17,7 +17,6 @@ export default class TwitchPaginatedResult<T>
     ) {}
 
     async nextPage(): Promise<ITwitchPaginatedResult<T>> {
-        console.log(this._pagination, this.hasNext());
         if (this._baseUrl.searchParams.has("after")) {
             this._baseUrl.searchParams.delete("after");
         }

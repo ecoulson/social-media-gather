@@ -15,7 +15,8 @@ export default class InstagramPost extends Post implements IInstagramPost {
         private _media: IMedia[],
         private _thumbnail: IImage,
         private _commentCount: number,
-        _creatorId: string
+        _creatorId: string,
+        private _commentCursor: string
     ) {
         super(PostType.INSTAGRAM_POST, _id, _channelId, _creatorId);
     }
@@ -46,5 +47,13 @@ export default class InstagramPost extends Post implements IInstagramPost {
 
     commentCount(): number {
         return this._commentCount;
+    }
+
+    commentCursor(): string {
+        return this._commentCursor;
+    }
+
+    setCommentCursor(commentCursor: string): void {
+        this._commentCursor = commentCursor;
     }
 }

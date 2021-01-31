@@ -17,12 +17,11 @@ export default class CreatorController extends Subscriber {
 
     @httpPost("/")
     async handleCreateCreator(@requestBody() body: ICreateCreatorBody) {
-        return (
-            await this.query<ICreatorsBody>(
-                Topic.Users,
-                MessageType.CreateCreator,
-                new CreateCreatorMessage(body)
-            )
-        ).toJson();
+        const message = await this.query<ICreatorsBody>(
+            Topic.Users,
+            MessageType.Creators,
+            new CreateCreatorMessage(body)
+        );
+        return message.toJson();
     }
 }

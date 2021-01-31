@@ -5,7 +5,6 @@ import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, Partial<IPostDocument>> = (
     post
 ) => {
-    console.log(post.commentPageToken());
     return {
         type: "YOUTUBE_VIDEO",
         channelId: post.channelId(),

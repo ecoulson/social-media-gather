@@ -16,7 +16,8 @@ const commentSchema = new Schema({
     dislikes: Number,
     dateCreated: Date,
     username: String,
-    profilePicture: String
+    profilePicture: String,
+    commentCursor: String
 });
 
 export default model<ICommentDocument>("Comment", commentSchema);

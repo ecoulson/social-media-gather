@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "../../InfiniteScroll";
 import Post from "../Feed/Post";
 import Comments from "./Comments";
@@ -8,9 +8,25 @@ import GetComments from "../../Library/GetComments";
 export default function PostDisplay({ post }) {
   const [comments, setComments] = useState([]);
 
+  const getNextComments = useCallback(
+    async (index) => {
+      function getCommentCount() {
+        return post.reactions
+          .filter((reaction) => reaction.type === "comments")
+          .map((reaction) => reaction.value);
+      }
+
+      if (comments.length !== getCommentCount()) {
+        const newComments = await GetComments(post.id, post.type, index);
+        setComments((comments) => [...comments, ...newComments]);
+      }
+    },
+    [comments, post]
+  );
+
   useEffect(() => {
     async function handleGetComments() {
-      const comments = await GetComments(post.id, 0);
+      const comments = await GetComments(post.id, post.type, 0);
       setComments(comments);
     }
 
@@ -20,24 +36,9 @@ export default function PostDisplay({ post }) {
     }
   }, [post]);
 
-  function getCommentCount() {
-    return post.reactions
-      .filter((reaction) => reaction.type === "comments")
-      .map((reaction) => reaction.value);
-  }
-
   if (!post) {
     return null;
   }
-
-  async function getNextComments(index) {
-    if (comments.length !== getCommentCount()) {
-      const newComments = await GetComments(post.id, index);
-      setComments((comments) => [...comments, ...newComments]);
-    }
-  }
-
-  console.log(comments);
 
   return (
     <PostDisplayLayout>

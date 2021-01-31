@@ -5,6 +5,7 @@ export default interface IInstagramPostDocument {
     id: string;
     likes: string;
     commentCount: number;
+    commentCursor: string;
     caption: string;
     media: IInstagramMediaDocument[];
     thumbnail: IInstagramMediaDocument;

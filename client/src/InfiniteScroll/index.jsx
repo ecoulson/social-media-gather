@@ -16,10 +16,9 @@ export default function InfiniteScroll({ next, children, items }) {
   const scrollRef = useRef(null);
   const [index, setIndex] = useState(items ? items.length : 0);
 
-  const getNext = useCallback(async () => {
-    console.log(index);
+  const getNext = useCallback(() => {
     next(index);
-  }, [index]);
+  }, [index, next]);
 
   const onScroll = debounce(() => {
     const height = getContainerHeight(scrollRef.current);

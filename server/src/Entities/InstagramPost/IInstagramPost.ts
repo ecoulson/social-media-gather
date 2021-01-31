@@ -9,4 +9,6 @@ export default interface IInstagramPost extends IPost {
     media(): IMedia[];
     thumbnail(): IMedia;
     postId(): string;
+    commentCursor(): string;
+    setCommentCursor(commentCursor: string): void;
 }

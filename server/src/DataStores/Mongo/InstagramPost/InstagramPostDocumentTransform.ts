@@ -21,7 +21,8 @@ const InstagramPostDocumentTransform: Transformer<IInstagramPost, Partial<IPostD
             caption: post.caption(),
             likes: post.likes().toString(),
             id: post.postId(),
-            commentCount: post.commentCount()
+            commentCount: post.commentCount(),
+            commentCursor: post.commentCursor()
         }
     };
 };

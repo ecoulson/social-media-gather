@@ -6,7 +6,7 @@ import ITweet from "../../Entities/Tweet/ITweet";
 import ITwitchStream from "../../Entities/TwitchStream/ITwitchStream";
 import ITwitchVideo from "../../Entities/TwitchVideo/ITwitchVideo";
 import IYouTubeVideo from "../../Entities/YouTubeVideo/IYouTubeVideo";
-import { IPostJSONSchema } from "../../Schemas/JSON/Post/IPostJSONSchema";
+import IPostJSONSchema from "../../Schemas/JSON/Post/IPostJSONSchema";
 import InstagramJSONSerializer from "./InstagramJSONSerializer";
 import TweetJSONSerializer from "./TweetJSONSerializer";
 import TwitchStreamJSONSerializer from "./TwitchStreamJSONSerializer";

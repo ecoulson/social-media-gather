@@ -15,6 +15,9 @@ export default abstract class ResponseMessage<T> extends Message<T> implements I
     }
 
     originalMessageId(): string {
+        if (this._originalMessage === null) {
+            return null;
+        }
         return this._originalMessage.metadata().id();
     }
 
