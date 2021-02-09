@@ -70,6 +70,7 @@ import ICommentService from "./Services/Comment/ICommentService";
 import CommentRepository from "./Repositories/Comment/CommentRepository";
 import MongoCommentStore from "./DataStores/Mongo/Comment/MongoCommentStore";
 import InstagramCommentService from "./Services/Comment/InstagramCommentService";
+import TwitterAPIVersion from "./Libraries/Twitter/TwitterAPIVersion";
 
 configureEnvironment();
 
@@ -159,7 +160,12 @@ container
     .toConstantValue(new YouTubeAPIClient(config));
 container
     .bind<TwitterAPIClient>(Types.TwitterAPIClient)
-    .toConstantValue(new TwitterAPIClient(config));
+    .toConstantValue(new TwitterAPIClient(TwitterAPIVersion.V1, config))
+    .whenTargetTagged(Tags.V1, true);
+container
+    .bind<TwitterAPIClient>(Types.TwitterAPIClient)
+    .toConstantValue(new TwitterAPIClient(TwitterAPIVersion.V2, config))
+    .whenTargetTagged(Tags.V2, true);
 container
     .bind<InstagramAPIClient>(Types.InstagramAPIClient)
     .toConstantValue(new InstagramAPIClient(config));
@@ -200,7 +206,7 @@ container.bind<Map<Platform, IMediaPlatformService>>(Types.MediaPlatformMap).toC
         [
             Platform.TWITTER,
             new TwitterChannelService(
-                container.get<TwitterAPIClient>(Types.TwitterAPIClient),
+                container.getTagged<TwitterAPIClient>(Types.TwitterAPIClient, Tags.V1, true),
                 mongoTweetRepository,
                 messageQueue
             )

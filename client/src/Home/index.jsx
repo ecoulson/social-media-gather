@@ -19,13 +19,18 @@ export default function Home() {
 
   const getNext = useCallback(async (index) => {
     const response = await Axios.get(`/api/feed?offset=${index}`);
-    const posts = await Promise.all(
+    let posts = await Promise.all(
       response.data.data.posts.map(async (post) => {
-        const creator = await GetUser(post.creatorId);
-        post.channelName = creator.username;
-        return post;
+        console.log(post);
+        if (post.creatorId) {
+          const creator = await GetUser(post.creatorId);
+          post.channelName = creator.username;
+          return post;
+        }
+        return null;
       })
     );
+    posts = posts.filter((x) => x !== null);
     setFeed((feed) => [...feed, ...transformFeed(posts)]);
   }, []);
 

@@ -10,6 +10,7 @@ import ITwitterVideoVariant from "../Libraries/Twitter/Schema/ITwitterVideoVaria
 import Video from "../Entities/Media/Video";
 import Image from "../Entities/Media/Image";
 import ChannelModel from "../Schemas/Mongo/Channel/ChannelModel";
+import UserModel from "../Schemas/Mongo/User/UserModel";
 import Platform from "../Entities/Platform/Platform";
 import IChannelDocument from "../Schemas/Mongo/Channel/IChannelDocument";
 const TwitterTweetTimelineEndpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json";
@@ -52,25 +53,33 @@ async function getTwitterPosts(twitterId: string): Promise<ITweetSchema[]> {
     return response.data;
 }
 
-async function createPostFromTweet(tweet: ITweetSchema, userId: string) {
-    const post = new Post({
-        type: "TWEET",
-        timeCreated: new Date(tweet.created_at),
-        userId: userId,
-        tweet: {
-            id: tweet.id_str,
-            text: tweet.full_text,
-            publishedAt: new Date(tweet.created_at),
-            screenName: tweet.user.screen_name,
-            hashtags: tweet.entities.hashtags.map((hashtag) => hashtag.text),
-            urls: getUrls(tweet),
-            userMentions: getUserMentions(tweet),
-            media: getMedia(tweet),
-            favorites: tweet.favorite_count,
-            retweetCount: tweet.retweet_count
+async function createPostFromTweet(tweet: ITweetSchema, channelId: string) {
+    const creators = await UserModel.find({
+        channels: {
+            $in: [channelId]
         }
     });
-    return post.save();
+    creators.map((creator) => {
+        const post = new Post({
+            type: "TWEET",
+            timeCreated: new Date(tweet.created_at),
+            channelId: channelId,
+            creatorId: creator.id,
+            tweet: {
+                id: tweet.id_str,
+                text: tweet.full_text,
+                publishedAt: new Date(tweet.created_at),
+                screenName: tweet.user.screen_name,
+                hashtags: tweet.entities.hashtags.map((hashtag) => hashtag.text),
+                urls: getUrls(tweet),
+                userMentions: getUserMentions(tweet),
+                media: getMedia(tweet),
+                favorites: tweet.favorite_count,
+                retweetCount: tweet.retweet_count
+            }
+        });
+        return post.save();
+    });
 }
 
 function getUrls(tweet: ITweetSchema) {

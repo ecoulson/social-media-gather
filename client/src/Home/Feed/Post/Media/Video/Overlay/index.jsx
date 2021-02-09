@@ -2,13 +2,16 @@ import { Badge, Box, Flex, Icon } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
+import { IconContext } from "react-icons/lib";
 
 const Overlay = styled(Box)`
   width: 100%;
+  max-width: 100%;
   height: 500px;
   background-image: url("${(props) => props.thumbnail}");
   position: relative;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center center;
 `;
 
@@ -41,7 +44,9 @@ export default ({ onClick, thumbnailUrl, isLive }) => {
     <Overlay thumbnail={thumbnailUrl} onClick={closeOverlay}>
       {isLive ? <Live>Live</Live> : null}
       <Shadow>
-        <Icon width={75} height={75} as={AiFillPlayCircle} />
+        <IconContext.Provider value={{ color: "white" }}>
+          <Icon width={75} height={75} as={AiFillPlayCircle} />
+        </IconContext.Provider>
       </Shadow>
     </Overlay>
   );

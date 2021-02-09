@@ -1,9 +1,9 @@
 import Axios from "axios";
-import ITweetSchema from "../Schema/ITweetSchema";
-import TwitterAPIClient from "../TwitterAPIClient";
+import ITweetSchema from "../../../Schema/ITweetSchema";
+import TwitterAPIClient from "../../../TwitterAPIClient";
 import ITwitterUsersLookUpOptions from "../Users/ITwitterLookUpOptions";
 
-export default class TwitterTweetClient {
+export default class TweetServiceV1 {
     private static TwitterTweetTimelineEndpoint =
         "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
@@ -12,7 +12,7 @@ export default class TwitterTweetClient {
     async lookup(options: ITwitterUsersLookUpOptions): Promise<ITweetSchema[]> {
         try {
             const response = await Axios.get(
-                `${TwitterTweetClient.TwitterTweetTimelineEndpoint}?user_id=${options.ids.join(
+                `${TweetServiceV1.TwitterTweetTimelineEndpoint}?user_id=${options.ids.join(
                     ","
                 )}&count=200&tweet_mode=extended&exclude_replies=true`,
                 {

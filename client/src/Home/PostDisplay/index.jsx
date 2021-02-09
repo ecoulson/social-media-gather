@@ -10,18 +10,10 @@ export default function PostDisplay({ post }) {
 
   const getNextComments = useCallback(
     async (index) => {
-      function getCommentCount() {
-        return post.reactions
-          .filter((reaction) => reaction.type === "comments")
-          .map((reaction) => reaction.value);
-      }
-
-      if (comments.length !== getCommentCount()) {
-        const newComments = await GetComments(post.id, post.type, index);
-        setComments((comments) => [...comments, ...newComments]);
-      }
+      const newComments = await GetComments(post.id, post.type, index);
+      setComments((comments) => [...comments, ...newComments]);
     },
-    [comments, post]
+    [post]
   );
 
   useEffect(() => {

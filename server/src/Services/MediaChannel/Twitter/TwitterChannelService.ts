@@ -28,11 +28,15 @@ import IChannel from "../../../Entities/Channel/IChannel";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 import MessageType from "../../../Messages/MessageType";
+import UsersServiceV1 from "../../../Libraries/Twitter/Services/v1/Users/UsersServiceV1";
+import TwitterServiceType from "../../../Libraries/Twitter/TwitterServiceType";
+import TweetServiceV1 from "../../../Libraries/Twitter/Services/v1/Tweets/TweetServiceV1";
 
 @injectable()
 export default class TwitterChannelService extends Subscriber implements IMediaPlatformService {
     constructor(
         @inject(Types.TwitterAPIClient)
+        @tagged(Tags.V1, true)
         private twitterAPIClient: TwitterAPIClient,
         @inject(Types.TweetRepository)
         @tagged(Tags.MONGO, true)
@@ -43,7 +47,10 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
     }
 
     async searchPlatformForChannel(userHandle: string): Promise<IMediaPlatformChannelSearchResult> {
-        const users = await this.twitterAPIClient.users.lookup({
+        const usersClient = this.twitterAPIClient.getService<UsersServiceV1>(
+            TwitterServiceType.Users
+        );
+        const users = await usersClient.lookup({
             screenNames: [userHandle]
         });
         return {
@@ -70,7 +77,10 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
     }
 
     async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<IPost[]> {
-        const tweets = await this.twitterAPIClient.tweets.lookup({
+        const tweetsClient = this.twitterAPIClient.getService<TweetServiceV1>(
+            TwitterServiceType.Tweets
+        );
+        const tweets = await tweetsClient.lookup({
             ids: [channel.platformId()]
         });
         return await Promise.all(
