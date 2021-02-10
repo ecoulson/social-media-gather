@@ -1,4 +1,4 @@
-export default interface ITwitterUsersLookUpOptions {
+export default interface IUsersSearchOptions {
     screenNames?: string[];
     ids?: string[];
     includeEntities?: boolean;

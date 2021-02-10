@@ -28,9 +28,9 @@ import IChannel from "../../../Entities/Channel/IChannel";
 import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
 import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
 import MessageType from "../../../Messages/MessageType";
-import UsersServiceV1 from "../../../Libraries/Twitter/Services/v1/Users/UsersServiceV1";
+import SearchServiceV1 from "../../../Libraries/Twitter/Services/v1/Search/SearchServiceV1";
 import TwitterServiceType from "../../../Libraries/Twitter/TwitterServiceType";
-import TweetServiceV1 from "../../../Libraries/Twitter/Services/v1/Tweets/TweetServiceV1";
+import UserServiceV1 from "../../../Libraries/Twitter/Services/v1/Users/UserServiceV1";
 
 @injectable()
 export default class TwitterChannelService extends Subscriber implements IMediaPlatformService {
@@ -47,10 +47,10 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
     }
 
     async searchPlatformForChannel(userHandle: string): Promise<IMediaPlatformChannelSearchResult> {
-        const usersClient = this.twitterAPIClient.getService<UsersServiceV1>(
-            TwitterServiceType.Users
+        const searchService = this.twitterAPIClient.getService<SearchServiceV1>(
+            TwitterServiceType.Search
         );
-        const users = await usersClient.lookup({
+        const users = await searchService.searchUsers({
             screenNames: [userHandle]
         });
         return {
@@ -77,10 +77,10 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
     }
 
     async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<IPost[]> {
-        const tweetsClient = this.twitterAPIClient.getService<TweetServiceV1>(
-            TwitterServiceType.Tweets
+        const usersService = this.twitterAPIClient.getService<UserServiceV1>(
+            TwitterServiceType.Users
         );
-        const tweets = await tweetsClient.lookup({
+        const tweets = await usersService.timeline({
             ids: [channel.platformId()]
         });
         return await Promise.all(

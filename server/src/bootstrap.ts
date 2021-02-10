@@ -71,6 +71,7 @@ import CommentRepository from "./Repositories/Comment/CommentRepository";
 import MongoCommentStore from "./DataStores/Mongo/Comment/MongoCommentStore";
 import InstagramCommentService from "./Services/Comment/InstagramCommentService";
 import TwitterAPIVersion from "./Libraries/Twitter/TwitterAPIVersion";
+import TwitterCommentService from "./Services/Comment/TwitterCommentService";
 
 configureEnvironment();
 
@@ -247,6 +248,15 @@ container.bind<Map<Platform, ICommentService>>(Types.CommentServiceMap).toConsta
                 messageQueue,
                 mongoCommentRepository,
                 container.get<InstagramAPIClient>(Types.InstagramAPIClient)
+            )
+        ],
+        [
+            Platform.TWITTER,
+            new TwitterCommentService(
+                messageQueue,
+                container.getTagged<TwitterAPIClient>(Types.TwitterAPIClient, Tags.V2, true),
+                container.getTagged<TwitterAPIClient>(Types.TwitterAPIClient, Tags.V1, true),
+                mongoCommentRepository
             )
         ]
     ])

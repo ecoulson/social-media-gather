@@ -1,6 +1,7 @@
 enum TwitterServiceType {
     Users = "Users",
-    Tweets = "Tweets"
+    Tweets = "Tweets",
+    Search = "Search"
 }
 
 export default TwitterServiceType;

@@ -5,33 +5,34 @@ import Topic from "../MessageQueue/Topic";
 import ICommentsBody from "../Messages/Bodies/ICommentsBody";
 import GetCommentsMessage from "../Messages/Comments/GetCommentsMessage";
 import MessageType from "../Messages/MessageType";
+import ErrorMessage from "../Messages/Status/ErrorMessage";
 
 @controller("/api/comments")
 export default class CommentsController extends Subscriber {
-    @httpGet("/youtube/:postId")
+    @httpGet("/:platform/:postId")
     async getYouTubeComments(
         @queryParam("offset") offset: string,
-        @requestParam("postId") postId: string
+        @requestParam("postId") postId: string,
+        @requestParam("platform") platform: string
     ) {
-        return (
-            await this.query<ICommentsBody>(
-                Topic.Comments,
-                MessageType.Comments,
-                new GetCommentsMessage(Platform.YOUTUBE, postId, parseInt(offset))
-            )
-        ).toJson();
+        switch (platform) {
+            case "youtube":
+                return this.getComments(Platform.YOUTUBE, postId, offset);
+            case "instagram":
+                return this.getComments(Platform.INSTAGRAM, postId, offset);
+            case "twitter":
+                return this.getComments(Platform.TWITTER, postId, offset);
+            default:
+                return new ErrorMessage(new Error(`Unrecognized platform ${platform}`)).toJson();
+        }
     }
 
-    @httpGet("/instagram/:postId")
-    async getInstagramComments(
-        @queryParam("offset") offset: string,
-        @requestParam("postId") postId: string
-    ) {
+    private async getComments(platform: Platform, postId: string, offset: string) {
         return (
             await this.query<ICommentsBody>(
                 Topic.Comments,
                 MessageType.Comments,
-                new GetCommentsMessage(Platform.INSTAGRAM, postId, parseInt(offset))
+                new GetCommentsMessage(platform, postId, parseInt(offset))
             )
         ).toJson();
     }

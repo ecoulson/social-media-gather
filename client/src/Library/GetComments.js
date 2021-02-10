@@ -16,6 +16,8 @@ function getType(type) {
       return "instagram";
     case "YOUTUBE_VIDEO":
       return "youtube";
+    case "TWEET":
+      return "twitter";
     default:
       return "fail";
   }

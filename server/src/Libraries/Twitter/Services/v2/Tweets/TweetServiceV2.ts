@@ -12,13 +12,26 @@ export default class TweetServiceV2 implements ITwitterService {
     async lookup(options: ITweetLookUpOptions): Promise<ITweetSchema[]> {
         const url = `${TweetServiceV2.TweetsEndPoint}?ids=${options.ids.join(
             ","
-        )}&fields=${options.fields.join(",")}&expansions=${options.expansions.join(",")}`;
+        )}&tweet.fields=${options.tweetFields.join(",")}&expansions=${options.expansions.join(
+            ","
+        )}`;
         const response = await Axios.get(url, {
             headers: {
-                authorization: `Bearer ${this.twitterClient.getAccessToken()}`
+                authorization: `Bearer ${await this.twitterClient.getAccessToken()}`
             }
         });
-        console.log(response.data);
-        return [];
+        return response.data.data.map(
+            (tweet: any): ITweetSchema => {
+                return {
+                    user: {
+                        id_str: tweet.author_id
+                    },
+                    text: tweet.text,
+                    id_str: tweet.id,
+                    conversation_id: tweet.conversation_id,
+                    created_at: tweet.created_at
+                };
+            }
+        );
     }
 }

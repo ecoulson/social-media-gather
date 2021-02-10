@@ -1,5 +1,5 @@
 export default interface ITweetLookUpOptions {
     ids: string[];
-    fields: string[];
+    tweetFields: string[];
     expansions: string[];
 }

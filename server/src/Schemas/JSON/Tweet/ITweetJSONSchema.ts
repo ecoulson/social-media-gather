@@ -11,4 +11,7 @@ export default interface ITweetJSONSchema {
     urls: ITweetUrlJSONSchema[];
     userMentions: ITweetMentionJSONSchema[];
     media: ITweetMediaJSONSchema[];
+    favorites: number;
+    commentCount: number;
+    retweetCount: number;
 }
