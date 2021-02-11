@@ -24,8 +24,13 @@ export default class FeedService implements IFeedService {
         const followedCreators = (await Promise.all(
             user.following().map((creatorId) => this.creatorRepository.findById(creatorId))
         )) as ICreator[];
-        const followedChannels = followedCreators
+        const nestedFollowedChannels = followedCreators
             .map((creator) => creator.channels())
+            .filter((channels) => channels.length > 0);
+        if (nestedFollowedChannels.length === 0) {
+            return [];
+        }
+        const flattenedFollowedChannels = nestedFollowedChannels
             .reduce((flattenedChannels, currentChannels) => [
                 ...flattenedChannels,
                 ...currentChannels
@@ -34,7 +39,7 @@ export default class FeedService implements IFeedService {
         return await this.postRepository.find({
             where: {
                 channelId: {
-                    $in: followedChannels
+                    $in: flattenedFollowedChannels
                 }
             },
             limit: BATCH_SIZE,

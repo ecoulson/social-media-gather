@@ -10,6 +10,10 @@ import YouTubeRepository from "../../../src/Repositories/YouTubeVideo/YouTubeRep
 import YouTubeWebhookCallbackService from "../../../src/Services/WebhookCallbacks/YouTubeWebhookCallbackService";
 import VideoClient from "../../../src/Libraries/YouTube/Videos/VideoClient";
 import YouTubeAPIClient from "../../../src/Libraries/YouTube/YouTubeAPIClient";
+import IChannel from "../../../src/Entities/Channel/IChannel";
+import Channel from "../../../src/Entities/Channel/Channel";
+import Platform from "../../../src/Entities/Platform/Platform";
+import { expect } from "chai";
 
 describe("Authentication Controller Suite", () => {
     let mockYouTubeVideoRepository: Mock<InstanceType<typeof YouTubeRepository>>;
@@ -17,9 +21,11 @@ describe("Authentication Controller Suite", () => {
     let mockYouTubeClient: Mock<YouTubeAPIClient>;
     let service: IWebhookCallbackService<IYouTubeWebhookCallbackData>;
     let user: IUser;
+    let channel: IChannel;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
+        channel = new Channel("", "", "", Platform.TIKTOK, 0);
         mockYouTubeClient = new Mock<YouTubeAPIClient>();
         mockVideoClient = new Mock<VideoClient>();
         mockYouTubeVideoRepository = new Mock<InstanceType<typeof YouTubeRepository>>();
@@ -38,13 +44,13 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Handle Challenge", () => {
-        test("Should return the challenge", () => {
-            expect(service.handleChallenge("challenge")).toEqual("challenge");
+        it("Should return the challenge", () => {
+            expect(service.handleChallenge("challenge")).to.equal("challenge");
         });
     });
 
     describe("Handle Callback", () => {
-        test("Should handle the callback", async () => {
+        it("Should handle the callback", async () => {
             mockYouTubeVideoRepository
                 .setup((youTubeVideoRepository) => youTubeVideoRepository.find)
                 .returns(() => Promise.resolve([]));
@@ -58,14 +64,22 @@ describe("Authentication Controller Suite", () => {
                         {
                             id: "",
                             title: "",
-                            thumbnails: {
-                                default: {
-                                    url: "",
-                                    width: 0,
-                                    height: 0
+                            snippet: {
+                                publishedAt: new Date().toDateString(),
+                                thumbnails: {
+                                    standard: {
+                                        url: "",
+                                        width: 0,
+                                        height: 0
+                                    }
                                 }
                             },
-                            publishedAt: new Date()
+                            statistics: {
+                                likeCount: "0",
+                                dislikeCount: "0",
+                                commentCount: "0",
+                                viewCount: "0"
+                            }
                         }
                     ])
                 );
@@ -79,7 +93,8 @@ describe("Authentication Controller Suite", () => {
                         "yt:videoid": "id"
                     }
                 },
-                userId: user.id()
+                creatorId: user.id(),
+                channelId: channel.id()
             });
         });
     });

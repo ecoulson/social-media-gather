@@ -13,6 +13,8 @@ import IllegalLoginException from "../../../src/Exceptions/IllegalLoginException
 import ITokenFactory from "../../../src/Security/Tokens/ITokenFactory";
 import IUserTokenPayload from "../../../src/Services/User/IUserTokenPayload";
 import IToken from "../../../src/Security/Tokens/IToken";
+import { expect } from "chai";
+import AuthenticationService from "../../../src/Services/Authentication/AuthenticationService";
 
 describe("Authentication Service Suite", () => {
     let service: IAuthenticationService;
@@ -22,7 +24,7 @@ describe("Authentication Service Suite", () => {
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockUserService = new Mock<IUserService>();
         mockPasswordManager = new Mock<IPasswordManager>();
         mockTokenFactory = new Mock<ITokenFactory<IUserTokenPayload>>();
@@ -35,11 +37,15 @@ describe("Authentication Service Suite", () => {
             .rebind<ITokenFactory<IUserTokenPayload>>(Types.TokenFactory)
             .toConstantValue(mockTokenFactory.object());
 
-        service = container.get<IAuthenticationService>(Types.AuthenticationService);
+        service = new AuthenticationService(
+            mockUserService.object(),
+            mockPasswordManager.object(),
+            mockTokenFactory.object()
+        );
     });
 
     describe("Login user", () => {
-        test("Password comparison failure", async () => {
+        it("Password comparison failure", async () => {
             mockUserService
                 .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(user));
@@ -50,11 +56,11 @@ describe("Authentication Service Suite", () => {
             try {
                 await service.login(user.username(), user.password());
             } catch (error) {
-                expect(error).toBeInstanceOf(ComparisonFailureException);
+                expect(error).to.be.instanceOf(ComparisonFailureException);
             }
         });
 
-        test("Passwords do no match", async () => {
+        it("Passwords do not match", async () => {
             mockUserService
                 .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(user));
@@ -65,11 +71,11 @@ describe("Authentication Service Suite", () => {
             try {
                 await service.login(user.username(), user.password());
             } catch (error) {
-                expect(error).toBeInstanceOf(IllegalLoginException);
+                expect(error).to.be.instanceOf(IllegalLoginException);
             }
         });
 
-        test("Successful login", async () => {
+        it("Successful login", async () => {
             const expectedToken = new Mock<IToken<IUserTokenPayload>>().object();
             mockTokenFactory
                 .setup((tokenFactor) => tokenFactor.create)
@@ -83,12 +89,12 @@ describe("Authentication Service Suite", () => {
 
             const token = await service.login(user.username(), user.password());
 
-            expect(token).toEqual(expectedToken);
+            expect(token).to.deep.equal(expectedToken);
         });
     });
 
     describe("Register user", () => {
-        test("User exists", async () => {
+        it("User exists", async () => {
             mockUserService
                 .setup((userService) => userService.doesUserExist)
                 .returns(() => Promise.resolve(true));
@@ -99,12 +105,12 @@ describe("Authentication Service Suite", () => {
             try {
                 await service.register(user.username(), user.email(), user.password());
             } catch (error) {
-                expect(error).toBeInstanceOf(UserExistsException);
+                expect(error).to.be.instanceOf(UserExistsException);
             }
         });
 
-        test("User does not exist", async () => {
-            const expectedUser = new User("", "", "", "", "", "", "", "", false, []);
+        it("User does not exist", async () => {
+            const expectedUser = new User("", "", "", "", false, [], false, []);
             expectedUser.addFollower(expectedUser);
             mockUserService
                 .setup((userService) => userService.doesUserExist)
@@ -123,9 +129,9 @@ describe("Authentication Service Suite", () => {
                 user.password()
             );
 
-            expect(registeredUser.following()).toHaveLength(1);
-            expect(registeredUser.following()).toEqual(expectedUser.following());
-            expect(registeredUser).toEqual(expectedUser);
+            expect(registeredUser.following()).to.have.length(1);
+            expect(registeredUser.following()).to.deep.equal(expectedUser.following());
+            expect(registeredUser).to.deep.equal(expectedUser);
         });
     });
 });

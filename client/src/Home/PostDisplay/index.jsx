@@ -35,16 +35,17 @@ export default function PostDisplay({ post }) {
     return null;
   }
 
+  console.log(post);
+
   if (post.type === "TWITCH_STREAM") {
     return (
       <PostDisplayLayout>
         <Box height="100%" overflowY="scroll">
           <Post post={post} />
           <iframe
+            title={`${post.author}'s stream`}
             id="chat_embed"
-            src={`https://www.twitch.tv/embed/${"miniminter"}/chat?parent=${
-              window.location.hostname
-            }`}
+            src={`https://www.twitch.tv/embed/${post.author}/chat?parent=${window.location.hostname}`}
             height="100%"
             width="100%"
           />

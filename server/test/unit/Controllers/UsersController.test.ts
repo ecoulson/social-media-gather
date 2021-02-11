@@ -6,10 +6,11 @@ import { Mock } from "moq.ts";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
-import UsersMessage from "../../../src/Messages/UsersMessage";
-import DeletedUserMessage from "../../../src/Messages/DeletedUserMessage";
+import UsersMessage from "../../../src/Messages/Users/UsersMessage";
+import DeletedUserMessage from "../../../src/Messages/Users/DeletedUserMessage";
 import { Request } from "express";
-import IsFollowingMessage from "../../../src/Messages/IsFollowingMessage";
+import IsFollowingMessage from "../../../src/Messages/Following/IsFollowingMessage";
+import { expect } from "chai";
 
 describe("Authentication Controller Suite", () => {
     let mockUserService: Mock<IUserService>;
@@ -17,7 +18,7 @@ describe("Authentication Controller Suite", () => {
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockUserService = new Mock<IUserService>();
 
         container.rebind<IUserService>(Types.UserService).toConstantValue(mockUserService.object());
@@ -26,19 +27,19 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Get User By Id", () => {
-        test("Should get user by id", async () => {
+        it("Should get user by id", async () => {
             mockUserService
                 .setup((userService) => userService.getUserById)
                 .returns(() => Promise.resolve(user));
 
             const message = await controller.getUserById(user.id());
 
-            expect(message).toEqual(new UsersMessage([user]).create());
+            expect(message).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Delete User With Id", () => {
-        test("Should delete user by id", async () => {
+        it("Should delete user by id", async () => {
             mockUserService
                 .setup((userService) => userService.getUserById)
                 .returns(() => Promise.resolve(user))
@@ -47,25 +48,25 @@ describe("Authentication Controller Suite", () => {
 
             const message = await controller.deleteUser(user.id());
 
-            expect(message).toEqual(new DeletedUserMessage(user.id()).create());
+            expect(message).to.deep.equal(new DeletedUserMessage(user.id()).toJson());
         });
     });
 
     describe("Get User With Username", () => {
-        test("Should get user with username", async () => {
+        it("Should get user with username", async () => {
             mockUserService
                 .setup((userService) => userService.getUserByUsername)
                 .returns(() => Promise.resolve(user));
 
             const message = await controller.getUserByUsername(user.username());
 
-            expect(message).toEqual(new UsersMessage([user]).create());
+            expect(message).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Follow User", () => {
-        test("Should follow user", async () => {
-            const userToFollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Should follow user", async () => {
+            const userToFollow = new User("followerId", "", "", "", false, [], false, []);
             mockUserService
                 .setup((userService) => userService.follow)
                 .returns((actingUser) => Promise.resolve(actingUser));
@@ -74,19 +75,19 @@ describe("Authentication Controller Suite", () => {
                 .returns(() => Promise.resolve(userToFollow));
 
             const message = await controller.followUser({
-                userEntity: () => user,
+                user: () => user,
                 params: {
                     userToFollowId: userToFollow.id()
                 } as unknown
             } as Request);
 
-            expect(message).toEqual(new UsersMessage([user]).create());
+            expect(message).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Unfollow User", () => {
-        test("Should unfollow user", async () => {
-            const userToUnfollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Should unfollow user", async () => {
+            const userToUnfollow = new User("followerId", "", "", "", false, [], false, []);
             user.addFollower(userToUnfollow);
             mockUserService
                 .setup((userService) => userService.unfollow)
@@ -96,46 +97,46 @@ describe("Authentication Controller Suite", () => {
                 .returns(() => Promise.resolve(userToUnfollow));
 
             const message = await controller.unfollowUser({
-                userEntity: () => user,
+                user: () => user,
                 params: {
                     userToUnfollowId: userToUnfollow.id()
                 } as unknown
             } as Request);
 
-            expect(message).toEqual(new UsersMessage([user]).create());
+            expect(message).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Is following", () => {
-        test("Is following user", async () => {
-            const userToUnfollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Is following user", async () => {
+            const userToUnfollow = new User("followerId", "", "", "", false, [], false, []);
             user.addFollower(userToUnfollow);
             mockUserService
                 .setup((userService) => userService.isFollowing)
                 .returns(() => Promise.resolve(true));
 
             const message = await controller.isFollowingUser({
-                userEntity: () => user,
+                user: () => user,
                 params: {
                     followingUsername: userToUnfollow.username()
                 } as unknown
             } as Request);
 
-            expect(message).toEqual(new IsFollowingMessage(true).create());
+            expect(message).to.deep.equal(new IsFollowingMessage(true).toJson());
         });
     });
 
     describe("Update user", () => {
-        test("Should update user", async () => {
+        it("Should update user", async () => {
             mockUserService
                 .setup((userService) => userService.updateUser)
                 .returns((user) => Promise.resolve(user));
 
             const message = await controller.updateUser({
-                userEntity: () => user
+                user: () => user
             } as Request);
 
-            expect(message).toEqual(new UsersMessage([user]).create());
+            expect(message).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 });

@@ -1,5 +1,10 @@
 module.exports = {
-    preset: "ts-jest",
+    transform: {
+        "^.+\\.(ts|tsx)$": "ts-jest"
+    },
     testEnvironment: "node",
+    testMatch: ["**/?(*.)+(spec|test).+(ts)"],
+    testPathIgnorePatterns: ["./node_modules/"],
+    moduleDirectories: ["node_modules"],
     roots: ["<rootDir>/test"]
 };
