@@ -16,6 +16,8 @@ export default ({ thumbnailUrl, videoUrl, isLive = false }) => {
     );
   }
 
+  console.log(videoUrl);
+
   return (
     <ReactPlayer width="100%" height="500px" controls playing url={videoUrl} />
   );

@@ -2,6 +2,7 @@ import IMedia from "../Media/IMedia";
 import Post from "../Post/Post";
 import PostType from "../Post/PostType";
 import ITweet from "./ITweet";
+import ITweetCommentPagination from "./ITweetCommentPagination";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
 
@@ -20,7 +21,8 @@ export default class Tweet extends Post implements ITweet {
         private _favorites: number,
         private _retweetCount: number,
         private _commentCount: number,
-        _creatorId: string
+        _creatorId: string,
+        private _pagination: ITweetCommentPagination
     ) {
         super(PostType.TWEET, _id, _channelId, _creatorId);
     }
@@ -67,5 +69,17 @@ export default class Tweet extends Post implements ITweet {
 
     commentCount(): number {
         return this._commentCount;
+    }
+
+    setCommentCount(commentCount: number) {
+        this._commentCount = commentCount;
+    }
+
+    pagination(): ITweetCommentPagination {
+        return this._pagination;
+    }
+
+    setPagination(pagination: ITweetCommentPagination) {
+        this._pagination = pagination;
     }
 }

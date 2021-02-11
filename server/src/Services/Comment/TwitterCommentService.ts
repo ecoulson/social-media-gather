@@ -5,10 +5,12 @@ import CommentBuilder from "../../Entities/Comment/CommentBuilder";
 import IComment from "../../Entities/Comment/IComment";
 import Image from "../../Entities/Media/Image";
 import ITweet from "../../Entities/Tweet/ITweet";
+import ITweetSchema from "../../Libraries/Twitter/Schema/ITweetSchema";
 import TweetServiceV1 from "../../Libraries/Twitter/Services/v1/Tweets/TweetServiceV1";
 import SearchServiceV2 from "../../Libraries/Twitter/Services/v2/Search/SearchServiceV2";
 import TweetServiceV2 from "../../Libraries/Twitter/Services/v2/Tweets/TweetServiceV2";
 import TwitterAPIClient from "../../Libraries/Twitter/TwitterAPIClient";
+import TwitterPaginatedResult from "../../Libraries/Twitter/TwitterPaginatedResult";
 import TwitterServiceType from "../../Libraries/Twitter/TwitterServiceType";
 import IMessageQueue from "../../MessageQueue/IMessageQueue";
 import Subscriber from "../../MessageQueue/Subscriber";
@@ -16,6 +18,7 @@ import Topic from "../../MessageQueue/Topic";
 import IPostsBody from "../../Messages/Bodies/IPostsBody";
 import MessageType from "../../Messages/MessageType";
 import GetPostsMessage from "../../Messages/Posts/GetPostsMessage";
+import UpdatePostsMessage from "../../Messages/Posts/UpdatePostsMessage";
 import CommentRepository from "../../Repositories/Comment/CommentRepository";
 import ICommentService from "./ICommentService";
 
@@ -36,7 +39,35 @@ export default class TwitterCommentService extends Subscriber implements ICommen
     }
 
     async getComments(postId: string, offset: number): Promise<IComment[]> {
-        return this.loadCommentsFromMedia(postId);
+        const tweet = await this.getTweet(postId);
+        if (await this.shouldLoadComments(tweet, offset)) {
+            return this.loadCommentsFromMedia(postId);
+        }
+        return this.commentsRepository.find({
+            where: {
+                postId
+            },
+            skip: offset,
+            limit: 100
+        });
+    }
+
+    private async shouldLoadComments(tweet: ITweet, offset: number) {
+        const postCommentCount = await this.getPostCommentCount(tweet);
+        return (
+            (tweet.pagination() == null || !tweet.pagination().isAtEnd) &&
+            offset >= postCommentCount
+        );
+    }
+
+    private async getPostCommentCount(tweet: ITweet) {
+        return (
+            await this.commentsRepository.find({
+                where: {
+                    postId: tweet.id()
+                }
+            })
+        ).length;
     }
 
     private async getTweet(postId: string) {
@@ -49,8 +80,81 @@ export default class TwitterCommentService extends Subscriber implements ICommen
     }
 
     async loadCommentsFromMedia(postId: string): Promise<IComment[]> {
-        const commentBuilder = new CommentBuilder();
         const tweet = await this.getTweet(postId);
+        const recentTweetComments = await this.getCommentsFromLast7Days(tweet);
+        const comments = await this.convertRecentTweetCommentsToComments(
+            recentTweetComments,
+            tweet
+        );
+        this.updateTweetCommentPagination(tweet, recentTweetComments);
+        return await this.commentsRepository.addAll(comments);
+    }
+
+    private async updateTweetCommentPagination(
+        tweet: ITweet,
+        recentTweetComments: TwitterPaginatedResult<ITweetSchema[]>
+    ) {
+        const pagination = recentTweetComments.pagination();
+        tweet.setPagination({
+            newestId: pagination.newest_id,
+            oldestId: pagination.oldest_id,
+            isAtEnd: pagination.isAtEnd
+        });
+        tweet.setCommentCount(
+            isNaN(tweet.commentCount())
+                ? recentTweetComments.data().length
+                : tweet.commentCount() + recentTweetComments.data().length
+        );
+        return await this.query(Topic.Posts, MessageType.Posts, new UpdatePostsMessage([tweet]));
+    }
+
+    private async convertRecentTweetCommentsToComments(
+        recentTweetComments: TwitterPaginatedResult<ITweetSchema[]>,
+        tweet: ITweet
+    ) {
+        const commentBuilder = new CommentBuilder();
+        const tweetServiceV1 = this.twitterAPIClientV1.getService<TweetServiceV1>(
+            TwitterServiceType.Tweets
+        );
+        const comments = (
+            await tweetServiceV1.lookupTweets({
+                ids: recentTweetComments.data().map((result) => result.id_str)
+            })
+        ).map((tweetSchema) => {
+            return commentBuilder
+                .setDateCreated(new Date(tweetSchema.created_at))
+                .setDislikes(0)
+                .setLikes(tweetSchema.favorite_count)
+                .setPostId(tweet.id())
+                .setProfileImage(new Image("", tweetSchema.user.profile_image_url, 0, 0))
+                .setReplyCount(tweetSchema.reply_count)
+                .setText(tweetSchema.full_text)
+                .setUsername(tweetSchema.user.screen_name)
+                .build();
+        });
+        return comments;
+    }
+
+    private async getCommentsFromLast7Days(tweet: ITweet) {
+        const conversationIdOfTweet = await this.getConversationIdForTweet(tweet);
+        const searchService = this.twitterAPIClientV2.getService<SearchServiceV2>(
+            TwitterServiceType.Search
+        );
+        const results = await searchService.searchRecentTweets({
+            conversationId: conversationIdOfTweet,
+            tweetFields: [
+                "in_reply_to_user_id",
+                "author_id",
+                "created_at",
+                "conversation_id",
+                "public_metrics"
+            ],
+            untilId: tweet.pagination() ? tweet.pagination().oldestId : undefined
+        });
+        return results;
+    }
+
+    private async getConversationIdForTweet(tweet: ITweet) {
         const tweetService = this.twitterAPIClientV2.getService<TweetServiceV2>(
             TwitterServiceType.Tweets
         );
@@ -60,37 +164,12 @@ export default class TwitterCommentService extends Subscriber implements ICommen
                 "conversation_id",
                 "created_at",
                 "in_reply_to_user_id",
-                "referenced_tweets"
+                "referenced_tweets",
+                "public_metrics"
             ],
             ids: [tweet.tweetId()],
             expansions: ["author_id", "in_reply_to_user_id", "referenced_tweets.id"]
         });
-        const searchService = this.twitterAPIClientV2.getService<SearchServiceV2>(
-            TwitterServiceType.Search
-        );
-        const results = await searchService.searchRecentTweets({
-            conversationId: tweets[0].conversation_id,
-            tweetFields: ["in_reply_to_user_id", "author_id", "created_at", "conversation_id"]
-        });
-        const tweetServiceV1 = this.twitterAPIClientV1.getService<TweetServiceV1>(
-            TwitterServiceType.Tweets
-        );
-        const comments = (
-            await tweetServiceV1.lookupTweets({
-                ids: results.map((result) => result.id_str)
-            })
-        ).map((tweet) => {
-            return commentBuilder
-                .setDateCreated(new Date(tweet.created_at))
-                .setDislikes(0)
-                .setLikes(tweet.favorite_count)
-                .setPostId(postId)
-                .setProfileImage(new Image("", tweet.user.profile_image_url, 0, 0))
-                .setReplyCount(tweet.reply_count)
-                .setText(tweet.full_text)
-                .setUsername(tweet.user.screen_name)
-                .build();
-        });
-        return await this.commentsRepository.addAll(comments);
+        return tweets[0].conversation_id;
     }
 }

@@ -9,6 +9,11 @@ export default interface ITweetDocument {
     screenName: string;
     hashtags: string[];
     favorites: number;
+    pagination: {
+        newestId: string;
+        oldestId: string;
+        isAtEnd: boolean;
+    };
     commentCount: number;
     retweetCount: number;
     urls: ITweetUrlDocument[];

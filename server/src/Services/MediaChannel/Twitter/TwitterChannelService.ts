@@ -113,7 +113,8 @@ export default class TwitterChannelService extends Subscriber implements IMediaP
             .setChannelId(channel.id())
             .setFavorites(tweetSchema.favorite_count)
             .setRetweets(tweetSchema.retweet_count)
-            .setCommentCount(tweetSchema.reply_count);
+            .setPagination(null)
+            .setCommentCount(tweetSchema.reply_count ? tweetSchema.reply_count : 0);
         return this.tweetRepository.add(tweetBuilder.build());
     }
 

@@ -30,6 +30,7 @@ export default function TweetJSONDeserializer(schema: IPostJSONSchema) {
         .setChannelId(schema.channelId)
         .setRetweets(schema.tweet.retweetCount)
         .setFavorites(schema.tweet.favorites)
+        .setPagination(schema.tweet.pagination)
         .setCommentCount(schema.tweet.commentCount);
     return tweetBuilder.build();
 }

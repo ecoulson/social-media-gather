@@ -72,6 +72,7 @@ function transformTwitchVideo(post) {
 }
 
 function transformTwitchStream(post) {
+  console.log(post.twitchStream);
   return {
     id: post.id,
     platform: "TWITCH",
@@ -81,7 +82,7 @@ function transformTwitchStream(post) {
     title: post.twitchStream.title,
     media: {
       live: post.twitchStream.live,
-      url: post.twitchStream.url,
+      url: `https://player.twitch.tv/${post.twitchStream.username}`,
       thumbnailUrl: post.twitchStream.thumbnailUrl
         .replace("{width}", "1080")
         .replace("{height}", "720"),
@@ -114,6 +115,10 @@ function transformTweet(post) {
       {
         type: "retweets",
         value: post.tweet.retweetCount,
+      },
+      {
+        type: "comments",
+        value: post.tweet.commentCount,
       },
     ],
   };

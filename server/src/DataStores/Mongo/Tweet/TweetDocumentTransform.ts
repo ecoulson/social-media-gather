@@ -28,7 +28,8 @@ const TweetDocumentTransform: Transformer<ITweet, Partial<IPostDocument>> = (twe
             urls: tweet.urls().map((url) => transformUrl(url)),
             favorites: tweet.favorites(),
             retweetCount: tweet.retweetCount(),
-            commentCount: tweet.commentCount()
+            commentCount: tweet.commentCount(),
+            pagination: tweet.pagination()
         }
     };
 };

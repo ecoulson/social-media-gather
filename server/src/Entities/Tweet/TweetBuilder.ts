@@ -1,6 +1,7 @@
 import Builder from "../../Libraries/Builder/Builder";
 import IMedia from "../Media/IMedia";
 import ITweet from "./ITweet";
+import ITweetCommentPagination from "./ITweetCommentPagination";
 import ITweetMention from "./ITweetMentions";
 import ITweetUrl from "./ITweetUrl";
 import Tweet from "./Tweet";
@@ -20,6 +21,7 @@ export default class TweetBuilder extends Builder<ITweet> {
     private _retweets: number;
     private _commentCount: number;
     private _creatorId: string;
+    private _pagination: ITweetCommentPagination;
 
     reset(): void {
         this._id = null;
@@ -36,6 +38,7 @@ export default class TweetBuilder extends Builder<ITweet> {
         this._retweets = null;
         this._commentCount = null;
         this._creatorId = null;
+        this._pagination = null;
     }
 
     construct(): ITweet {
@@ -53,7 +56,8 @@ export default class TweetBuilder extends Builder<ITweet> {
             this._favorites,
             this._retweets,
             this._commentCount,
-            this._creatorId
+            this._creatorId,
+            this._pagination
         );
         this.reset();
         return tweet;
@@ -125,6 +129,11 @@ export default class TweetBuilder extends Builder<ITweet> {
 
     setCommentCount(commentCount: number): TweetBuilder {
         this._commentCount = commentCount;
+        return this;
+    }
+
+    setPagination(pagination: ITweetCommentPagination) {
+        this._pagination = pagination;
         return this;
     }
 }

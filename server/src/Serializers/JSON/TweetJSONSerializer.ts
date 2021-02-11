@@ -23,7 +23,8 @@ const TweetJSONSerializer: Transformer<ITweet, ITweetJSONSchema> = (tweetEntity)
         media: tweetEntity.media().map((media) => TweetMediaJSONSerializer(media)),
         favorites: tweetEntity.favorites(),
         retweetCount: tweetEntity.retweetCount(),
-        commentCount: tweetEntity.commentCount()
+        commentCount: tweetEntity.commentCount(),
+        pagination: tweetEntity.pagination()
     };
 };
 

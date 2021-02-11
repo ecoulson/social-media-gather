@@ -31,6 +31,7 @@ const TweetEntityTransform: Transformer<IPostDocument, ITweet> = (post) => {
         .setChannelId(post.channelId)
         .setRetweets(post.tweet.retweetCount)
         .setFavorites(post.tweet.favorites)
+        .setPagination(post.tweet.pagination)
         .setCommentCount(post.tweet.commentCount);
     return tweetBuilder.build();
 };

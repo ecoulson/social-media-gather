@@ -4,6 +4,7 @@ import Post from "../Feed/Post";
 import Comments from "./Comments";
 import PostDisplayLayout from "./Layout";
 import GetComments from "../../Library/GetComments";
+import { Box } from "@chakra-ui/react";
 
 export default function PostDisplay({ post }) {
   const [comments, setComments] = useState([]);
@@ -11,7 +12,9 @@ export default function PostDisplay({ post }) {
   const getNextComments = useCallback(
     async (index) => {
       const newComments = await GetComments(post.id, post.type, index);
-      setComments((comments) => [...comments, ...newComments]);
+      if (newComments) {
+        setComments((comments) => [...comments, ...newComments]);
+      }
     },
     [post]
   );
@@ -30,6 +33,24 @@ export default function PostDisplay({ post }) {
 
   if (!post) {
     return null;
+  }
+
+  if (post.type === "TWITCH_STREAM") {
+    return (
+      <PostDisplayLayout>
+        <Box height="100%" overflowY="scroll">
+          <Post post={post} />
+          <iframe
+            id="chat_embed"
+            src={`https://www.twitch.tv/embed/${"miniminter"}/chat?parent=${
+              window.location.hostname
+            }`}
+            height="100%"
+            width="100%"
+          />
+        </Box>
+      </PostDisplayLayout>
+    );
   }
 
   return (

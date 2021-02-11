@@ -26,6 +26,12 @@ const TwitterMedia = new Schema({
     url: String
 });
 
+const TwitterPagination = new Schema({
+    newestId: String,
+    oldestId: String,
+    isAtEnd: Boolean
+});
+
 const schema = new Schema({
     type: {
         type: String,
@@ -77,6 +83,7 @@ const schema = new Schema({
         commentCount: Number,
         retweetCount: Number,
         hashtags: [String],
+        pagination: TwitterPagination,
         urls: [TwitterUrls],
         userMentions: [TwitterUserMentions],
         media: [TwitterMedia]
