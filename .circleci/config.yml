@@ -154,6 +154,6 @@ workflows:
           filters:
             branches:
               only: # Only deploy for production, staging, and master branches
-                - dev
-                - staging
+                # - dev
+                # - staging
                 - master
