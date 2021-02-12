@@ -12,6 +12,7 @@ import transformFeed from "../Library/FeedTransformer";
 import PostDisplay from "../Home/PostDisplay";
 import { useCallback } from "react";
 import Cookie from "../Library/Cookie";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function Profile(props) {
   const history = useHistory();
@@ -22,7 +23,7 @@ export default function Profile(props) {
   const getNext = useCallback(
     async (index) => {
       const response = await Axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/feed/${user.id}?offset=${index}`,
+        `${GetEndpoint()}/api/feed/${user.id}?offset=${index}`,
         {
           headers: {
             Authorization: `Bearer ${Cookie.getCookie("token")}`,
@@ -44,7 +45,7 @@ export default function Profile(props) {
   useEffect(() => {
     async function getUser() {
       const response = await Axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/users/username/${props.match.params.username}`
+        `${GetEndpoint()}/api/users/username/${props.match.params.username}`
       );
       setUser(response.data.data.users[0]);
     }

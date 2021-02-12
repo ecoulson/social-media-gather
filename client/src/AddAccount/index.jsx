@@ -7,6 +7,7 @@ import PlatformSelector from "../PlatformSelector";
 import AccountSearch from "../AccountSearch";
 import { useState } from "react";
 import Axios from "axios";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function AddAccount() {
   const [platform, setPlatform] = useState("twitch");
@@ -25,7 +26,7 @@ export default function AddAccount() {
   }
 
   async function onRegister() {
-    await Axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/creator/`, {
+    await Axios.post(`${GetEndpoint()}/api/creator/`, {
       channels: getChannels(),
       username: name,
       email: `${name}@unclaimed.account`,

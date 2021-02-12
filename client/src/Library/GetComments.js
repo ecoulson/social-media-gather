@@ -1,9 +1,10 @@
 import Axios from "axios";
+import GetEndpoint from "./GetEndpoint";
 
 export default async function GetComments(postId, type, offset) {
   if (type) {
     const response = await Axios.get(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/comments/${getType(
+      `${GetEndpoint()}/api/comments/${getType(
         type
       )}/${postId}?offset=${offset}`
     );

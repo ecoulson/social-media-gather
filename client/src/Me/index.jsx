@@ -16,6 +16,7 @@ import GetUser from "../Library/GetUser";
 import Loader from "../Loader";
 import Panel from "../Panel";
 import "./index.css";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function Me() {
   const [user, setUser] = useState(null);
@@ -26,7 +27,7 @@ export default function Me() {
   const getNext = useCallback(
     async (index) => {
       const response = await Axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/feed/${user.id}?offset=${index}`,
+        `${GetEndpoint()}/api/feed/${user.id}?offset=${index}`,
         {
           headers: {
             Authorization: `Bearer ${Cookie.getCookie("token")}`,
@@ -55,14 +56,11 @@ export default function Me() {
     }
 
     async function getMe() {
-      const response = await Axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`,
-        {
-          headers: {
-            authorization: `Bearer ${Cookie.getCookie("token")}`,
-          },
-        }
-      );
+      const response = await Axios.get(`${GetEndpoint()}/api/auth/me`, {
+        headers: {
+          authorization: `Bearer ${Cookie.getCookie("token")}`,
+        },
+      });
       setUser(response.data.data.users[0]);
     }
 

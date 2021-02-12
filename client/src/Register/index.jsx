@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import Button from "../Button";
 import Form from "../Form";
 import Input from "../Input";
+import GetEndpoint from "../Library/GetEndpoint";
 import "./index.css";
 
 export default function Register(props) {
@@ -13,14 +14,11 @@ export default function Register(props) {
   const history = useHistory();
 
   async function onRegister() {
-    await Axios.post(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/auth/register`,
-      {
-        username,
-        email,
-        password,
-      }
-    );
+    await Axios.post(`${GetEndpoint()}/api/auth/register`, {
+      username,
+      email,
+      password,
+    });
     history.push("/login");
   }
 

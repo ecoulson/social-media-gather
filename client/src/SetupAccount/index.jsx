@@ -8,6 +8,7 @@ import Cookie from "../Library/Cookie";
 import isAuthenticated from "../Auth/IsAuthenticated";
 import Panel from "../Panel";
 import Button from "../Button";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function SignUp() {
   const [platform, setPlatform] = useState("twitch");
@@ -50,7 +51,7 @@ function onRegister(platformChannelMap) {
     platformChannelMap.forEach((id, platform) => {
       registerRequests.push(
         Axios.put(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/channel/${platform}/link/${id}`,
+          `${GetEndpoint()}/api/channel/${platform}/link/${id}`,
           {},
           {
             headers: {

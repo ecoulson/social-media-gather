@@ -11,6 +11,7 @@ import { ReactComponent as Twitter } from "../Assets/twitter.svg";
 import { ReactComponent as Youtube } from "../Assets/youtube.svg";
 import { ReactComponent as Instagram } from "../Assets/instagram.svg";
 import { Link, useLocation } from "react-router-dom";
+import GetEndpoint from "../Library/GetEndpoint";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -25,9 +26,7 @@ export default function SearchPage() {
     async function getUsers() {
       const parameters = new URLSearchParams(window.location.search);
       const response = await Axios.get(
-        `${
-          process.env.REACT_APP_API_ENDPOINT
-        }/api/search?query=${parameters.get("query")}`
+        `${GetEndpoint()}/api/search?query=${parameters.get("query")}`
       );
       setUsers(response.data.data.users);
     }
