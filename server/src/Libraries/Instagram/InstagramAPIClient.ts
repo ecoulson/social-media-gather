@@ -11,7 +11,7 @@ export default class InstagramAPIClient {
         this.igClient = new IgApiClient();
         config.getValue("INSTAGRAM_USER").then((username) => {
             this.igClient.state.generateDevice(username);
-            // this.setupInstagram(this.igClient, config);
+            this.setupInstagram(this.igClient, config);
         });
     }
 
