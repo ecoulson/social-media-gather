@@ -4,6 +4,7 @@ import Axios from "axios";
 import debounce from "../Library/debounce";
 import "./index.css";
 import Input from "../Input";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function AccountSearch(props) {
   const [results, setResults] = useState([]);
@@ -17,7 +18,9 @@ export default function AccountSearch(props) {
       let formattedUsername = username.trim();
       if (formattedUsername !== "") {
         const response = await Axios.get(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/channel/${props.platform}/search?username=${formattedUsername}`
+          `${GetEndpoint()}/api/channel/${
+            props.platform
+          }/search?username=${formattedUsername}`
         );
         setResults(response.data.data.results.channels);
       }

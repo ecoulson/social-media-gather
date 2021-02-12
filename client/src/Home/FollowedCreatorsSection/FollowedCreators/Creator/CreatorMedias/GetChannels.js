@@ -1,8 +1,9 @@
 import Axios from "axios";
+import GetEndpoint from "../../../../../Library/GetEndpoint";
 
 export default async function GetChannels(ids) {
   const response = await Axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/api/channel?ids=${ids.join(",")}`
+    `${GetEndpoint()}/api/channel?ids=${ids.join(",")}`
   );
   return response.data.data.channels;
 }

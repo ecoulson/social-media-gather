@@ -7,6 +7,7 @@ import isAuthenticated from "../Auth/IsAuthenticated";
 import InfiniteScroll from "../InfiniteScroll";
 import Cookie from "../Library/Cookie";
 import transformFeed from "../Library/FeedTransformer";
+import GetEndpoint from "../Library/GetEndpoint";
 import GetUser from "../Library/GetUser";
 import Feed from "./Feed";
 import FollowedCreatorsSection from "./FollowedCreatorsSection";
@@ -20,7 +21,7 @@ export default function Home() {
 
   const getNext = useCallback(async (index) => {
     const response = await Axios.get(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/feed?offset=${index}`,
+      `${GetEndpoint()}/api/feed?offset=${index}`,
       {
         headers: {
           Authorization: `Bearer ${Cookie.getCookie("token")}`,

@@ -5,6 +5,7 @@ import Button from "../Button";
 import Form from "../Form";
 import Input from "../Input";
 import Cookie from "../Library/Cookie";
+import GetEndpoint from "../Library/GetEndpoint";
 import "./index.css";
 
 export default function Login() {
@@ -14,13 +15,10 @@ export default function Login() {
 
   const submit = async (event) => {
     event.preventDefault();
-    const response = await Axios.post(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/auth/login`,
-      {
-        username,
-        password,
-      }
-    );
+    const response = await Axios.post(`${GetEndpoint()}/api/auth/login`, {
+      username,
+      password,
+    });
     if (response.data.data.token) {
       Cookie.setCookie(
         "token",

@@ -8,6 +8,7 @@ import Input from "../Input";
 import Cookie from "../Library/Cookie";
 import Panel from "../Panel";
 import "./index.css";
+import GetEndpoint from "../Library/GetEndpoint";
 
 export default function EditProfile() {
   const [user, setUser] = useState();
@@ -15,14 +16,11 @@ export default function EditProfile() {
 
   useEffect(() => {
     async function getMe() {
-      const response = await Axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`,
-        {
-          headers: {
-            authorization: `Bearer ${Cookie.getCookie("token")}`,
-          },
-        }
-      );
+      const response = await Axios.get(`${GetEndpoint()}/api/auth/me`, {
+        headers: {
+          authorization: `Bearer ${Cookie.getCookie("token")}`,
+        },
+      });
       setUser(response.data);
       setEmail(response.data.email);
     }
@@ -31,19 +29,16 @@ export default function EditProfile() {
   }, []);
 
   async function deleteProfile() {
-    await Axios.delete(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/users/delete`,
-      {
-        headers: {
-          authorization: `Bearer ${Cookie.getCookie("token")}`,
-        },
-      }
-    );
+    await Axios.delete(`${GetEndpoint()}/api/users/delete`, {
+      headers: {
+        authorization: `Bearer ${Cookie.getCookie("token")}`,
+      },
+    });
   }
 
   async function updateProfile() {
     await Axios.put(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/users/update`,
+      `${GetEndpoint()}/api/users/update`,
       {
         email: email,
       },
