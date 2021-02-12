@@ -2,6 +2,7 @@ import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
 import IMessage from "./IMessage";
 import IMetaData from "./IMetaData";
 
+// comment
 export default abstract class Message<Body> implements IMessage<Body> {
     constructor(private _metadata: IMetaData, private _data: Body) {}
 
