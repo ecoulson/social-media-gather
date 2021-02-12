@@ -11,6 +11,7 @@ import GetUser from "../Library/GetUser";
 import transformFeed from "../Library/FeedTransformer";
 import PostDisplay from "../Home/PostDisplay";
 import { useCallback } from "react";
+import Cookie from "../Library/Cookie";
 
 export default function Profile(props) {
   const history = useHistory();
@@ -20,7 +21,14 @@ export default function Profile(props) {
 
   const getNext = useCallback(
     async (index) => {
-      const response = await Axios.get(`/api/feed/${user.id}?offset=${index}`);
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/feed/${user.id}?offset=${index}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       const posts = await Promise.all(
         response.data.data.posts.map(async (post) => {
           const creator = await GetUser(post.creatorId);
@@ -36,7 +44,7 @@ export default function Profile(props) {
   useEffect(() => {
     async function getUser() {
       const response = await Axios.get(
-        `/api/users/username/${props.match.params.username}`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/users/username/${props.match.params.username}`
       );
       setUser(response.data.data.users[0]);
     }

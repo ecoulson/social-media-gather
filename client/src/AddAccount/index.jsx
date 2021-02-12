@@ -25,7 +25,7 @@ export default function AddAccount() {
   }
 
   async function onRegister() {
-    await Axios.post("/api/creator/", {
+    await Axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/creator/`, {
       channels: getChannels(),
       username: name,
       email: `${name}@unclaimed.account`,

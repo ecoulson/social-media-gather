@@ -3,7 +3,9 @@ import Axios from "axios";
 export default async function GetComments(postId, type, offset) {
   if (type) {
     const response = await Axios.get(
-      `/api/comments/${getType(type)}/${postId}?offset=${offset}`
+      `${process.env.REACT_APP_API_ENDPOINT}/api/comments/${getType(
+        type
+      )}/${postId}?offset=${offset}`
     );
     return response.data.data.comments;
   }

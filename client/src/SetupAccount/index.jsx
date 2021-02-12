@@ -50,7 +50,7 @@ function onRegister(platformChannelMap) {
     platformChannelMap.forEach((id, platform) => {
       registerRequests.push(
         Axios.put(
-          `/api/channel/${platform}/link/${id}`,
+          `${process.env.REACT_APP_API_ENDPOINT}/api/channel/${platform}/link/${id}`,
           {},
           {
             headers: {

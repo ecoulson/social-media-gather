@@ -14,18 +14,23 @@ export default function SearchDropdown(props) {
 
   useEffect(() => {
     async function getMe() {
-      const response = await Axios.get(`/api/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${Cookie.getCookie("token")}`,
-        },
-      });
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       setMe(response.data.data.users[0]);
       getUsers();
     }
 
     async function getUsers() {
       if (props.username.length !== 0) {
-        const response = await Axios.get(`/api/search?query=${props.username}`);
+        const response = await Axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/search?query=${props.username}`
+        );
         setUsers(response.data.data.users.slice(0, 9));
       } else {
         hide();
@@ -62,7 +67,9 @@ export default function SearchDropdown(props) {
       event.stopPropagation();
       me.following.push(user.id);
       setMe(me);
-      await Axios.put(`/api/users/follow/${user.id}`);
+      await Axios.put(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/users/follow/${user.id}`
+      );
       updateFollowedUser(user, true);
     };
   }
@@ -87,7 +94,9 @@ export default function SearchDropdown(props) {
       event.stopPropagation();
       me.following.splice(me.following.indexOf(user.id), 1);
       setMe(me);
-      await Axios.put(`/api/users/unfollow/${user.id}`);
+      await Axios.put(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/users/unfollow/${user.id}`
+      );
       updateFollowedUser(user, false);
     };
   }

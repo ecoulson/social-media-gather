@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import isAuthenticated from "../Auth/IsAuthenticated";
 import InfiniteScroll from "../InfiniteScroll";
+import Cookie from "../Library/Cookie";
 import transformFeed from "../Library/FeedTransformer";
 import GetUser from "../Library/GetUser";
 import Feed from "./Feed";
@@ -18,7 +19,14 @@ export default function Home() {
   const [feed, setFeed] = useState([]);
 
   const getNext = useCallback(async (index) => {
-    const response = await Axios.get(`/api/feed?offset=${index}`);
+    const response = await Axios.get(
+      `${process.env.REACT_APP_API_ENDPOINT}/api/feed?offset=${index}`,
+      {
+        headers: {
+          Authorization: `Bearer ${Cookie.getCookie("token")}`,
+        },
+      }
+    );
     let posts = await Promise.all(
       response.data.data.posts.map(async (post) => {
         console.log(post);

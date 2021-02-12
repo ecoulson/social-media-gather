@@ -17,7 +17,7 @@ export default function AccountSearch(props) {
       let formattedUsername = username.trim();
       if (formattedUsername !== "") {
         const response = await Axios.get(
-          `/api/channel/${props.platform}/search?username=${formattedUsername}`
+          `${process.env.REACT_APP_API_ENDPOINT}/api/channel/${props.platform}/search?username=${formattedUsername}`
         );
         setResults(response.data.data.results.channels);
       }

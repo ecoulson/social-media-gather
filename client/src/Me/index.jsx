@@ -25,7 +25,14 @@ export default function Me() {
 
   const getNext = useCallback(
     async (index) => {
-      const response = await Axios.get(`/api/feed/${user.id}?offset=${index}`);
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/feed/${user.id}?offset=${index}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       const posts = await Promise.all(
         response.data.data.posts.map(async (post) => {
           const creator = await GetUser(post.creatorId);
@@ -48,11 +55,14 @@ export default function Me() {
     }
 
     async function getMe() {
-      const response = await Axios.get("/api/auth/me", {
-        headers: {
-          authorization: `Bearer ${Cookie.getCookie("token")}`,
-        },
-      });
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`,
+        {
+          headers: {
+            authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       setUser(response.data.data.users[0]);
     }
 
