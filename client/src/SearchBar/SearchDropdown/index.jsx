@@ -65,7 +65,15 @@ export default function SearchDropdown(props) {
       event.stopPropagation();
       me.following.push(user.id);
       setMe(me);
-      await Axios.put(`${GetEndpoint()}/api/users/follow/${user.id}`);
+      await Axios.put(
+        `${GetEndpoint()}/api/users/follow/${user.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       updateFollowedUser(user, true);
     };
   }
@@ -90,7 +98,15 @@ export default function SearchDropdown(props) {
       event.stopPropagation();
       me.following.splice(me.following.indexOf(user.id), 1);
       setMe(me);
-      await Axios.put(`${GetEndpoint()}/api/users/unfollow/${user.id}`);
+      await Axios.put(
+        `${GetEndpoint()}/api/users/unfollow/${user.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
+        }
+      );
       updateFollowedUser(user, false);
     };
   }
