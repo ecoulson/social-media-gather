@@ -7,7 +7,8 @@ import User from "../../../src/Entities/User/User";
 import Types from "../../../src/@Types/Types";
 import IFeedService from "../../../src/Services/Feed/IFeedService";
 import { Request } from "express";
-import FeedMessage from "../../../src/Messages/FeedMessage";
+import PostMessage from "../../../src/Messages/Posts/PostMessage";
+import { expect } from "chai";
 
 describe("Authentication Controller Suite", () => {
     let mockFeedService: Mock<IFeedService>;
@@ -15,7 +16,7 @@ describe("Authentication Controller Suite", () => {
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockFeedService = new Mock<IFeedService>();
 
         container.rebind<IFeedService>(Types.FeedService).toConstantValue(mockFeedService.object());
@@ -24,31 +25,31 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Gets users feed", () => {
-        test("Should get users feed", async () => {
+        it("Should get users feed", async () => {
             mockFeedService
                 .setup((feedService) => feedService.getUsersFeed)
                 .returns(() => Promise.resolve([]));
 
             const message = await controller.getUsersFeed({
-                userEntity: () => user,
+                user: () => user,
                 query: {
                     offset: "0"
                 } as unknown
             } as Request);
 
-            expect(message).toEqual(new FeedMessage([]).create());
+            expect(message).to.deep.equal(new PostMessage([]).toJson());
         });
     });
 
     describe("Gets users posts", () => {
-        test("Should get users posts", async () => {
+        it("Should get users posts", async () => {
             mockFeedService
-                .setup((feedService) => feedService.getUsersPosts)
+                .setup((feedService) => feedService.getCreatorsPosts)
                 .returns(() => Promise.resolve([]));
 
             const message = await controller.getUsersPosts(user.id(), "0");
 
-            expect(message).toEqual(new FeedMessage([]).create());
+            expect(message).to.deep.equal(new PostMessage([]).toJson());
         });
     });
 });

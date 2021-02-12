@@ -1,20 +1,25 @@
-import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IYouTubeVideo from "../../../Entities/YouTubeVideo/IYouTubeVideo";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
-const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, UpdateQuery<IPostDocument>> = (
+const YouTubeVideoDocumentTransform: Transformer<IYouTubeVideo, Partial<IPostDocument>> = (
     post
 ) => {
     return {
         type: "YOUTUBE_VIDEO",
-        userId: post.userId(),
+        channelId: post.channelId(),
         timeCreated: post.publishedAt(),
+        creatorId: post.creatorId(),
         youtubeVideo: {
             publishedAt: post.publishedAt(),
             videoId: post.videoId(),
             thumbnailUrl: post.thumbnailUrl(),
-            title: post.title()
+            title: post.title(),
+            commentCount: post.commentCount(),
+            likes: post.likes(),
+            dislikes: post.dislikes(),
+            views: post.views(),
+            commentPageToken: post.commentPageToken()
         }
     };
 };

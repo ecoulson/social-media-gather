@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import IUserDocument from "../Schemas/Mongo/User/IUserDocument";
 import IUser from "../Entities/User/IUser";
 
 declare global {
     namespace Express {
         export interface Request {
-            user: IUserDocument | null;
-            userEntity?(): IUser;
+            user(): IUser;
         }
     }
 }

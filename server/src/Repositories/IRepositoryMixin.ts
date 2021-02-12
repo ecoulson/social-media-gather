@@ -5,6 +5,8 @@ export default interface IRepositoryMixin<Entity extends IEntity> {
     find(query?: IQuery): Promise<Entity[]>;
     findById(id: string): Promise<Entity>;
     update(entity: Entity): Promise<Entity>;
+    updateAll(entities: Entity[]): Promise<Entity[]>;
     delete(entity: Entity): Promise<Entity>;
     add(entity: Entity): Promise<Entity>;
+    addAll(entities: Entity[]): Promise<Entity[]>;
 }

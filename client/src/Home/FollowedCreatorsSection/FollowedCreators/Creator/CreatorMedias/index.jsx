@@ -1,29 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CreatorMediaContainer from "./CreatorMediaContainer";
 import MediaIcon from "../../../../../MediaIcon";
 import MediaIconType from "../../../../../MediaIcon/Type";
 
-export default function CreatorMedias(props) {
-    function renderMedias() {
-        let medias = [];
-        if (props.user.instagramId) {
-            medias.push(<MediaIcon key={1} type={MediaIconType.INSTAGRAM} />);
+export default function CreatorMedias({ user, channels }) {
+  const [media, setMedia] = useState([]);
+
+  useEffect(() => {
+    async function getMedias() {
+      const medias = channels.map((channel) => {
+        switch (channel.platform) {
+          case "TWITCH":
+            return <MediaIcon key={3} type={MediaIconType.TWITCH} />;
+          case "YOUTUBE":
+            return <MediaIcon key={2} type={MediaIconType.YOUTUBE} />;
+          case "TWITTER":
+            return <MediaIcon key={4} type={MediaIconType.TWITTER} />;
+          case "INSTAGRAM":
+            return <MediaIcon key={1} type={MediaIconType.INSTAGRAM} />;
+          default:
+            return null;
         }
-        if (props.user.youtubeId) {
-            medias.push(<MediaIcon key={2} type={MediaIconType.YOUTUBE} />);
-        }
-        if (props.user.twitchId) {
-            medias.push(<MediaIcon key={3} type={MediaIconType.TWITCH} />)
-        }
-        if (props.user.twitterId) {
-            medias.push(<MediaIcon key={4} type={MediaIconType.TWITTER} />)
-        }
-        return medias;
+      });
+      setMedia(medias);
     }
 
-    return (
-        <CreatorMediaContainer>
-            {renderMedias()}
-        </CreatorMediaContainer>
-    )
+    getMedias();
+  }, [channels]);
+
+  return <CreatorMediaContainer>{media}</CreatorMediaContainer>;
 }

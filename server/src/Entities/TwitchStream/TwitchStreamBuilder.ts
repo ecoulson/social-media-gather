@@ -1,9 +1,9 @@
+import Builder from "../../Libraries/Builder/Builder";
 import Image from "../Media/Image";
 import ITwitchStream from "./ITwitchStream";
-import ITwitchStreamBuilder from "./ITwitchStreamBuilder";
 import TwitchStream from "./TwitchStream";
 
-export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
+export default class TwitchStreamBuilder extends Builder<ITwitchStream> {
     private viewers: number;
     private isLive: boolean;
     private thumbnail: Image;
@@ -16,22 +16,29 @@ export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
     private gameName: string;
     private streamId: string;
     private id: string;
+    private creatorId: string;
 
-    constructor() {
-        this.viewers = 0;
-        this.isLive = false;
+    reset() {
+        this.viewers = null;
+        this.isLive = null;
         this.thumbnail = null;
-        this.startedAt = new Date();
-        this.url = "";
-        this.title = "";
-        this.userId = "";
-        this.screenName = "";
-        this.gameName = "";
-        this.streamId = "";
-        this.id = "";
+        this.startedAt = null;
+        this.url = null;
+        this.title = null;
+        this.userId = null;
+        this.screenName = null;
+        this.gameName = null;
+        this.streamId = null;
+        this.id = null;
+        this.creatorId = null;
     }
 
-    build(): ITwitchStream {
+    setCreatorId(creatorId: string): TwitchStreamBuilder {
+        this.creatorId = creatorId;
+        return this;
+    }
+
+    construct(): ITwitchStream {
         return new TwitchStream(
             this.viewers,
             this.isLive,
@@ -44,66 +51,67 @@ export default class TwitchStreamBuilder implements ITwitchStreamBuilder {
             this.id,
             this.gameName,
             this.streamId,
+            this.creatorId,
             this.endedAt
         );
     }
 
-    setViewers(viewers: number): ITwitchStreamBuilder {
+    setViewers(viewers: number): TwitchStreamBuilder {
         this.viewers = viewers;
         return this;
     }
 
-    setStatus(isLive: boolean): ITwitchStreamBuilder {
+    setStatus(isLive: boolean): TwitchStreamBuilder {
         this.isLive = isLive;
         return this;
     }
 
-    setThumbnail(url: string): ITwitchStreamBuilder {
-        this.thumbnail = new Image("", url, 0, 0);
+    setThumbnail(thumbnail: Image): TwitchStreamBuilder {
+        this.thumbnail = thumbnail;
         return this;
     }
 
-    setStartedAt(startedAt: Date): ITwitchStreamBuilder {
+    setStartedAt(startedAt: Date): TwitchStreamBuilder {
         this.startedAt = startedAt;
         return this;
     }
 
-    setEndedAt(endedAt: Date): ITwitchStreamBuilder {
+    setEndedAt(endedAt: Date): TwitchStreamBuilder {
         this.endedAt = endedAt;
         return this;
     }
 
-    setUrl(url: string): ITwitchStreamBuilder {
+    setUrl(url: string): TwitchStreamBuilder {
         this.url = url;
         return this;
     }
 
-    setTitle(title: string): ITwitchStreamBuilder {
+    setTitle(title: string): TwitchStreamBuilder {
         this.title = title;
         return this;
     }
 
-    setUserId(userId: string): ITwitchStreamBuilder {
+    setChannelId(userId: string): TwitchStreamBuilder {
         this.userId = userId;
         return this;
     }
 
-    setScreenName(screenName: string): ITwitchStreamBuilder {
+    setScreenName(screenName: string): TwitchStreamBuilder {
         this.screenName = screenName;
         return this;
     }
 
-    setGameName(gameName: string): ITwitchStreamBuilder {
+    setGameName(gameName: string): TwitchStreamBuilder {
         this.gameName = gameName;
         return this;
     }
 
-    setStreamId(streamId: string): ITwitchStreamBuilder {
+    setStreamId(streamId: string): TwitchStreamBuilder {
         this.streamId = streamId;
         return this;
     }
 
-    setId(id: string): ITwitchStreamBuilder {
+    setId(id: string): TwitchStreamBuilder {
         this.id = id;
         return this;
     }

@@ -7,6 +7,7 @@ import Types from "../../../src/@Types/Types";
 import IUser from "../../../src/Entities/User/IUser";
 import User from "../../../src/Entities/User/User";
 import IUserService from "../../../src/Services/User/IUserService";
+import { expect } from "chai";
 
 describe("User Service Suite", () => {
     let service: IUserService;
@@ -14,7 +15,7 @@ describe("User Service Suite", () => {
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockUserRepository = new Mock<InstanceType<typeof UserRepository>>();
         mockUserRepository
             .setup((userRepository) => userRepository.delete)
@@ -30,91 +31,91 @@ describe("User Service Suite", () => {
             .rebind<InstanceType<typeof UserRepository>>(Types.UserRepository)
             .toConstantValue(mockUserRepository.object());
 
-        service = container.get<UserService>(Types.UserService);
+        service = new UserService(mockUserRepository.object());
     });
 
     describe("Verify user", () => {
-        test("Verifies user", async () => {
+        it("Verifies user", async () => {
             await service.verifyUser(user);
 
-            expect(user.verified()).toBeTruthy();
+            expect(user.verified()).true;
         });
     });
 
     describe("Does user exist", () => {
-        test("User does exist", async () => {
+        it("User does exist", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsernameOrEmail)
                 .returns(() => Promise.resolve([user]));
 
             const userExists = await service.doesUserExist(user.email(), user.username());
 
-            expect(userExists).toBeTruthy();
+            expect(userExists).true;
         });
 
-        test("User does not exist", async () => {
+        it("User does not exist", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsernameOrEmail)
                 .returns(() => Promise.resolve([]));
 
             const userExists = await service.doesUserExist(user.email(), user.username());
 
-            expect(userExists).toBeFalsy();
+            expect(userExists).false;
         });
     });
 
     describe("Create user", () => {
-        test("Should create user", async () => {
+        it("Should create user", async () => {
             const newUser = await service.createUser(user);
 
-            expect(newUser).toEqual(user);
+            expect(newUser).to.deep.equal(user);
         });
     });
 
     describe("Update User", () => {
-        test("Should update user", async () => {
+        it("Should update user", async () => {
             const newEmail = "test@test.com";
             const savedUser = await service.updateUser(user, {
                 email: newEmail
             });
 
-            expect(savedUser.email()).toEqual(newEmail);
+            expect(savedUser.email()).to.deep.equal(newEmail);
         });
     });
 
     describe("Delete User", () => {
-        test("Should delete user", async () => {
+        it("Should delete user", async () => {
             await service.deleteUser(user);
         });
     });
 
     describe("Finds user by username", () => {
-        test("Should find user", async () => {
+        it("Should find user", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsername)
                 .returns(() => Promise.resolve(user));
 
             const userWithUsername = await service.getUserByUsername(user.username());
 
-            expect(userWithUsername).toEqual(user);
+            expect(userWithUsername).to.deep.equal(user);
         });
     });
 
     describe("Gets user by id", () => {
-        test("Should get user by id", async () => {
+        it("Should get user by id", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findById)
                 .returns(() => Promise.resolve(user));
 
             const userWithId = await service.getUserById(user.id());
 
-            expect(userWithId).toEqual(user);
+            expect(userWithId).to.deep.equal(user);
         });
     });
 
     describe("Follow user", () => {
-        test("Should follow a user", async () => {
-            const userToFollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Should follow a user", async () => {
+            const userToFollow = new User("followerId", "", "", "", false, [], false, []);
             mockUserRepository
                 .setup((userRepository) => userRepository.update)
                 .returns((user) => Promise.resolve(user));
@@ -124,13 +125,13 @@ describe("User Service Suite", () => {
 
             await service.follow(user, userToFollow.id());
 
-            expect(user.following()).toEqual(["followerId"]);
+            expect(user.following()).to.deep.equal(["followerId"]);
         });
     });
 
     describe("Unfollow user", () => {
-        test("Should unfollow a user", async () => {
-            const userToUnfollow = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Should unfollow a user", async () => {
+            const userToUnfollow = new User("followerId", "", "", "", false, [], false, []);
             user.addFollower(userToUnfollow);
             mockUserRepository
                 .setup((userRepository) => userRepository.update)
@@ -138,17 +139,17 @@ describe("User Service Suite", () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findById)
                 .returns(() => Promise.resolve(userToUnfollow));
-            expect(user.following()).toEqual(["followerId"]);
+            expect(user.following()).to.deep.equal(["followerId"]);
 
             await service.unfollow(user, userToUnfollow.id());
 
-            expect(user.following()).toEqual([]);
+            expect(user.following()).to.deep.equal([]);
         });
     });
 
     describe("Is following", () => {
-        test("Should be following a user", async () => {
-            const followedUser = new User("followerId", "", "", "", "", "", "", "", false, []);
+        it("Should be following a user", async () => {
+            const followedUser = new User("followerId", "", "", "", false, [], false, []);
             mockUserRepository
                 .setup((userRepository) => userRepository.findByUsername)
                 .returns(() => Promise.resolve(followedUser));
@@ -156,7 +157,7 @@ describe("User Service Suite", () => {
 
             const isFollowing = await service.isFollowing(user, followedUser.username());
 
-            expect(isFollowing).toBeTruthy();
+            expect(isFollowing).true;
         });
     });
 });

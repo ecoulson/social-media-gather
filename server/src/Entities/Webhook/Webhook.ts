@@ -8,8 +8,8 @@ export default class Webhook implements IWebhook {
         private _platform: string,
         private _topicUrl: string,
         private _callbackUrl: string,
-        private _channelId: string,
-        private _userId: string
+        private _platformChannelId: string,
+        private _channelId: string
     ) {}
 
     id(): string {
@@ -36,11 +36,11 @@ export default class Webhook implements IWebhook {
         return this._callbackUrl;
     }
 
-    channelId(): string {
-        return this._channelId;
+    platformChannelId(): string {
+        return this._platformChannelId;
     }
 
-    userId(): string {
-        return this._userId;
+    channelId(): string {
+        return this._channelId;
     }
 }

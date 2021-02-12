@@ -1,73 +1,74 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Button from "../Button";
-import FeedFetcher from "../FeedFetcher";
-import { ReactComponent as Check } from "../Assets/check.svg";
-import Cookie from "../Library/Cookie";
+import InfiniteScroll from "../InfiniteScroll";
 import "./index.css";
-import { useRef } from "react";
-import Panel from "../Panel";
 import Feed from "../Home/Feed";
+import HomeLayout from "../Home/HomeLayout";
+import FollowedCreatorsSection from "../Home/FollowedCreatorsSection";
+import { GridItem } from "@chakra-ui/react";
+import GetUser from "../Library/GetUser";
+import transformFeed from "../Library/FeedTransformer";
+import PostDisplay from "../Home/PostDisplay";
+import { useCallback } from "react";
+import Cookie from "../Library/Cookie";
 
 export default function Profile(props) {
-    const history = useHistory();
-    const [user, setUser] = useState(null);
-    const [following, setFollowing] = useState(false);
-    const followButton = useRef(null);
-    
-    useEffect(() => {
-        async function checkAuthenticated() {
-            // if (!await isAuthenticated()) {
-                // history.push('/')
-            // } else {
-            const response = await Axios.get(`/api/users/username/${props.match.params.username}`);
-            setUser(response.data.data.users[0]);
-            // }
+  const history = useHistory();
+  const [user, setUser] = useState(null);
+  const [feed, setFeed] = useState([]);
+  const [currentPost, setPost] = useState(null);
+
+  const getNext = useCallback(
+    async (index) => {
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/feed/${user.id}?offset=${index}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("token")}`,
+          },
         }
-        
-        async function isFollowing() {
-            const response = await Axios.get(`/api/users/is-following/${props.match.params.username}`, {
-                headers: {
-                    authorization: `Bearer ${Cookie.getCookie("token")}`
-                }
-            });
-            setFollowing(response.data.data.isFollowing);
-        }
+      );
+      const posts = await Promise.all(
+        response.data.data.posts.map(async (post) => {
+          const creator = await GetUser(post.creatorId);
+          post.channelName = creator.username;
+          return post;
+        })
+      );
+      setFeed((feed) => [...feed, ...transformFeed(posts)]);
+    },
+    [user]
+  );
 
-        checkAuthenticated();
-        isFollowing();
-    }, [props.match.params.username, history])
-
-    async function follow() {
-        await Axios.put(`/api/users/follow/${user.id}`);
-        setFollowing(true);
-        followButton.current.blur();
+  useEffect(() => {
+    async function getUser() {
+      const response = await Axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/users/username/${props.match.params.username}`
+      );
+      setUser(response.data.data.users[0]);
     }
 
-    async function unfollow() {
-        await Axios.put(`/api/users/unfollow/${user.id}`);
-        setFollowing(false);
-        followButton.current.blur();
-    }
+    getUser();
+  }, [props.match.params.username, history]);
 
-    if (!user) {
-        return null;
-    }
+  if (!user) {
+    return null;
+  }
 
-    function renderFollowButton() {
-        if (following) {
-            return <Button innerRef={followButton} onClick={unfollow} id="following-button">Following <Check className="following-check" /></Button>;
-        }
-        return <Button innerRef={followButton} id="follow-button" onClick={follow}>Follow</Button>;
-    }
-    return (
-        <>
-            <Panel className="profile-splash-container">
-                <h1 className="profile-username">{user.username}</h1>
-                {renderFollowButton()}
-            </Panel>
-            <FeedFetcher Component={Feed} feedUrl={`/api/feed/${user.id}`} />
-        </>
-    )
+  function handlePostClick(post) {
+    setPost(post);
+  }
+
+  return (
+    <HomeLayout>
+      <FollowedCreatorsSection />
+      <GridItem gridArea="feed">
+        <InfiniteScroll items={feed} next={getNext}>
+          <Feed posts={feed} onPostClick={handlePostClick} />
+        </InfiniteScroll>
+      </GridItem>
+      <PostDisplay post={currentPost} />
+    </HomeLayout>
+  );
 }

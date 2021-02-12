@@ -2,16 +2,22 @@ import React from "react";
 import "./index.css";
 
 export default function Account(props) {
-    return (
-        <div onClick={handleClick(props.onClick, props.id)} className="account-search-result">
-            <img alt="avatar" className="account-search-profile-image" src={props.profilePicture} />
-            <span className="account-search-profile-username">{props.username}</span>
-        </div>
-    )
-}
+  function handleClick() {
+    props.onClick({
+      platformId: props.id,
+      username: props.username,
+      subscriberCount: props.subscriberCount,
+    });
+  }
 
-function handleClick(onClick, id) {
-    return () => {
-        onClick(id)
-    }
+  return (
+    <div onClick={handleClick} className="account-search-result">
+      <img
+        alt="avatar"
+        className="account-search-profile-image"
+        src={props.profilePicture}
+      />
+      <span className="account-search-profile-username">{props.username}</span>
+    </div>
+  );
 }

@@ -9,15 +9,21 @@ import ITwitchWebhookCallbackData from "../../../src/Services/WebhookCallbacks/I
 import TwitchWebhookCallbackService from "../../../src/Services/WebhookCallbacks/TwitchWebhookCallbackService";
 import TwitchAPIClient from "../../../src/Libraries/Twitch/TwitchAPIClient";
 import TwitchStreamRepository from "../../../src/Repositories/TwitchStream/TwitchStreamRepository";
+import IChannel from "../../../src/Entities/Channel/IChannel";
+import Channel from "../../../src/Entities/Channel/Channel";
+import Platform from "../../../src/Entities/Platform/Platform";
+import { expect } from "chai";
 
 describe("Authentication Controller Suite", () => {
     let mockTwitchStreamRepository: Mock<InstanceType<typeof TwitchStreamRepository>>;
     let mockTwitchClient: Mock<TwitchAPIClient>;
     let service: IWebhookCallbackService<ITwitchWebhookCallbackData>;
     let user: IUser;
+    let channel: IChannel;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
+        channel = new Channel("", "", "", Platform.TIKTOK, 0);
         mockTwitchClient = new Mock<TwitchAPIClient>();
         mockTwitchStreamRepository = new Mock<InstanceType<typeof TwitchStreamRepository>>();
 
@@ -37,13 +43,13 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Handle Challenge", () => {
-        test("Should return the challenge", () => {
-            expect(service.handleChallenge("challenge")).toEqual("challenge");
+        it("Should return the challenge", () => {
+            expect(service.handleChallenge("challenge")).to.deep.equal("challenge");
         });
     });
 
     describe("Handle Callback", () => {
-        test("Should handle the callback", async () => {
+        it("Should handle the callback", async () => {
             mockTwitchStreamRepository
                 .setup(
                     (twitchStreamRepository) => twitchStreamRepository.findAllLiveBroadcastsForUser
@@ -52,7 +58,8 @@ describe("Authentication Controller Suite", () => {
 
             await service.handleCallback({
                 streams: [],
-                userId: user.id()
+                creatorId: user.id(),
+                channelId: channel.id()
             });
         });
     });

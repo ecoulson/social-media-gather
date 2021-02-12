@@ -13,13 +13,14 @@ import UserDoesNotExistsException from "../../../src/Exceptions/UserDoesNotExist
 import IllegalLoginException from "../../../src/Exceptions/IllegalLoginException";
 import IUserTokenPayload from "../../../src/Services/User/IUserTokenPayload";
 import IToken from "../../../src/Security/Tokens/IToken";
-import UserExistsMessage from "../../../src/Messages/UserExistsMessage";
-import UsersMessage from "../../../src/Messages/UsersMessage";
-import UnauthenticatedMessage from "../../../src/Messages/UnauthenticatedMessage";
-import TokenMessage from "../../../src/Messages/TokenMessage";
-import UserDoesNotExistMessage from "../../../src/Messages/UserDoesNotExistMessage";
-import AuthenticatedMessage from "../../../src/Messages/AuthenticatedMessage";
-import DeletedUserMessage from "../../../src/Messages/DeletedUserMessage";
+import UserExistsMessage from "../../../src/Messages/Users/UserExistsMessage";
+import UsersMessage from "../../../src/Messages/Users/UsersMessage";
+import UnauthenticatedMessage from "../../../src/Messages/Security/UnauthenticatedMessage";
+import TokenMessage from "../../../src/Messages/Token/TokenMessage";
+import UserDoesNotExistMessage from "../../../src/Messages/Users/UserDoesNotExistMessage";
+import AuthenticatedMessage from "../../../src/Messages/Security/AuthenticatedMessage";
+import DeletedUserMessage from "../../../src/Messages/Users/DeletedUserMessage";
+import { expect } from "chai";
 
 describe("Authentication Controller Suite", () => {
     let mockUserService: Mock<IUserService>;
@@ -28,7 +29,7 @@ describe("Authentication Controller Suite", () => {
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockUserService = new Mock<IUserService>();
         mockAuthenticationService = new Mock<IAuthenticationService>();
 
@@ -44,7 +45,7 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Register", () => {
-        test("User already exists", async () => {
+        it("User already exists", async () => {
             mockUserService
                 .setup((userService) => userService.doesUserExist)
                 .returns(() => Promise.resolve(true));
@@ -60,10 +61,10 @@ describe("Authentication Controller Suite", () => {
                     email: user.email(),
                     username: user.username()
                 })
-            ).toEqual(new UserExistsMessage(user.username(), user.email()).create());
+            ).to.deep.equal(new UserExistsMessage(user.username(), user.email()).toJson());
         });
 
-        test("Should register user", async () => {
+        it("Should register user", async () => {
             mockUserService
                 .setup((userService) => userService.doesUserExist)
                 .returns(() => Promise.resolve(false))
@@ -81,12 +82,12 @@ describe("Authentication Controller Suite", () => {
                     email: user.email(),
                     username: user.username()
                 })
-            ).toEqual(new UsersMessage([user]).create());
+            ).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Logs in user", () => {
-        test("Should fail to find user", async () => {
+        it("Should fail to find user", async () => {
             mockAuthenticationService
                 .setup((authenticationService) => authenticationService.login)
                 .returns(() => Promise.reject(new UserDoesNotExistsException(user.username())));
@@ -97,10 +98,10 @@ describe("Authentication Controller Suite", () => {
                     username: user.username(),
                     password: user.password()
                 })
-            ).toEqual(new UserDoesNotExistMessage(user.username()).create());
+            ).to.deep.equal(new UserDoesNotExistMessage(user.username()).toJson());
         });
 
-        test("Password does not match", async () => {
+        it("Password does not match", async () => {
             mockAuthenticationService
                 .setup((authenticationService) => authenticationService.login)
                 .returns(() => Promise.reject(new IllegalLoginException(user)));
@@ -111,10 +112,10 @@ describe("Authentication Controller Suite", () => {
                     username: "",
                     password: "wrong"
                 })
-            ).toEqual(new UnauthenticatedMessage().create());
+            ).to.deep.equal(new UnauthenticatedMessage().toJson());
         });
 
-        test("Password matches", async () => {
+        it("Password matches", async () => {
             const token = new Mock<IToken<IUserTokenPayload>>();
             token.setup((token) => token.sign).returns(() => "token");
             mockAuthenticationService
@@ -127,69 +128,59 @@ describe("Authentication Controller Suite", () => {
                     username: user.username(),
                     password: user.password()
                 })
-            ).toEqual(new TokenMessage(token.object()).create());
+            ).to.deep.equal(new TokenMessage(token.object()).toJson());
         });
     });
 
     describe("Verify Authenticated User", () => {
-        test("Verifies user", async () => {
+        it("Verifies user", async () => {
             mockUserService
                 .setup((userService) => userService.verifyUser)
                 .returns((user: IUser) => Promise.resolve(user));
 
             expect(
                 await controller.verifyUser({
-                    userEntity: () => user
+                    user: () => user
                 } as Request)
-            ).toEqual(new UsersMessage([user]).create());
+            ).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Get Authenticated User", () => {
-        test("Gets user", () => {
+        it("Gets user", () => {
             expect(
                 controller.getAuthenticatedUser({
-                    userEntity: () => user
+                    user: () => user
                 } as Request)
-            ).toEqual(new UsersMessage([user]).create());
+            ).to.deep.equal(new UsersMessage([user]).toJson());
         });
     });
 
     describe("Is Authenticated", () => {
-        test("No user entity", () => {
-            expect(controller.isAuthenticated({} as Request)).toEqual(
-                new AuthenticatedMessage(false).create()
-            );
+        it("No user entity", () => {
+            expect(controller.isAuthenticated()).to.deep.equal(new AuthenticatedMessage().toJson());
         });
 
-        test("Null user", () => {
-            expect(
-                controller.isAuthenticated({
-                    userEntity: () => null
-                } as Request)
-            ).toEqual(new AuthenticatedMessage(false).create());
+        it("Null user", () => {
+            expect(controller.isAuthenticated()).to.deep.equal(new AuthenticatedMessage().toJson());
         });
 
-        test("Authenticated User", () => {
-            expect(
-                controller.isAuthenticated({
-                    userEntity: () => user
-                } as Request)
-            ).toEqual(new AuthenticatedMessage(true).create());
+        it("Authenticated User", () => {
+            expect(controller.isAuthenticated()).to.deep.equal(new AuthenticatedMessage().toJson());
         });
     });
 
     describe("Delete User", () => {
-        test("Deletes user", async () => {
+        it("Deletes user", async () => {
             mockUserService
                 .setup((userService) => userService.deleteUser)
                 .returns((user: IUser) => Promise.resolve(user));
 
             const message = await controller.deleteAuthenticatedUser({
-                userEntity: () => user
+                user: () => user
             } as Request);
 
-            expect(message).toEqual(new DeletedUserMessage(user.id()).create());
+            expect(message).to.deep.equal(new DeletedUserMessage(user.id()).toJson());
         });
     });
 });

@@ -6,4 +6,5 @@ export default interface ITwitchVideoDocument {
     description: string;
     thumbnailUrl: string;
     userName: string;
+    views: number;
 }

@@ -5,11 +5,12 @@ import ITwitchStreamJSONSchema from "../TwitchStream/ITwitchStreamJSONSchema";
 import ITwitchVideoJSONSchema from "../TwitchVideo/ITwitchVideoJSONSchema";
 import IYouTubeVideoJSONSchema from "../YouTubeVideo/IYouTubeVideoJSONSchema";
 
-export interface IPostJSONSchema {
+export default interface IPostJSONSchema {
     type: PostType;
     id: string;
     timeCreated: Date;
-    userId: string;
+    channelId: string;
+    creatorId: string;
     twitchStream?: ITwitchStreamJSONSchema;
     twitchVideo?: ITwitchVideoJSONSchema;
     youtubeVideo?: IYouTubeVideoJSONSchema;

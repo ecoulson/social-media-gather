@@ -1,3 +1,4 @@
+import ITweetCommentPagination from "../../../Entities/Tweet/ITweetCommentPagination";
 import ITweetMediaJSONSchema from "./ITweetMediaJSONSchema";
 import ITweetMentionJSONSchema from "./ITweetMentionJSONSchema";
 import ITweetUrlJSONSchema from "./ITweetUrlJSONSchema";
@@ -11,4 +12,8 @@ export default interface ITweetJSONSchema {
     urls: ITweetUrlJSONSchema[];
     userMentions: ITweetMentionJSONSchema[];
     media: ITweetMediaJSONSchema[];
+    favorites: number;
+    commentCount: number;
+    retweetCount: number;
+    pagination: ITweetCommentPagination;
 }

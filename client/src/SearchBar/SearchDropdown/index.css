@@ -1,68 +1,70 @@
 .search-dropdown {
-    background-color: white;
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    top: 70px;
-    box-sizing: border-box;
-    padding: 0 20px;
-    padding-bottom: 10px;
-    box-shadow: 0px 5px 5px 2px rgba(0,0,0,0.2);
+  background-color: white;
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  top: 70px;
+  box-sizing: border-box;
+  padding: 0 20px;
+  padding-bottom: 10px;
+  box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
 
 .search-dropdown-users {
-    color: #8b8b96;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 14px;
+  color: #8b8b96;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
 }
 
 .search-dropdown-user-result {
-    padding: 6px 10px;
-    margin-top: 3px;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
+  padding: 6px 10px;
+  margin-top: 3px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .search-dropdown-user-result:hover {
-    background-color: #e2e2ec;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: #e2e2ec;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .search-dropdown-user-result-icon {
-    width: 15px;
-    padding-right: 10px;
+  width: 15px;
+  padding-right: 10px;
 }
 
-.search-dropdown-follow, .search-dropdown-following {
-    color: #4B6AB1;
-    padding: 2px 5px;
+.search-dropdown-follow,
+.search-dropdown-following {
+  color: #4b6ab1;
+  padding: 2px 5px;
 }
 
-.search-dropdown-follow:hover, .search-dropdown-following:hover {
-    background-color: rgb(178, 173, 199);
-    border-radius: 5px;
+.search-dropdown-follow:hover,
+.search-dropdown-following:hover {
+  background-color: rgb(178, 173, 199);
+  border-radius: 5px;
 }
 
 .dropdown-check {
-    width: 15px;
-    height: 15px;
-    margin-left: 2px;
-    margin-right: 5px;
+  width: 15px;
+  height: 15px;
+  margin-left: 2px;
+  margin-right: 5px;
 }
 
 .search-dropdown-following {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
-    .search-dropdown {
-        width: 100vw;
-        box-shadow: none;
-        position: relative;
-        top: 0;
-    }
+  .search-dropdown {
+    width: 100vw;
+    box-shadow: none;
+    position: relative;
+    top: 0;
+  }
 }

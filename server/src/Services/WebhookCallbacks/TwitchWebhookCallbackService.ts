@@ -1,4 +1,5 @@
 import { inject, injectable, tagged } from "inversify";
+import Image from "../../Entities/Media/Image";
 import Tags from "../../@Types/Tags";
 import Types from "../../@Types/Types";
 import TwitchStreamBuilder from "../../Entities/TwitchStream/TwitchStreamBuilder";
@@ -21,11 +22,15 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
         super();
     }
 
-    async handleCallback({ userId, streams }: ITwitchWebhookCallbackData): Promise<void> {
+    async handleCallback({
+        channelId,
+        streams,
+        creatorId
+    }: ITwitchWebhookCallbackData): Promise<void> {
         if (this.hasBroadcastStarted(streams)) {
-            this.startBroadcast(userId, streams[0]);
+            this.startBroadcast(channelId, creatorId, streams[0]);
         } else {
-            this.endBroadcast(userId);
+            this.endBroadcast(channelId);
         }
         return;
     }
@@ -34,18 +39,23 @@ export default class TwitchWebhookCallbackService extends WebhookCallbackService
         return streams.length === 1;
     }
 
-    private async startBroadcast(userId: string, stream: ITwitchStreamSchema) {
+    private async startBroadcast(
+        channelId: string,
+        creatorId: string,
+        stream: ITwitchStreamSchema
+    ) {
         const game = await this.getBroadcastedGame(stream);
         const newBroadcast = new TwitchStreamBuilder()
             .setGameName(game.name)
             .setScreenName(stream.user_name)
+            .setCreatorId(creatorId)
             .setStartedAt(stream.started_at)
             .setStatus(true)
             .setStreamId(stream.id)
-            .setThumbnail(stream.thumbnail_url)
+            .setThumbnail(new Image("", stream.thumbnail_url, 0, 0))
             .setTitle(stream.title)
             .setUrl(`https://www.twitch.tv/${stream.user_name}`)
-            .setUserId(userId)
+            .setChannelId(channelId)
             .setViewers(stream.viewer_count)
             .build();
         await this.twitchStreamRepository.add(newBroadcast);

@@ -19,13 +19,6 @@ class UserRepository extends CoreRepository<IUser> implements IUserRepository {
     }
 
     async findByUsernameOrEmail(username: string, email: string): Promise<IUser[]> {
-        console.log(
-            await this.dataStore.find({
-                where: {
-                    $or: [{ email }, { username }]
-                }
-            })
-        );
         return await this.dataStore.find({
             where: {
                 $or: [{ email }, { username }]

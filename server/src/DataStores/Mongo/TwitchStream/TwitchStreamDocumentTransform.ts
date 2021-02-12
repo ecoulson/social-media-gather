@@ -1,15 +1,15 @@
 import { Transformer } from "../../../@Types";
-import { UpdateQuery } from "mongoose";
 import ITwitchStream from "../../../Entities/TwitchStream/ITwitchStream";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
-const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPostDocument>> = (
+const TwitchStreamDocumentTransform: Transformer<ITwitchStream, Partial<IPostDocument>> = (
     stream
 ) => {
     return {
         type: "TWITCH_STREAM",
-        userId: stream.userId(),
+        channelId: stream.channelId(),
         timeCreated: stream.startedAt(),
+        creatorId: stream.creatorId(),
         twitchStream: {
             endedAt: stream.endedAt(),
             startedAt: stream.startedAt(),
@@ -19,7 +19,8 @@ const TwitchStreamDocumentTransform: Transformer<ITwitchStream, UpdateQuery<IPos
             thumbnailUrl: stream.thumbnail().url(),
             title: stream.title(),
             url: stream.url(),
-            userName: stream.screenName()
+            userName: stream.screenName(),
+            viewers: stream.viewers()
         }
     };
 };

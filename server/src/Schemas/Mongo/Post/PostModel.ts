@@ -26,6 +26,12 @@ const TwitterMedia = new Schema({
     url: String
 });
 
+const TwitterPagination = new Schema({
+    newestId: String,
+    oldestId: String,
+    isAtEnd: Boolean
+});
+
 const schema = new Schema({
     type: {
         type: String,
@@ -33,7 +39,8 @@ const schema = new Schema({
         required: true
     },
     timeCreated: Date,
-    userId: String,
+    channelId: String,
+    creatorId: String,
     twitchStream: {
         url: String,
         live: Boolean,
@@ -43,7 +50,8 @@ const schema = new Schema({
         userName: String,
         thumbnailUrl: String,
         title: String,
-        streamId: String
+        streamId: String,
+        viewers: Number
     },
     twitchVideo: {
         url: String,
@@ -52,20 +60,30 @@ const schema = new Schema({
         title: String,
         description: String,
         thumbnailUrl: String,
-        userName: String
+        userName: String,
+        views: Number
     },
     youtubeVideo: {
         publishedAt: Date,
         thumbnailUrl: String,
         title: String,
-        videoId: String
+        videoId: String,
+        likes: Number,
+        dislikes: Number,
+        views: Number,
+        commentCount: Number,
+        commentPageToken: String
     },
     tweet: {
         id: String,
         text: String,
         publishedAt: Date,
         screenName: String,
+        favorites: Number,
+        commentCount: Number,
+        retweetCount: Number,
         hashtags: [String],
+        pagination: TwitterPagination,
         urls: [TwitterUrls],
         userMentions: [TwitterUserMentions],
         media: [TwitterMedia]
@@ -74,6 +92,8 @@ const schema = new Schema({
         takenAt: Date,
         id: String,
         likes: String,
+        commentCount: Number,
+        commentCursor: String,
         caption: String,
         media: [InstagramMedia],
         thumbnail: InstagramMedia

@@ -7,19 +7,18 @@ import IInstagramPost from "./IInstagramPost";
 export default class InstagramPost extends Post implements IInstagramPost {
     constructor(
         _id: string,
-        private _userId: string,
+        _channelId: string,
         private _postId: string,
         private _likes: number,
         private _takenAt: Date,
         private _caption: string,
         private _media: IMedia[],
-        private _thumbnail: IImage
+        private _thumbnail: IImage,
+        private _commentCount: number,
+        _creatorId: string,
+        private _commentCursor: string
     ) {
-        super(PostType.INSTAGRAM_POST, _id);
-    }
-
-    userId(): string {
-        return this._userId;
+        super(PostType.INSTAGRAM_POST, _id, _channelId, _creatorId);
     }
 
     postId(): string {
@@ -44,5 +43,17 @@ export default class InstagramPost extends Post implements IInstagramPost {
 
     thumbnail(): IImage {
         return this._thumbnail;
+    }
+
+    commentCount(): number {
+        return this._commentCount;
+    }
+
+    commentCursor(): string {
+        return this._commentCursor;
+    }
+
+    setCommentCursor(commentCursor: string): void {
+        this._commentCursor = commentCursor;
     }
 }

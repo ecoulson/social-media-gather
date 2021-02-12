@@ -1,11 +1,9 @@
 export interface IUserJSONSchema {
     id: string;
-    twitchId: string;
-    twitterId: string;
-    instagramId: string;
-    youtubeId: string;
     username: string;
     email: string;
+    isCreator: boolean;
     verified: boolean;
     following: string[];
+    channels: string[];
 }

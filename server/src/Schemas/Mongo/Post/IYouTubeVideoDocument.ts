@@ -3,4 +3,9 @@ export default interface IYouTubeVideoDocument {
     thumbnailUrl: string;
     title: string;
     videoId: string;
+    likes: number;
+    dislikes: number;
+    views: number;
+    commentCount: number;
+    commentPageToken: string;
 }

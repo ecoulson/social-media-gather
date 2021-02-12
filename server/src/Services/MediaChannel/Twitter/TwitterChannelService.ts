@@ -1,15 +1,12 @@
 import { inject, injectable, tagged } from "inversify";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
-import IUser from "../../../Entities/User/IUser";
 import TweetRepository from "../../../Repositories/Tweet/TweetRepository";
-import UserRepository from "../../../Repositories/User/UserRepository";
-import IMediaPlatformChannelService from "../IMediaChannelService";
+import IMediaPlatformService from "../IMediaPlatformService";
 import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
 import TwitterAPIClient from "../../../Libraries/Twitter/TwitterAPIClient";
 import ITweetSchema from "../../../Libraries/Twitter/Schema/ITweetSchema";
 import IPost from "../../../Entities/Post/IPost";
-import Tweet from "../../../Entities/Tweet/Tweet";
 import ITweet from "../../../Entities/Tweet/ITweet";
 import ITweetUrl from "../../../Entities/Tweet/ITweetUrl";
 import TweetUrl from "../../../Entities/Tweet/TweetUrl";
@@ -18,22 +15,42 @@ import TweetMention from "../../../Entities/Tweet/TweetMention";
 import Video from "../../../Entities/Media/Video";
 import Image from "../../../Entities/Media/Image";
 import ITwitterVideoVariant from "../../../Libraries/Twitter/Schema/ITwitterVideoVariant";
+import TweetBuilder from "../../../Entities/Tweet/TweetBuilder";
+import ITwitterMediaSchema from "../../../Libraries/Twitter/Schema/ITwitterMediaSchema";
+import IMedia from "../../../Entities/Media/IMedia";
+import Subscriber from "../../../MessageQueue/Subscriber";
+import IMessageQueue from "../../../MessageQueue/IMessageQueue";
+import CreateChannelMessage from "../../../Messages/Channel/CreateChannelMessage";
+import ICreateChannelBody from "../../../Messages/Bodies/ICreateChannelBody";
+import Topic from "../../../MessageQueue/Topic";
+import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
+import IChannel from "../../../Entities/Channel/IChannel";
+import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
+import MessageType from "../../../Messages/MessageType";
+import SearchServiceV1 from "../../../Libraries/Twitter/Services/v1/Search/SearchServiceV1";
+import TwitterServiceType from "../../../Libraries/Twitter/TwitterServiceType";
+import UserServiceV1 from "../../../Libraries/Twitter/Services/v1/Users/UserServiceV1";
 
 @injectable()
-export default class TwitterChannelService implements IMediaPlatformChannelService {
+export default class TwitterChannelService extends Subscriber implements IMediaPlatformService {
     constructor(
         @inject(Types.TwitterAPIClient)
+        @tagged(Tags.V1, true)
         private twitterAPIClient: TwitterAPIClient,
-        @inject(Types.UserRepository)
-        @tagged(Tags.MONGO, true)
-        private userRepository: InstanceType<typeof UserRepository>,
         @inject(Types.TweetRepository)
         @tagged(Tags.MONGO, true)
-        private tweetRepository: InstanceType<typeof TweetRepository>
-    ) {}
+        private tweetRepository: InstanceType<typeof TweetRepository>,
+        @inject(Types.MessageQueue) messageQueue: IMessageQueue
+    ) {
+        super(messageQueue);
+    }
 
     async searchPlatformForChannel(userHandle: string): Promise<IMediaPlatformChannelSearchResult> {
-        const users = await this.twitterAPIClient.users.lookup({
+        const searchService = this.twitterAPIClient.getService<SearchServiceV1>(
+            TwitterServiceType.Search
+        );
+        const users = await searchService.searchUsers({
             screenNames: [userHandle]
         });
         return {
@@ -41,43 +58,64 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
                 return {
                     id: user.id_str,
                     username: user.screen_name,
-                    profilePicture: user.profile_image_url
+                    profilePicture: user.profile_image_url,
+                    subscriberCount: user.followers_count
                 };
             })
         };
     }
 
-    async linkChannel(user: IUser, twitterId: string): Promise<void> {
-        user.setTwitterId(twitterId);
-        this.createTwitterPostsForUser(twitterId, user.id());
-        if (user.id() === "") {
-            await this.userRepository.add(user);
-        } else {
-            await this.userRepository.update(user);
-        }
-    }
-
-    async createTwitterPostsForUser(twitterId: string, userId: string): Promise<IPost[]> {
-        const tweets = await this.twitterAPIClient.tweets.lookup({
-            ids: [twitterId]
-        });
-        return await Promise.all(tweets.map((tweet) => this.createPostFromTweet(tweet, userId)));
-    }
-
-    async createPostFromTweet(tweetSchema: ITweetSchema, userId: string): Promise<ITweet> {
-        const tweetPost = new Tweet(
-            "",
-            tweetSchema.full_text,
-            new Date(tweetSchema.created_at),
-            tweetSchema.user.screen_name,
-            tweetSchema.entities.hashtags.map((hashtag) => hashtag.text),
-            this.getUrls(tweetSchema),
-            this.getUserMentions(tweetSchema),
-            this.getMedia(tweetSchema),
-            tweetSchema.id_str,
-            userId
+    async createChannel(createChannelBody: ICreateChannelBody, creator: ICreatorJSONSchema) {
+        const channelResponse = await this.query<IChannelsBody>(
+            Topic.Channel,
+            MessageType.Channels,
+            new CreateChannelMessage(createChannelBody)
         );
-        return this.tweetRepository.add(tweetPost);
+        const channel = ChannelJSONDeserializer(channelResponse.body().channels[0]);
+        this.createPosts(channel, creator);
+        return channel;
+    }
+
+    async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<IPost[]> {
+        const usersService = this.twitterAPIClient.getService<UserServiceV1>(
+            TwitterServiceType.Users
+        );
+        const tweets = await usersService.timeline({
+            ids: [channel.platformId()]
+        });
+        return await Promise.all(
+            tweets.map((tweet) => this.createPostFromTweet(tweet, channel, creator))
+        );
+    }
+
+    async createPostFromTweet(
+        tweetSchema: ITweetSchema,
+        channel: IChannel,
+        creator: ICreatorJSONSchema
+    ): Promise<ITweet> {
+        const tweetBuilder = new TweetBuilder();
+        tweetBuilder
+            .setId("")
+            .setCreatorId(creator.id)
+            .setText(
+                tweetSchema.full_text.substring(
+                    tweetSchema.display_text_range[0],
+                    tweetSchema.display_text_range[1]
+                )
+            )
+            .setPublishedAt(new Date(tweetSchema.created_at))
+            .setScreenName(tweetSchema.user.screen_name)
+            .setHashtags(tweetSchema.entities.hashtags.map((hashtag) => hashtag.text))
+            .setUrls(this.getUrls(tweetSchema))
+            .setMentions(this.getUserMentions(tweetSchema))
+            .setMedia(this.getMedia(tweetSchema))
+            .setTweetId(tweetSchema.id_str)
+            .setChannelId(channel.id())
+            .setFavorites(tweetSchema.favorite_count)
+            .setRetweets(tweetSchema.retweet_count)
+            .setPagination(null)
+            .setCommentCount(tweetSchema.reply_count ? tweetSchema.reply_count : 0);
+        return this.tweetRepository.add(tweetBuilder.build());
     }
 
     private getUrls(tweet: ITweetSchema): ITweetUrl[] {
@@ -99,56 +137,50 @@ export default class TwitterChannelService implements IMediaPlatformChannelServi
     }
 
     private getMedia(tweet: ITweetSchema) {
-        if (this.hasVideos(tweet)) {
-            return this.createVideosFromTweet(tweet);
-        } else if (this.hasPhotos(tweet)) {
-            return this.createImagesFromTweet(tweet);
+        let media: IMedia[] = [];
+        if (this.hasMedia(tweet)) {
+            media = media.concat(
+                tweet.extended_entities.media
+                    .filter(
+                        (mediaItem) =>
+                            mediaItem.type === "photo" || mediaItem.type === "animated_gif"
+                    )
+                    .map((mediaItem) => this.createImageFromMediaItem(mediaItem))
+            );
+        }
+        if (this.hasMedia(tweet)) {
+            media = media.concat(
+                tweet.extended_entities.media
+                    .filter((mediaItem) => mediaItem.type === "video")
+                    .map((mediaItem) => this.createVideoFromMediaItem(mediaItem))
+                    .filter((mediaItem) => mediaItem !== null)
+            );
+        }
+        return media;
+    }
+
+    private createVideoFromMediaItem(media: ITwitterMediaSchema): Video {
+        let variant: ITwitterVideoVariant = null;
+        if (media.video_info) {
+            const sortedVariants = media.video_info.variants
+                .filter((variant) => variant.bitrate)
+                .sort((a, b) => a.bitrate - b.bitrate);
+            if (sortedVariants[sortedVariants.length - 1]) {
+                variant = sortedVariants[sortedVariants.length - 1];
+            }
+        }
+        if (variant) {
+            return new Video(media.id_str, variant.url, 0, 0, new Image("", media.media_url, 0, 0));
         } else {
-            return [];
+            return null;
         }
     }
 
-    private hasVideos(tweet: ITweetSchema) {
-        return tweet.extended_entities && tweet.extended_entities.media;
+    private hasMedia(tweet: ITweetSchema): boolean {
+        return tweet.extended_entities !== undefined && tweet.extended_entities.media !== undefined;
     }
 
-    private createVideosFromTweet(tweet: ITweetSchema): Video[] {
-        return tweet.extended_entities.media
-            .map((media) => {
-                let variant: ITwitterVideoVariant = null;
-                if (media.video_info) {
-                    const sortedVariants = media.video_info.variants
-                        .filter((variant) => variant.bitrate)
-                        .sort((a, b) => a.bitrate - b.bitrate);
-                    if (sortedVariants[sortedVariants.length - 1]) {
-                        variant = sortedVariants[sortedVariants.length - 1];
-                    }
-                }
-                if (variant) {
-                    return new Video(
-                        media.id_str,
-                        variant.url,
-                        0,
-                        0,
-                        new Image("", media.media_url, 0, 0)
-                    );
-                } else {
-                    return null;
-                }
-            })
-            .filter((media) => media !== null);
-    }
-
-    private hasPhotos(tweet: ITweetSchema) {
-        return tweet.entities && tweet.entities.media;
-    }
-
-    private createImagesFromTweet(tweet: ITweetSchema): Image[] {
-        return tweet.entities.media.map((media) => new Image(media.id_str, media.media_url, 0, 0));
-    }
-
-    async linkChannelWithUserId(userId: string, twitterId: string): Promise<void> {
-        const user = await this.userRepository.findById(userId);
-        this.linkChannel(user, twitterId);
+    private createImageFromMediaItem(media: ITwitterMediaSchema): Image {
+        return new Image(media.id_str, media.media_url, 0, 0);
     }
 }

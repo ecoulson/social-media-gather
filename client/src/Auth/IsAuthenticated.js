@@ -2,12 +2,19 @@ import Axios from "axios";
 import Cookie from "../Library/Cookie";
 
 async function isAuthenticated() {
-    const response = await Axios.get("/api/auth/is-authenticated", {
+  try {
+    const response = await Axios.get(
+      `${process.env.REACT_APP_API_ENDPOINT}/api/auth/is-authenticated`,
+      {
         headers: {
-            "Authorization": `Bearer ${Cookie.getCookie("token")}`
-        }
-    })
+          Authorization: `Bearer ${Cookie.getCookie("token")}`,
+        },
+      }
+    );
     return response.data.data.isAuthenticated;
+  } catch (error) {
+    return false;
+  }
 }
 
 export default isAuthenticated;

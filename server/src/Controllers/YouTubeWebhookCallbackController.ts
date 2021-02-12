@@ -2,8 +2,8 @@ import xmlparser from "express-xml-bodyparser";
 import { inject } from "inversify";
 import { controller, httpGet, httpPost, queryParam, requestBody } from "inversify-express-utils";
 import Types from "../@Types/Types";
-import IMessageStructure from "../Messages/IMessageStructure";
-import SuccessMessage from "../Messages/SuccessMessage";
+import SuccessMessage from "../Messages/Status/SuccessMessage";
+import IMessageJSONSchema from "../Schemas/JSON/Message/IMessageJSONSchema";
 import IWebhookCallbackService from "../Services/WebhookCallbacks/IWebhookCallbackService";
 import IYouTubeWebhookCallbackData from "../Services/WebhookCallbacks/IYouTubeWebhookCallbackData";
 import IYouTubeCallbackBody from "./RequestBodies/IYouTubeCallbackBody";
@@ -22,13 +22,15 @@ export default class YouTubeWebhookCallbackController {
 
     @httpPost("/", xmlparser({ trim: false, explicitArray: false }))
     handleCallback(
-        @queryParam("userId") userId: string,
+        @queryParam("channelId") channelId: string,
+        @queryParam("creatorId") creatorId: string,
         @requestBody() youTubeCallbackBody: IYouTubeCallbackBody
-    ): IMessageStructure {
+    ): IMessageJSONSchema {
         this.youTubeWebhookCallbackService.handleCallback({
-            userId,
+            channelId: channelId,
+            creatorId: creatorId,
             feed: youTubeCallbackBody.feed
         });
-        return new SuccessMessage().create();
+        return new SuccessMessage().toJson();
     }
 }

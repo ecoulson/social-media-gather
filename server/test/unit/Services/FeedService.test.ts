@@ -8,15 +8,16 @@ import IFeedService from "../../../src/Services/Feed/IFeedService";
 import UserRepository from "../../../src/Repositories/User/UserRepository";
 import PostRepository from "../../../src/Repositories/Post/PostRepository";
 import FeedService from "../../../src/Services/Feed/FeedService";
+import { expect } from "chai";
 
-describe("Authentication Controller Suite", () => {
+describe("Feed Service Suite", () => {
     let mockUserRepository: Mock<InstanceType<typeof UserRepository>>;
     let mockPostRepository: Mock<InstanceType<typeof PostRepository>>;
     let service: IFeedService;
     let user: IUser;
 
     beforeEach(() => {
-        user = new User("", "", "", "", "", "", "", "", false, []);
+        user = new User("", "", "", "", false, [], false, []);
         mockUserRepository = new Mock<InstanceType<typeof UserRepository>>();
         mockPostRepository = new Mock<InstanceType<typeof PostRepository>>();
 
@@ -34,19 +35,19 @@ describe("Authentication Controller Suite", () => {
     });
 
     describe("Should get users feed", () => {
-        test("Gets users feed", async () => {
+        it("Gets users feed", async () => {
             mockPostRepository
                 .setup((postRepository) => postRepository.find)
                 .returns(() => Promise.resolve([]));
 
             const posts = await service.getUsersFeed(user, 0);
 
-            expect(posts).toEqual([]);
+            expect(posts).to.deep.equal([]);
         });
     });
 
-    describe("Should get users posts", () => {
-        test("Gets users posts", async () => {
+    describe("Should get creators posts", () => {
+        it("Gets creators posts", async () => {
             mockUserRepository
                 .setup((userRepository) => userRepository.findById)
                 .returns(() => Promise.resolve(user));
@@ -54,9 +55,9 @@ describe("Authentication Controller Suite", () => {
                 .setup((postRepository) => postRepository.find)
                 .returns(() => Promise.resolve([]));
 
-            const posts = await service.getUsersPosts(user.id(), 0);
+            const posts = await service.getCreatorsPosts(user.id(), 0);
 
-            expect(posts).toEqual([]);
+            expect(posts).to.deep.equal([]);
         });
     });
 });

@@ -20,7 +20,11 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
         super();
     }
 
-    async handleCallback({ userId, feed }: IYouTubeWebhookCallbackData): Promise<void> {
+    async handleCallback({
+        channelId,
+        feed,
+        creatorId
+    }: IYouTubeWebhookCallbackData): Promise<void> {
         if (await this.isNewVideo(feed.entry["yt:videoid"])) {
             const youTubeVideos = await this.youtubeAPIClient.videos.list({
                 ids: [feed.entry["yt:videoid"]],
@@ -28,11 +32,16 @@ export default class YouTubeWebhookCallbackService extends WebhookCallbackServic
             });
             const newVideoData = youTubeVideos[0];
             const newVideo = new YouTubeVideoBuilder()
-                .setPublishedAt(newVideoData.publishedAt)
-                .setThumbnailUrl(this.getThumbnailUrl(newVideoData.thumbnails))
-                .setTitle(newVideoData.title)
-                .setUserId(userId)
+                .setPublishedAt(new Date(newVideoData.snippet.publishedAt))
+                .setCreatorId(creatorId)
+                .setThumbnailUrl(this.getThumbnailUrl(newVideoData.snippet.thumbnails))
+                .setTitle(newVideoData.snippet.title)
+                .setChannelId(channelId)
                 .setVideoId(newVideoData.id)
+                .setLikes(parseInt(newVideoData.statistics.likeCount))
+                .setDislikes(parseInt(newVideoData.statistics.dislikeCount))
+                .setCommentCount(parseInt(newVideoData.statistics.commentCount))
+                .setViews(parseInt(newVideoData.statistics.viewCount))
                 .build();
             await this.youTubeVideoRepository.add(newVideo);
         }

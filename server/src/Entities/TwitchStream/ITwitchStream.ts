@@ -10,7 +10,6 @@ export default interface ITwitchStream extends IPost {
     endedAt(): Date;
     url(): string;
     title(): string;
-    userId(): string;
     screenName(): string;
     gameName(): string;
     streamId(): string;

@@ -4,8 +4,8 @@ import IConfig from "../Config/IConfig";
 import ControllerLoader from "./ControllerLoader";
 import DILoader from "./DILoader";
 import ExpressLoader from "./ExpressLoader";
-import InstagramLoader from "./InstagramLoader";
 import MongooseLoader from "./MongooseLoader";
+import SubscriberLoader from "./SubscriberLoader";
 import TwitterJobLoader from "./TwitterJobLoader";
 import WebhookJobLoader from "./WebhookJobLoader";
 
@@ -14,8 +14,6 @@ export default async (configuration: Record<string, unknown>): Promise<Applicati
     const container = DILoader();
     console.log("Dependencies injected...");
     const config = container.get<IConfig>(Types.Config);
-    await InstagramLoader(config);
-    console.log("Instantiated instagram api...");
     ControllerLoader(container);
     console.log("Controllers loaded...");
     const server = ExpressLoader(container);
@@ -26,5 +24,7 @@ export default async (configuration: Record<string, unknown>): Promise<Applicati
     console.log("Started twitter job...");
     WebhookJobLoader();
     console.log("Started webhook job...");
+    SubscriberLoader();
+    console.log("Subscribed to message queue...");
     return server;
 };

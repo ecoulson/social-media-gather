@@ -3,4 +3,9 @@ export default interface IYouTubeVideoJSONSchema {
     thumbnailUrl: string;
     title: string;
     videoId: string;
+    likes: number;
+    dislikes: number;
+    commentCount: number;
+    views: number;
+    commentPageToken: string;
 }

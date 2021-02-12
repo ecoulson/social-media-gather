@@ -7,6 +7,9 @@ export default {
     WebhookRepository: Symbol.for("WebhookRepository"),
     YouTubeVideoRepository: Symbol.for("YouTubeVideoRepository"),
     PostRepository: Symbol.for("PostRepository"),
+    ChannelRepository: Symbol.for("ChannelRepository"),
+    CreatorRepository: Symbol.for("CreatorRepository"),
+    CommentsRepository: Symbol.for("CommentsRepository"),
     RequiresAuthentication: Symbol.for("RequiresAuthentication"),
     Config: Symbol.for("Config"),
     PasswordManager: Symbol.for("PasswordManager"),
@@ -24,5 +27,12 @@ export default {
     InstagramChannelService: Symbol.for("InstagramChannelService"),
     TwitterChannelService: Symbol.for("TwitterChannelService"),
     TwitchChannelService: Symbol.for("TwitchChannelService"),
-    YouTubeChannelService: Symbol.for("YouTubeChannelService")
+    YouTubeChannelService: Symbol.for("YouTubeChannelService"),
+    PostsService: Symbol.for("PostsService"),
+    ChannelService: Symbol.for("ChannelService"),
+    CreatorService: Symbol.for("CreatorService"),
+    MessageQueue: Symbol.for("MessageQueue"),
+    MediaPlatformMap: Symbol.for("MediaPlatformMap"),
+    CommentServiceMap: Symbol.for("CommentServiceMap"),
+    YouTubeCommentsService: Symbol.for("YouTubeCommentsService")
 };

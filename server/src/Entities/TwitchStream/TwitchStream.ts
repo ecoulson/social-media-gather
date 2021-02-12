@@ -11,14 +11,15 @@ export default class TwitchStream extends Post implements ITwitchStream {
         private _timeStarted: Date,
         private _url: string,
         private _title: string,
-        private _userId: string,
+        _userId: string,
         private _screenName: string,
         _id: string,
         private _gameName: string,
         private _streamId: string,
+        _creatorId: string,
         private _endedAt?: Date
     ) {
-        super(PostType.TWITCH_STREAM, _id);
+        super(PostType.TWITCH_STREAM, _id, _userId, _creatorId);
     }
 
     viewers(): number {
@@ -47,10 +48,6 @@ export default class TwitchStream extends Post implements ITwitchStream {
 
     title(): string {
         return this._title;
-    }
-
-    userId(): string {
-        return this._userId;
     }
 
     screenName(): string {

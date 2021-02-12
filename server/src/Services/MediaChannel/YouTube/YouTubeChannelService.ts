@@ -1,23 +1,31 @@
 import { inject, injectable, tagged } from "inversify";
+import YouTubeVideoBuilder from "../../../Entities/YouTubeVideo/YouTubeVideoBuilder";
 import Tags from "../../../@Types/Tags";
 import Types from "../../../@Types/Types";
-import IUser from "../../../Entities/User/IUser";
 import Webhook from "../../../Entities/Webhook/Webhook";
-import YouTubeVideo from "../../../Entities/YouTubeVideo/YouTubeVideo";
 import IYouTubePaginatedResult from "../../../Libraries/YouTube/IYouTubePaginatedResult";
 import IYouTubeChannelSchema from "../../../Libraries/YouTube/Schema/IYouTubeChannelSchema";
 import IYouTubePlaylistSchema from "../../../Libraries/YouTube/Schema/IYouTubePlaylistSchema";
 import IYouTubeThumbnailSchema from "../../../Libraries/YouTube/Schema/IYouTubeThumbnailSchema";
 import IYouTubeVideoSchema from "../../../Libraries/YouTube/Schema/IYouTubeVideoSchema";
 import YouTubeAPIClient from "../../../Libraries/YouTube/YouTubeAPIClient";
-import UserRepository from "../../../Repositories/User/UserRepository";
 import WebhookRepository from "../../../Repositories/Webhook/WebhookRepository";
 import YouTubeRepository from "../../../Repositories/YouTubeVideo/YouTubeRepository";
-import IMediaPlatformChannelService from "../IMediaChannelService";
+import IMediaPlatformService from "../IMediaPlatformService";
 import IMediaPlatformChannelSearchResult from "../IMediaPlatformChannelSearchResult";
+import Subscriber from "../../../MessageQueue/Subscriber";
+import IMessageQueue from "../../../MessageQueue/IMessageQueue";
+import ICreateChannelBody from "../../../Messages/Bodies/ICreateChannelBody";
+import IChannel from "../../../Entities/Channel/IChannel";
+import CreateChannelMessage from "../../../Messages/Channel/CreateChannelMessage";
+import Topic from "../../../MessageQueue/Topic";
+import ChannelJSONDeserializer from "../../../Serializers/JSON/ChannelJSONDeserializer";
+import IChannelsBody from "../../../Messages/Bodies/IChannelsBody";
+import ICreatorJSONSchema from "../../../Schemas/JSON/Creator/ICreatorJSONSchema";
+import MessageType from "../../../Messages/MessageType";
 
 @injectable()
-export default class YouTubeChannelService implements IMediaPlatformChannelService {
+export default class YouTubeChannelService extends Subscriber implements IMediaPlatformService {
     private static readonly LEASE_SECONDS = 60 * 60 * 24 * 7;
 
     constructor(
@@ -25,44 +33,59 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         @inject(Types.YouTubeVideoRepository)
         @tagged(Tags.MONGO, true)
         private youTubeVideoRepository: InstanceType<typeof YouTubeRepository>,
-        @inject(Types.UserRepository)
-        @tagged(Tags.MONGO, true)
-        private userRepository: InstanceType<typeof UserRepository>,
         @inject(Types.WebhookRepository)
         @tagged(Tags.MONGO, true)
-        private webhookRepository: InstanceType<typeof WebhookRepository>
-    ) {}
+        private webhookRepository: InstanceType<typeof WebhookRepository>,
+        @inject(Types.MessageQueue) messageQueue: IMessageQueue
+    ) {
+        super(messageQueue);
+    }
 
     async searchPlatformForChannel(username: string): Promise<IMediaPlatformChannelSearchResult> {
-        const channels = await this.youTubeAPIClient.channels.searchChannels(username);
+        const channelSearch = await this.youTubeAPIClient.channels.searchChannels(username);
+        const channels = await this.youTubeAPIClient.channels.get({
+            ids: channelSearch.map((channelSearchResult) => channelSearchResult.id.channelId)
+        });
         return {
             channels: channels.map((channel) => {
                 return {
-                    id: channel.id.channelId,
+                    id: channel.id,
                     username: channel.snippet.title,
-                    profilePicture: channel.snippet.thumbnails.default.url
+                    profilePicture: channel.snippet.thumbnails.default.url,
+                    subscriberCount: parseInt(channel.statistics.subscriberCount)
                 };
             })
         };
     }
 
-    async linkChannel(user: IUser, youTubeChannelId: string): Promise<void> {
-        user.setYouTubeId(youTubeChannelId);
-        if (user.id() === "") {
-            this.userRepository.add(user);
-        } else {
-            this.userRepository.update(user);
-        }
-        this.createYoutubePosts(user, youTubeChannelId);
-        this.registerWebhook(user, youTubeChannelId);
+    async createChannel(createChannelBody: ICreateChannelBody, creator: ICreatorJSONSchema) {
+        const channelResponse = await this.query<IChannelsBody>(
+            Topic.Channel,
+            MessageType.Channels,
+            new CreateChannelMessage(createChannelBody)
+        );
+        const channel = ChannelJSONDeserializer(channelResponse.body().channels[0]);
+        this.createPosts(channel, creator);
+        return channel;
     }
 
-    private async createYoutubePosts(user: IUser, youTubeChannelId: string) {
-        const youTubeChannel = await this.youTubeAPIClient.channels.get(youTubeChannelId);
-        let uploadPage = await this.getUploads(youTubeChannel);
+    private async createPosts(channel: IChannel, creator: ICreatorJSONSchema): Promise<void> {
+        try {
+            this.createYoutubePosts(channel, creator);
+            this.registerWebhook(channel, creator);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    private async createYoutubePosts(channel: IChannel, creator: ICreatorJSONSchema) {
+        const youTubeChannels = await this.youTubeAPIClient.channels.get({
+            ids: [channel.platformId()]
+        });
+        let uploadPage = await this.getUploads(youTubeChannels[0]);
         do {
             const videos = await this.getUploadedVideosOnPage(uploadPage);
-            this.createYouTubeVideoPosts(user, videos);
+            this.createYouTubeVideoPosts(channel, videos, creator);
             uploadPage = await uploadPage.getNextPage();
         } while (uploadPage.hasNextPage());
     }
@@ -87,19 +110,33 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         });
     }
 
-    private async createYouTubeVideoPosts(user: IUser, videos: IYouTubeVideoSchema[]) {
-        const videoPosts = videos.map(
-            (video) =>
-                new YouTubeVideo(
-                    "",
-                    user.id(),
-                    video.publishedAt,
-                    this.getThumbnail(video.thumbnails),
-                    video.title,
-                    video.id
-                )
+    private async createYouTubeVideoPosts(
+        channel: IChannel,
+        videos: IYouTubeVideoSchema[],
+        creator: ICreatorJSONSchema
+    ) {
+        const youTubeVideoBuilder = new YouTubeVideoBuilder();
+        const videoPosts = videos.map((video) =>
+            youTubeVideoBuilder
+                .setId("")
+                .setPublishedAt(new Date(video.snippet.publishedAt))
+                .setThumbnailUrl(this.getThumbnail(video.snippet.thumbnails))
+                .setTitle(video.snippet.title)
+                .setCreatorId(creator.id)
+                .setVideoId(video.id)
+                .setChannelId(channel.id())
+                .setLikes(this.parseStatistic(video.statistics.likeCount))
+                .setDislikes(this.parseStatistic(video.statistics.dislikeCount))
+                .setCommentCount(this.parseStatistic(video.statistics.commentCount))
+                .setViews(this.parseStatistic(video.statistics.viewCount))
+                .build()
         );
         videoPosts.forEach((videoPost) => this.youTubeVideoRepository.add(videoPost));
+    }
+
+    private parseStatistic(statistic: string): number {
+        const value = parseInt(statistic);
+        return isNaN(value) ? 0 : value;
     }
 
     private getThumbnail(thumbnails: IYouTubeThumbnailSchema) {
@@ -118,7 +155,7 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
         return thumbnails.default.url;
     }
 
-    private async registerWebhook(user: IUser, youTubeChannelId: string) {
+    private async registerWebhook(channel: IChannel, creator: ICreatorJSONSchema) {
         const expirationDate = new Date();
         expirationDate.setSeconds(
             expirationDate.getSeconds() + YouTubeChannelService.LEASE_SECONDS
@@ -128,10 +165,12 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
             expirationDate,
             new Date(),
             "youtube",
-            `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${user.id()}`,
-            `${this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?userId=${user.id()}`,
-            youTubeChannelId,
-            user.id()
+            `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channel.platformId()}`,
+            `${await this.youTubeAPIClient.baseUrl()}/api/webhook/youtube/callback?channelId=${channel.id()}&creatorId=${
+                creator.id
+            }`,
+            channel.platformId(),
+            channel.id()
         );
         this.youTubeAPIClient.webhooks.register({
             mode: "subscribe",
@@ -140,10 +179,5 @@ export default class YouTubeChannelService implements IMediaPlatformChannelServi
             topic: webhook.topicUrl()
         });
         this.webhookRepository.add(webhook);
-    }
-
-    async linkChannelWithUserId(userId: string, youTubeChannelId: string): Promise<void> {
-        const user = await this.userRepository.findById(userId);
-        this.linkChannel(user, youTubeChannelId);
     }
 }

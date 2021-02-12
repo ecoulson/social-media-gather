@@ -1,25 +1,26 @@
 import IConfig from "../../Config/IConfig";
-import TwitterTweetClient from "./Tweets/TwitterTweetClient";
-import TwitterUsersClient from "./Users/TwitterUsersClient";
+import TwitterAPIVersion from "./TwitterAPIVersion";
+import TwitterServiceAbstractFactory from "./Services/Factories/TwitterServiceAbstractFactory";
+import ITwitterServiceFactory from "./Services/Factories/ITwitterServiceFactory";
+import ITwitterService from "./Services/ITwitterService";
+import TwitterServiceType from "./TwitterServiceType";
 
 export default class TwitterAPIClient {
-    private usersClient: TwitterUsersClient;
-    private tweetClient: TwitterTweetClient;
+    private serviceFactory: ITwitterServiceFactory;
 
-    constructor(private config: IConfig) {
-        this.usersClient = new TwitterUsersClient(this);
-        this.tweetClient = new TwitterTweetClient(this);
+    constructor(private version: TwitterAPIVersion, private config: IConfig) {
+        this.serviceFactory = new TwitterServiceAbstractFactory(this).createClientFactory(version);
+    }
+
+    getVersion(): TwitterAPIVersion {
+        return this.version;
     }
 
     getAccessToken(): Promise<string> {
         return this.config.getValue("TWITTER_BEARER_TOKEN");
     }
 
-    get users(): TwitterUsersClient {
-        return this.usersClient;
-    }
-
-    get tweets(): TwitterTweetClient {
-        return this.tweetClient;
+    getService<T>(serviceType: TwitterServiceType): T {
+        return this.serviceFactory.createService(serviceType) as T;
     }
 }

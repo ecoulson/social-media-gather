@@ -4,8 +4,11 @@ import styled from "@emotion/styled";
 
 const GridLayout = styled(Grid)`
   max-height: 100%;
-  grid-template-columns: 25% 50% 25%;
+  max-width: 100%;
+  overflow-y: hidden;
+  grid-template-columns: 25% 40% 35%;
   grid-template-areas: "followed feed post";
+  grid-template-rows: 100%;
 `;
 
 export default function HomeLayout(props) {

@@ -3,51 +3,25 @@ import IUser from "./IUser";
 export default class User implements IUser {
     constructor(
         private _id: string,
-        private _twitterId: string,
-        private _youTubeId: string,
-        private _twitchId: string,
-        private _instagramId: string,
         private _email: string,
         private _username: string,
         private _password: string,
         private _verified: boolean,
-        private _followingIds: string[]
+        private _followingIds: string[],
+        private _isCreator: boolean,
+        protected _channels: string[]
     ) {}
+
+    channels() {
+        return Array.from(this._channels);
+    }
 
     id(): string {
         return this._id;
     }
 
-    twitterId(): string {
-        return this._twitterId;
-    }
-
-    setTwitterId(twitterId: string): void {
-        this._twitterId = twitterId;
-    }
-
-    youTubeId(): string {
-        return this._youTubeId;
-    }
-
-    setYouTubeId(youTubeId: string): void {
-        this._youTubeId = youTubeId;
-    }
-
-    twitchId(): string {
-        return this._twitchId;
-    }
-
-    setTwitchId(twitchId: string): void {
-        this._twitchId = twitchId;
-    }
-
-    instagramId(): string {
-        return this._instagramId;
-    }
-
-    setInstagramId(instagramId: string): void {
-        this._instagramId = instagramId;
+    isCreator(): boolean {
+        return this._isCreator;
     }
 
     email(): string {
@@ -67,7 +41,7 @@ export default class User implements IUser {
     }
 
     following(): string[] {
-        return this._followingIds;
+        return Array.from(this._followingIds);
     }
 
     verify(): void {

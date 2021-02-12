@@ -13,7 +13,7 @@ export default abstract class MongoDataStore<
     constructor(
         protected model: Model<Document>,
         protected entityTransform: Transformer<Document, Entity>,
-        protected documentTransform: Transformer<Entity, UpdateQuery<Document>>
+        protected documentTransform: Transformer<Entity, Partial<Document>>
     ) {}
 
     async count(): Promise<number> {

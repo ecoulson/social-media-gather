@@ -1,5 +1,6 @@
 import IConfig from "../../Config/IConfig";
 import ChannelClient from "./Channels/ChannelClient";
+import FollowClient from "./Follows/FollowClient";
 import GameClient from "./Games/GameClient";
 import StreamClient from "./Streams/StreamClient";
 import TokenClient from "./Tokens/TokenClient";
@@ -13,6 +14,7 @@ export default class TwitchAPIClient {
     private streamClient: StreamClient;
     private videosClient: VideosClient;
     private webhookClient: WebhookClient;
+    private followClient: FollowClient;
 
     constructor(private config: IConfig) {
         this.gameClient = new GameClient(this);
@@ -21,6 +23,7 @@ export default class TwitchAPIClient {
         this.streamClient = new StreamClient(this);
         this.videosClient = new VideosClient(this);
         this.webhookClient = new WebhookClient(this);
+        this.followClient = new FollowClient(this);
     }
 
     public clientId(): Promise<string> {
@@ -57,5 +60,9 @@ export default class TwitchAPIClient {
 
     get webhooks(): WebhookClient {
         return this.webhookClient;
+    }
+
+    get follows(): FollowClient {
+        return this.followClient;
     }
 }

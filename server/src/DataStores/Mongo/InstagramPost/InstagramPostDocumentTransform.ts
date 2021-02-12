@@ -1,4 +1,3 @@
-import { UpdateQuery } from "mongoose";
 import { Transformer } from "../../../@Types";
 import IInstagramPost from "../../../Entities/InstagramPost/IInstagramPost";
 import IImage from "../../../Entities/Media/IImage";
@@ -7,20 +6,23 @@ import IVideo from "../../../Entities/Media/IVideo";
 import IInstagramMediaDocument from "../../../Schemas/Mongo/Post/IInstagramMediaDocument";
 import IPostDocument from "../../../Schemas/Mongo/Post/IPostDocument";
 
-const InstagramPostDocumentTransform: Transformer<IInstagramPost, UpdateQuery<IPostDocument>> = (
+const InstagramPostDocumentTransform: Transformer<IInstagramPost, Partial<IPostDocument>> = (
     post
 ) => {
     return {
         type: "INSTAGRAM",
-        userId: post.userId(),
+        channelId: post.channelId(),
         timeCreated: post.takenAt(),
+        creatorId: post.creatorId(),
         instagram: {
             takenAt: post.takenAt(),
             thumbnail: transformMediaEntity(post.thumbnail()),
             media: post.media().map((mediaItem) => transformMediaEntity(mediaItem)),
             caption: post.caption(),
             likes: post.likes().toString(),
-            id: post.postId()
+            id: post.postId(),
+            commentCount: post.commentCount(),
+            commentCursor: post.commentCursor()
         }
     };
 };

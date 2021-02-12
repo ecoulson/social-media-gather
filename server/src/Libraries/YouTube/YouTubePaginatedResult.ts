@@ -31,8 +31,16 @@ export default class YouTubePaginatedResult<T> implements IYouTubePaginatedResul
         return await this.callback(this.options);
     }
 
+    getNextPageToken() {
+        return this.response.nextPageToken;
+    }
+
     async getPreviousPage(): Promise<IYouTubePaginatedResult<T>> {
         this.options.pageToken = this.response.previousPageToken;
         return await this.callback(this.options);
+    }
+
+    getPreviousPageToken() {
+        return this.response.previousPageToken;
     }
 }

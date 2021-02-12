@@ -1,4 +1,4 @@
 export default interface IYouTubeLocalizationSchema {
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
 }
