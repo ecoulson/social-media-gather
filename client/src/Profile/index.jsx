@@ -7,12 +7,12 @@ import Feed from "../Home/Feed";
 import HomeLayout from "../Home/HomeLayout";
 import FollowedCreatorsSection from "../Home/FollowedCreatorsSection";
 import { GridItem } from "@chakra-ui/react";
-import GetUser from "../Library/GetUser";
 import transformFeed from "../Library/FeedTransformer";
 import PostDisplay from "../Home/PostDisplay";
 import { useCallback } from "react";
 import Cookie from "../Library/Cookie";
 import GetEndpoint from "../Library/GetEndpoint";
+import GetChannels from "../Home/FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";
 
 export default function Profile(props) {
   const history = useHistory();
@@ -30,13 +30,18 @@ export default function Profile(props) {
           },
         }
       );
-      const posts = await Promise.all(
-        response.data.data.posts.map(async (post) => {
-          const creator = await GetUser(post.creatorId);
-          post.channelName = creator.username;
-          return post;
-        })
-      );
+      const channelIds = response.data.data.posts.map((post) => {
+        return post.channelId;
+      });
+      const channels = await GetChannels(channelIds);
+      const channelMap = new Map();
+      channels.forEach((channel) => {
+        channelMap.set(channel.id, channel);
+      });
+      const posts = response.data.data.posts.map((post) => {
+        post.channelName = channelMap.get(post.channelId).name;
+        return post;
+      });
       setFeed((feed) => [...feed, ...transformFeed(posts)]);
     },
     [user]

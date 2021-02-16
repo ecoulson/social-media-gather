@@ -5,12 +5,14 @@ import ControllerLoader from "./ControllerLoader";
 import DILoader from "./DILoader";
 import ExpressLoader from "./ExpressLoader";
 import MongooseLoader from "./MongooseLoader";
+import SentryLoader from "./SentryLoader";
 import SubscriberLoader from "./SubscriberLoader";
 import TwitterJobLoader from "./TwitterJobLoader";
 import WebhookJobLoader from "./WebhookJobLoader";
 
 export default async (configuration: Record<string, unknown>): Promise<Application> => {
     console.log("Configured with:", JSON.stringify(configuration, null, 4));
+    SentryLoader();
     const container = DILoader();
     console.log("Dependencies injected...");
     const config = container.get<IConfig>(Types.Config);

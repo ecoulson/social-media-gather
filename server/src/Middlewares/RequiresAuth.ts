@@ -9,12 +9,13 @@ function requiresAuth(repository: InstanceType<typeof UserRepository>): RequestH
     return async (req, res, next) => {
         try {
             if (req.headers.authorization) {
-                console.log(req.headers.authorization);
                 const config = container.get<IConfig>(Types.Config);
                 const token = req.cookies.token || req.headers.authorization.split("Bearer ")[1];
                 const decoded = jsonwebtoken.verify(
                     token,
-                    await config.getValue("AUTH_SECRET")
+                    await config.getValue("AUTH_SECRET"), {
+                        algorithms: ["HS256"]
+                    }
                 ) as {
                     id: string;
                 };
@@ -22,7 +23,6 @@ function requiresAuth(repository: InstanceType<typeof UserRepository>): RequestH
                 req.user = () => userEntity;
                 return next();
             }
-            console.log(req.headers);
             return next(new Error("no auth header provided"));
         } catch (error) {
             return res.status(401).json({

@@ -11,6 +11,8 @@ export default class JSONWebToken<Payload> implements IToken<Payload> {
     }
 
     verify(token: string): Payload {
-        return (jsonwebtoken.verify(token, this.secret) as unknown) as Payload;
+        return (jsonwebtoken.verify(token, this.secret, {
+            algorithms: ["HS256"]
+        }) as unknown) as Payload;
     }
 }
