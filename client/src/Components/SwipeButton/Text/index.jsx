@@ -16,6 +16,7 @@ const TextAnimationController = ({ children }) => {
     <motion.span
       animate={{ x: [null, 30, 0] }}
       transition={{ repeat: Infinity, duration: 4 }}
+      whileHover={{ scale: 1.05 }}
       style={{ display: "flex", alignItems: "center" }}
     >
       {children}
@@ -29,6 +30,7 @@ const TextAnimationLifeCycleAnimator = ({ children }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: [0, 1] }}
       transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.05 }}
       exit={{ opacity: 0 }}
     >
       {children}
@@ -48,7 +50,7 @@ export default ({ text, isSwipeable }) => {
   }, [text, isSwipeable]);
 
   if (!shouldAnimate) {
-    return text;
+    return <motion.div whileHover={{ scale: 1.05 }}>{text}</motion.div>;
   }
 
   return (

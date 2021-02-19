@@ -7,4 +7,6 @@ const makeAPIRequst = (url, method) => {
 
 export default {
   login: makeAPIRequst("auth/login", "POST"),
+  register: makeAPIRequst("auth/register", "POST"),
+  isAuthenticated: makeAPIRequst("auth/is-authenticated", "GET"),
 };

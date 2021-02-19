@@ -4,7 +4,7 @@ import { ReactComponent as Logo } from "../../../Assets/logo3.svg";
 import Card from "../../../Components/Card";
 import { Center } from "@chakra-ui/react";
 import ListAnimationController from "../../../Animations/ListAnimation/ListAnimationController";
-import LoginForm from "./LoginForm";
+import SignUpForm from "./SignUpForm";
 
 const FormCard = ({ children }) => (
   <Card margin="50px auto" width="300px" height="475px">
@@ -14,7 +14,7 @@ const FormCard = ({ children }) => (
 
 const AppTitle = styled.h1`
   text-align: center;
-  margin-bottom: 68px;
+  margin-bottom: 40px;
   font-size: 60px;
   font-family: "Monoton", cursive;
 `;
@@ -27,7 +27,7 @@ export default () => {
           <Logo style={{ marginTop: 33 }} />
         </Center>
         <AppTitle>Switch</AppTitle>
-        <LoginForm />
+        <SignUpForm />
       </ListAnimationController>
     </FormCard>
   );

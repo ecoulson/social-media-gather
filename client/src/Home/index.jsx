@@ -1,9 +1,6 @@
 import { GridItem } from "@chakra-ui/react";
 import Axios from "axios";
 import React, { useCallback, useState } from "react";
-import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import isAuthenticated from "../Auth/IsAuthenticated";
 import InfiniteScroll from "../InfiniteScroll";
 import Cookie from "../Library/Cookie";
 import transformFeed from "../Library/FeedTransformer";
@@ -13,9 +10,10 @@ import FollowedCreatorsSection from "./FollowedCreatorsSection";
 import GetChannels from "./FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";
 import HomeLayout from "./HomeLayout";
 import PostDisplay from "./PostDisplay";
+import useAuth from "../Auth/useAuth";
 
 export default function Home() {
-  const history = useHistory();
+  useAuth();
   const [currentPost, setPost] = useState(null);
   const [feed, setFeed] = useState([]);
 
@@ -43,16 +41,6 @@ export default function Home() {
     posts = posts.filter((x) => x !== null);
     setFeed((feed) => [...feed, ...transformFeed(posts)]);
   }, []);
-
-  useEffect(() => {
-    async function checkAuthenticated() {
-      if (!(await isAuthenticated())) {
-        history.push("/login");
-      }
-    }
-
-    checkAuthenticated();
-  }, [history]);
 
   function handlePostSelection(post) {
     setPost(post);

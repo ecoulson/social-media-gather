@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 export default ({ children, background }) => {
   return (
     <motion.div
+      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0 }}
       style={{
         transition: "all 0.5s ease",
         background,

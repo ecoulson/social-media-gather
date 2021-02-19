@@ -2,11 +2,18 @@ import styled from "@emotion/styled";
 
 const Background = styled.button`
   display: flex;
-  background: linear-gradient(
+  /* background: linear-gradient(
     93.63deg,
     #731dd8 0%,
     #ff3da4 52.8%,
     #ff9900 96.55%
+  ); */
+  background: linear-gradient(
+    90.93deg,
+    #731dd8 5.09%,
+    #6142e5 24.17%,
+    #3d8bff 49.44%,
+    #21d81d 99.46%
   );
   width: 100%;
   padding: 1px;
@@ -27,9 +34,6 @@ const Background = styled.button`
   bottom: 0;
   outline: none;
   overflow: hidden;
-  &:hover {
-    font-size: 26px;
-  }
 `;
 
 export default Background;

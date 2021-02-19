@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-const item = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1 },
-};
-
 export default ({ children }) => {
   return (
-    <motion.div initial="hidden" exit="hidden" variants={item}>
+    <motion.div
+      initial={{ y: 20 }}
+      animate={{ y: 0 }}
+      exit={{ y: 20 }}
+      transition={{ duration: 0.25 }}
+    >
       {children}
     </motion.div>
   );

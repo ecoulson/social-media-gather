@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import SignUpRequest from "../../../../API/SignUpRequest";
 import LoginRequest from "../../../../API/LoginRequest";
 import { ReactComponent as User } from "../../../../Assets/user.svg";
 import { ReactComponent as Password } from "../../../../Assets/password.svg";
+import { ReactComponent as Email } from "../../../../Assets/email.svg";
 import InputV2 from "../../../../Components/Input";
 import Cookie from "../../../../Library/Cookie";
 import AuthenticatedToast from "../../Toasts/AuthenticatedToast";
-import IllegalCredentialsToast from "../../Toasts/IllegalCredentialsToast";
+import UsernameTakenToast from "../../Toasts/UsernameTakenToast";
 import RequireFieldToast from "../../Toasts/RequireFieldToast";
+import MinimumLengthToast from "../../Toasts/MinimumLengthToast";
 import styled from "@emotion/styled";
 import { toast } from "react-toastify";
 import debounce from "../../../../Library/debounce";
@@ -30,32 +33,47 @@ const PasswordIcon = styled(Password)`
   color: rgb(32, 30, 30);
 `;
 
+const EmailIcon = styled(Email)`
+  width: 24px;
+  height: 22px;
+  margin-top: -6px;
+  color: rgb(32, 30, 30);
+`;
+
 export default () => {
   const [currentToast, setCurrentToast] = useState(null);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [loginStatus, setLoginStatus] = useState(true);
-  const [isAuthenticated, setAuthenticated] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState(true);
   const { register, handleSubmit, watch, errors } = useForm();
-  const { username, password } = watch(["username", "password"]);
+  const { username, password, email } = watch([
+    "username",
+    "password",
+    "email",
+  ]);
   const history = useHistory();
 
   const onSubmit = async (formData) => {
-    if (!isLoggingIn) {
-      setIsLoggingIn(true);
-      const loginResponse = await LoginRequest(
+    console.log(formData);
+    if (!isRegistering) {
+      setIsRegistering(true);
+      const registerResponse = await SignUpRequest(
         formData.username,
+        formData.email,
         formData.password
       );
-      if (loginResponse.metadata.success) {
-        setAuthenticated(true);
+      if (registerResponse.metadata.success) {
+        const loginResponse = await LoginRequest(
+          formData.username,
+          formData.password
+        );
         Cookie.setCookie("token", loginResponse.data.token);
         setCurrentToast(AuthenticatedToast(history));
       } else {
-        setLoginStatus(false);
+        setRegistrationStatus(false);
         setCurrentToast(
-          IllegalCredentialsToast(() => {
-            setIsLoggingIn(false);
-            setLoginStatus(true);
+          UsernameTakenToast(() => {
+            setIsRegistering(false);
+            setRegistrationStatus(true);
           })
         );
       }
@@ -67,9 +85,19 @@ export default () => {
       toast.dismiss(currentToast);
     }
     if (error.username) {
-      setCurrentToast(RequireFieldToast("username"));
+      if (error.username.type === "required") {
+        setCurrentToast(RequireFieldToast("username"));
+      } else {
+        setCurrentToast(MinimumLengthToast("username", 6));
+      }
+    } else if (error.email) {
+      setCurrentToast(RequireFieldToast("email"));
     } else if (error.password) {
-      setCurrentToast(RequireFieldToast("password"));
+      if (error.password.type === "required") {
+        setCurrentToast(RequireFieldToast("password"));
+      } else {
+        setCurrentToast(MinimumLengthToast("password", 8));
+      }
     }
   };
 
@@ -83,6 +111,13 @@ export default () => {
           label="Username"
           name="username"
           type="text"
+          inputRef={register({ required: true, minLength: 6 })}
+        />
+        <InputV2
+          Icon={EmailIcon}
+          label="Email"
+          name="email"
+          type="email"
           inputRef={register({ required: true })}
         />
         <InputV2
@@ -90,15 +125,16 @@ export default () => {
           label="Password"
           name="password"
           type="password"
-          inputRef={register({ required: true })}
+          inputRef={register({ required: true, minLength: 8 })}
         />
         <SwipeButton
-          isLoading={isLoggingIn}
+          isLoading={isRegistering}
           onSwipe={submitHandler}
-          didError={!loginStatus}
-          didSucceed={isAuthenticated}
-          isSwipeable={Object.keys(errors).length === 0 && username && password}
-          text="Sign In"
+          didError={!registrationStatus}
+          isSwipeable={
+            email && username && password && Object.keys(errors).length === 0
+          }
+          text="Create Account"
         />
       </ListAnimationController>
     </Form>

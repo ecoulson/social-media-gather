@@ -21,7 +21,7 @@ const ActionLink = styled(Link)`
 `;
 
 const ActionFlex = styled(Flex)`
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 0 25px;
   height: 100%;
@@ -32,10 +32,7 @@ export default () => (
     <ListAnimationController autoWrapChildren={false}>
       <ActionFlex>
         <ItemAnimationController>
-          <ActionLink to="/signup">Sign Up</ActionLink>
-        </ItemAnimationController>
-        <ItemAnimationController>
-          <ActionLink to="/forgot-password">Forgot Password?</ActionLink>
+          <ActionLink to="/login">Sign In</ActionLink>
         </ItemAnimationController>
       </ActionFlex>
     </ListAnimationController>

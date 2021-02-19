@@ -19,6 +19,7 @@ export default ({ children, autoWrapChildren = true }) => {
       style={{ width: "100%", height: "100%" }}
       variants={container}
       initial="hidden"
+      exit="hidden"
       animate="show"
     >
       {autoWrapChildren

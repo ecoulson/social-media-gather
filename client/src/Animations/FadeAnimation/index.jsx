@@ -1,8 +1,7 @@
-import { motion } from "framer-motion";
 import React from "react";
-import Loader from "react-loader-spinner";
+import { motion } from "framer-motion";
 
-export default () => {
+export default ({ children }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -10,7 +9,7 @@ export default () => {
       transition={{ duration: 0.5 }}
       exit={{ opacity: 0 }}
     >
-      <Loader type="TailSpin" color="white" width="40px" height="40px" />
+      {children}
     </motion.div>
   );
 };

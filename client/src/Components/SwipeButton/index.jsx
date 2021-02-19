@@ -7,16 +7,39 @@ import Spinner from "./Spinner";
 import DragContainer from "./DragContainer";
 import AnimationContainer from "./AnimationContainer";
 import Text from "./Text";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import FadeAnimation from "../../Animations/FadeAnimation";
 
-export default ({ isLoading, onSwipe, isSwipeable, text, didError }) => {
+export default ({
+  isLoading,
+  onSwipe,
+  isSwipeable,
+  text,
+  didError,
+  didSucceed,
+}) => {
   const getSwipeColor = () => {
     if (!isSwipeable || didError) {
-      return "#A63C06";
+      return "#df4b38";
     }
     return "#60D394";
   };
 
   const renderContent = () => {
+    if (didSucceed) {
+      return (
+        <FadeAnimation>
+          <FiCheckCircle size={40} />
+        </FadeAnimation>
+      );
+    }
+    if (didError) {
+      return (
+        <FadeAnimation>
+          <FiXCircle size={40} />
+        </FadeAnimation>
+      );
+    }
     return isLoading ? (
       <Spinner />
     ) : (
@@ -28,20 +51,28 @@ export default ({ isLoading, onSwipe, isSwipeable, text, didError }) => {
 
   const renderOverlay = () => {
     return !isLoading ? (
-      <Overlay background={swipeBackground}>
-        <AnimatePresence>{renderContent()}</AnimatePresence>
-      </Overlay>
+      <AnimatePresence>
+        <Overlay background={swipeBackground}>
+          <FadeAnimation>{renderContent()}</FadeAnimation>
+        </Overlay>
+      </AnimatePresence>
     ) : (
-      <Overlay background={getSwipeColor()}>
-        <AnimatePresence>{renderContent()}</AnimatePresence>
-      </Overlay>
+      <AnimatePresence>
+        <Overlay background={getSwipeColor()}>
+          <FadeAnimation>{renderContent()}</FadeAnimation>
+        </Overlay>
+      </AnimatePresence>
     );
   };
 
   const swipe = defineSwipe({ swipeDistance: 100 });
   const x = useMotionValue(0);
   const swipeColor = getSwipeColor();
-  const swipeBackground = useTransform(x, [0, 50], ["rgba(0,0,0,0)", swipeColor]);
+  const swipeBackground = useTransform(
+    x,
+    [0, 50],
+    ["rgba(0,0,0,0)", swipeColor]
+  );
 
   if (isLoading) {
     x.set(100);
