@@ -15,7 +15,7 @@ import Cookie from "../Library/Cookie";
 import Loader from "../Loader";
 import Panel from "../Panel";
 import "./index.css";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 import GetChannels from "../Home/FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";
 
 export default function Me() {

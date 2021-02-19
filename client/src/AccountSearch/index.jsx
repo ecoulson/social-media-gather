@@ -4,7 +4,7 @@ import Axios from "axios";
 import debounce from "../Library/debounce";
 import "./index.css";
 import Input from "../Input";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 export default function AccountSearch(props) {
   const [results, setResults] = useState([]);

@@ -7,7 +7,7 @@ import isAuthenticated from "../Auth/IsAuthenticated";
 import InfiniteScroll from "../InfiniteScroll";
 import Cookie from "../Library/Cookie";
 import transformFeed from "../Library/FeedTransformer";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 import Feed from "./Feed";
 import FollowedCreatorsSection from "./FollowedCreatorsSection";
 import GetChannels from "./FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";

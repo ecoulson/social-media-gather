@@ -11,7 +11,7 @@ import { ReactComponent as Twitter } from "../Assets/twitter.svg";
 import { ReactComponent as Youtube } from "../Assets/youtube.svg";
 import { ReactComponent as Instagram } from "../Assets/instagram.svg";
 import { Link, useLocation } from "react-router-dom";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

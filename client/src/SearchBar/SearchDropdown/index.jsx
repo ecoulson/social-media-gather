@@ -6,7 +6,7 @@ import "./index.css";
 import { ReactComponent as UserIcon } from "../../Assets/user.svg";
 import { ReactComponent as Check } from "../../Assets/check.svg";
 import Cookie from "../../Library/Cookie";
-import GetEndpoint from "../../Library/GetEndpoint";
+import GetEndpoint from "../../API/GetEndpoint";
 
 export default function SearchDropdown(props) {
   const history = useHistory();

@@ -2,7 +2,7 @@ import MessageType from "../../../Messages/MessageType";
 
 export default interface IMessageJSONSchema {
     metadata: {
-        succes: boolean;
+        success: boolean;
         type: MessageType;
     };
     data: any;

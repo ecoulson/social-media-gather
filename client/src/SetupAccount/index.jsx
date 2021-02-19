@@ -8,7 +8,7 @@ import Cookie from "../Library/Cookie";
 import isAuthenticated from "../Auth/IsAuthenticated";
 import Panel from "../Panel";
 import Button from "../Button";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 export default function SignUp() {
   const [platform, setPlatform] = useState("twitch");

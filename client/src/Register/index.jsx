@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import Button from "../Button";
 import Form from "../Form";
 import Input from "../Input";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 import "./index.css";
 
 export default function Register(props) {

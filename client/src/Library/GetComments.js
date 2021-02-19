@@ -1,6 +1,6 @@
 import Axios from "axios";
-import GetEndpoint from "./GetEndpoint";
 
+import GetEndpoint from "../API/GetEndpoint";
 export default async function GetComments(postId, type, offset) {
   if (type) {
     const response = await Axios.get(

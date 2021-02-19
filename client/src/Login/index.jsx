@@ -5,7 +5,7 @@ import Button from "../Button";
 import Form from "../Form";
 import Input from "../Input";
 import Cookie from "../Library/Cookie";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 import "./index.css";
 
 export default function Login() {

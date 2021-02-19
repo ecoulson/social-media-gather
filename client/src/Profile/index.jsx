@@ -11,7 +11,7 @@ import transformFeed from "../Library/FeedTransformer";
 import PostDisplay from "../Home/PostDisplay";
 import { useCallback } from "react";
 import Cookie from "../Library/Cookie";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 import GetChannels from "../Home/FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";
 
 export default function Profile(props) {
