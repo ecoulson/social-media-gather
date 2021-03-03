@@ -8,6 +8,7 @@ import { injectable } from "inversify";
 export default class BcryptPasswordManager implements IPasswordManager {
     hash(plainTextPassword: string, rounds: number): Promise<string> {
         try {
+            console.log(plainTextPassword)
             return hash(plainTextPassword, rounds);
         } catch (error) {
             throw new HashFailureException(error);

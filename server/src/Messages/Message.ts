@@ -16,7 +16,7 @@ export default abstract class Message<Body> implements IMessage<Body> {
     toJson(): IMessageJSONSchema {
         return {
             metadata: {
-                succes: this._metadata.success(),
+                success: this._metadata.success(),
                 type: this._metadata.type()
             },
             data: this._data

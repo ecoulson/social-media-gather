@@ -1,5 +1,5 @@
 import Axios from "axios";
-import GetEndpoint from "../../../Library/GetEndpoint";
+import GetEndpoint from "../../../API/GetEndpoint";
 
 export default async function GetFollowedUsers(followedIds) {
   const responses = await Promise.all(

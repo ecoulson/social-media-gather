@@ -1,6 +1,6 @@
 import Axios from "axios";
 import Cookie from "../Library/Cookie";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 async function isAuthenticated() {
   try {

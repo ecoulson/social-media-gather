@@ -12,11 +12,11 @@ import PostDisplay from "../Home/PostDisplay";
 import InfiniteScroll from "../InfiniteScroll";
 import transformFeed from "../Library/FeedTransformer";
 import Cookie from "../Library/Cookie";
-import GetUser from "../Library/GetUser";
 import Loader from "../Loader";
 import Panel from "../Panel";
 import "./index.css";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
+import GetChannels from "../Home/FollowedCreatorsSection/FollowedCreators/Creator/CreatorMedias/GetChannels";
 
 export default function Me() {
   const [user, setUser] = useState(null);
@@ -34,13 +34,18 @@ export default function Me() {
           },
         }
       );
-      const posts = await Promise.all(
-        response.data.data.posts.map(async (post) => {
-          const creator = await GetUser(post.creatorId);
-          post.channelName = creator.username;
-          return post;
-        })
-      );
+      const channelIds = response.data.data.posts.map((post) => {
+        return post.channelId;
+      });
+      const channels = await GetChannels(channelIds);
+      const channelMap = new Map();
+      channels.forEach((channel) => {
+        channelMap.set(channel.id, channel);
+      });
+      const posts = response.data.data.posts.map((post) => {
+        post.channelName = channelMap.get(post.channelId).name;
+        return post;
+      });
       setFeed((feed) => [...feed, ...transformFeed(posts)]);
     },
     [user]

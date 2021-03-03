@@ -19,6 +19,7 @@ import TokenMessage from "../Messages/Token/TokenMessage";
 import ErrorMessage from "../Messages/Status/ErrorMessage";
 import UserExistsMessage from "../Messages/Users/UserExistsMessage";
 import AuthenticatedMessage from "../Messages/Security/AuthenticatedMessage";
+import * as Sentry from "@sentry/node";
 
 const AuthenticationMiddleware = container.get<RequestHandler>(Types.RequiresAuthentication);
 
@@ -47,6 +48,7 @@ export default class AuthenticationController {
             const token = await this.authenticationService.login(body.username, body.password);
             return new TokenMessage(token).toJson();
         } catch (error) {
+            Sentry.captureException(error);
             if (error instanceof IllegalLoginException) {
                 return new UnauthenticatedMessage().toJson();
             }
@@ -60,6 +62,7 @@ export default class AuthenticationController {
     @httpPost("/register")
     async register(@requestBody() body: IUserRegistrationBody): Promise<IMessageJSONSchema> {
         try {
+            console.log(body);
             const user = await this.authenticationService.register(
                 body.username,
                 body.email,

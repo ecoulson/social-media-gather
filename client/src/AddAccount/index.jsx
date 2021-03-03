@@ -7,7 +7,7 @@ import PlatformSelector from "../PlatformSelector";
 import AccountSearch from "../AccountSearch";
 import { useState } from "react";
 import Axios from "axios";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 export default function AddAccount() {
   const [platform, setPlatform] = useState("twitch");

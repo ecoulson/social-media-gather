@@ -8,7 +8,7 @@ import Input from "../Input";
 import Cookie from "../Library/Cookie";
 import Panel from "../Panel";
 import "./index.css";
-import GetEndpoint from "../Library/GetEndpoint";
+import GetEndpoint from "../API/GetEndpoint";
 
 export default function EditProfile() {
   const [user, setUser] = useState();
