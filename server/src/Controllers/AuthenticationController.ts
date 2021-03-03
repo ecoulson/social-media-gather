@@ -62,6 +62,7 @@ export default class AuthenticationController {
     @httpPost("/register")
     async register(@requestBody() body: IUserRegistrationBody): Promise<IMessageJSONSchema> {
         try {
+            console.log(body);
             const user = await this.authenticationService.register(
                 body.username,
                 body.email,

@@ -10,10 +10,10 @@ const Background = styled.button`
   ); */
   background: linear-gradient(
     90.93deg,
-    #731dd8 5.09%,
-    #6142e5 24.17%,
-    #3d8bff 49.44%,
-    #21d81d 99.46%
+    rgb(115, 29, 216) 5.09%,
+    rgb(97, 66, 229) 24.17%,
+    rgb(61, 139, 255) 49.44%,
+    rgb(33, 216, 29) 99.46%
   );
   width: 100%;
   padding: 1px;
